@@ -1,20 +1,20 @@
 [
   {
     "id": "ieee-semiconductor",
-    "title": "Classification of Semiconductor Wafer Defects using Deep Transfer Learning-based Approaches",
+    "title": "Advanced Semiconductor Classifiers using Machine Learning Techniques",
     "publisher": "IEEE",
-    "date": "Mar 2023",
-    "description": "Developed deep transfer learning models for automated semiconductor wafer defect classification, improving quality control in manufacturing. Applied ResNet, VGG, and custom CNN architectures to achieve high-accuracy defect detection.",
-    "link": "https://ieeexplore.ieee.org",
+    "date": "2023",
+    "description": "An innovative method to perform advanced semiconductor classification using logistic regression and a random forest classifier is proposed. Testing semiconductors is a crucial step in the production process, especially as the complexity of integrated circuit (IC) designs and the competitive pressure on the market rise. This work provides an examination on how to perform automated testing using machine learning techniques.",
+    "link": "https://ieeexplore.ieee.org/document/10083525",
     "type": "Conference Paper"
   },
   {
     "id": "springer-xgboost",
-    "title": "Classification of Emotional States from Electrocardiogram Signals using XGBoost",
+    "title": "XGBoost-Based Prediction and Evaluation Model for Enchanting Subscribers in Industrial Sector",
     "publisher": "Springer",
-    "date": "Jan 2023",
-    "description": "Implemented XGBoost-based classification of emotional states using ECG signal features. Achieved robust classification performance through feature engineering and hyperparameter optimization of gradient boosting models.",
-    "link": "https://link.springer.com",
+    "date": "2023",
+    "description": "An innovative XGBoost method to enhance company engagement with customers using machine learning concepts. The paper evaluates parameters for subscriber shortfall and proposes progression strategies for revenue enhancement in industrial management systems.",
+    "link": "https://link.springer.com/chapter/10.1007/978-981-99-1479-1_22",
     "type": "Book Chapter"
   }
 ]

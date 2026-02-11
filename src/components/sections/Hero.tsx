@@ -49,8 +49,8 @@ export const Hero = () => {
             </div>
             <p className="text-lg text-gray-600 dark:text-gray-400 mb-8 max-w-2xl">
               MS in Data Science graduate from The George Washington University.
-              Junior Data Scientist at UPS, specializing in Machine Learning,
-              AI Engineering, and scalable data solutions.
+              Data Engineer / Data Scientist at Beauty Manufacturing Solutions Corp,
+              specializing in Machine Learning, AI Engineering, and scalable data solutions.
             </p>
 
             {/* CTA Buttons */}

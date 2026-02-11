@@ -2,25 +2,41 @@
   {
     "id": "imf-volunteer",
     "organization": "International Monetary Fund",
-    "role": "Volunteer",
-    "dateRange": "Oct 2024",
-    "description": "Volunteered at the IMF Annual Meetings and Civil Society Policy Forum in Washington, D.C. Assisted with event coordination, attendee support, and logistics management for international policy discussions.",
+    "role": "Student Volunteer",
+    "dateRange": "2024",
+    "description": "Assisted in organizing and coordinating logistics for the annual summit, facilitating seamless communication and event flow for high-level international delegates and officials. Provided comprehensive on-site support, including managing registration processes, guiding attendees, and ensuring strict compliance with event protocols. Collaborated with a diverse team of volunteers and staff to guarantee the success of a global event.",
     "cause": "Economic Empowerment"
   },
   {
     "id": "yrc-volunteer",
-    "organization": "Indian Red Cross Society - Youth Red Cross",
-    "role": "Youth Red Cross Volunteer",
-    "dateRange": "Aug 2019 - May 2023",
-    "description": "Active Youth Red Cross member throughout undergraduate studies. Organized blood donation drives, first aid training camps, health awareness campaigns, and community service activities. Led team of volunteers for disaster preparedness programs.",
-    "cause": "Humanitarian Aid & Health"
+    "organization": "Youth Red Cross - SVCE Unit",
+    "role": "Volunteer",
+    "dateRange": "Oct 2019 - Present",
+    "description": "Participated in blood donation drives, first-aid training, and health awareness campaigns in underprivileged communities. Assisted in organizing disaster relief programs, providing essential supplies and support to affected families. Conducted educational sessions on hygiene and emergency preparedness for local schools and communities.",
+    "cause": "Health"
   },
   {
-    "id": "equinox-coordinator",
-    "organization": "Equinox - National Level Technical Symposium",
-    "role": "Event Coordinator",
-    "dateRange": "2021 - 2023",
-    "description": "Coordinated technical events, workshops, and competitions at the national-level symposium hosted by the Department of EEE. Managed logistics, participant registration, and cross-departmental collaboration.",
-    "cause": "Science & Technology"
+    "id": "env-cleanup",
+    "organization": "Local Environmental Cleanup Initiative",
+    "role": "Coordinator of Volunteers",
+    "dateRange": "Mar 2023 - May 2023",
+    "description": "Coordinated volunteer teams for community environmental cleanup drives. Organized logistics, managed participant scheduling, and ensured successful execution of public health and environmental initiatives.",
+    "cause": "Environment"
+  },
+  {
+    "id": "student-tutor",
+    "organization": "Educational Tutoring for Underprivileged Youth",
+    "role": "Student Tutor",
+    "dateRange": "Sep 2021 - Dec 2021",
+    "description": "Provided free tutoring in mathematics and science to underprivileged students, significantly improving their academic performance. Developed personalized learning plans and mentored students on career development and personal growth, encouraging them to pursue higher education.",
+    "cause": "Education"
+  },
+  {
+    "id": "food-distribution",
+    "organization": "Food Distribution Program for Homeless Communities",
+    "role": "Volunteer",
+    "dateRange": "Jan 2022 - Mar 2022",
+    "description": "Assisted in organizing and distributing meals to homeless and low-income individuals. Collaborated with local shelters and food banks to ensure efficient distribution processes. Coordinated fundraising events to sustain ongoing food distribution efforts.",
+    "cause": "Poverty Alleviation"
   }
 ]

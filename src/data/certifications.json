@@ -7,6 +7,13 @@
     "description": "Certified proficiency in data science methodologies, machine learning algorithms, and statistical analysis."
   },
   {
+    "id": "aws-cloud-arch",
+    "name": "AWS Academy Cloud Architecting",
+    "issuer": "Amazon Web Services Training and Certification",
+    "date": "Dec 2024",
+    "description": "Graduate-level certification in AWS cloud architecture, covering compute, storage, networking, security, and scalable cloud solutions."
+  },
+  {
     "id": "kaashiv-iot",
     "name": "Internet of Things",
     "issuer": "KaaShiv InfoTech",
@@ -14,31 +21,24 @@
     "description": "Certified in IoT architecture, sensor networks, real-time data processing, and embedded systems integration."
   },
   {
-    "id": "ibm-ds",
-    "name": "Data Science Foundations",
-    "issuer": "IBM",
-    "date": "Dec 2022",
-    "description": "Foundation-level certification covering data science methodology, Python programming, and data visualization."
-  },
-  {
-    "id": "cisco-intro",
-    "name": "Introduction to IoT",
-    "issuer": "Cisco",
-    "date": "Sep 2022",
-    "description": "Certification covering IoT concepts, networking fundamentals, and connected device architectures."
-  },
-  {
-    "id": "nptel-python",
-    "name": "Python for Data Science",
-    "issuer": "NPTEL",
-    "date": "Jul 2022",
+    "id": "niit-python",
+    "name": "Programming with Python for Data Science",
+    "issuer": "NIIT Limited",
+    "date": "2022",
     "description": "Certification in Python programming for data analysis, scientific computing, and machine learning applications."
   },
   {
-    "id": "aws-cloud",
-    "name": "AWS Cloud Practitioner Essentials",
-    "issuer": "Amazon Web Services (AWS)",
-    "date": "Jun 2022",
-    "description": "Foundation-level understanding of AWS Cloud services, architecture, security, and pricing models."
+    "id": "niit-c",
+    "name": "Programming in C",
+    "issuer": "NIIT Limited",
+    "date": "2022",
+    "description": "Certification in C programming language fundamentals, memory management, and systems programming."
+  },
+  {
+    "id": "niit-cpp",
+    "name": "Object Oriented Programming using C++",
+    "issuer": "NIIT Limited",
+    "date": "2022",
+    "description": "Certification in C++ object-oriented programming, covering classes, inheritance, polymorphism, and design patterns."
   }
 ]

@@ -11,6 +11,7 @@ import {
   Publications,
   Volunteering,
   Awards,
+  Organizations,
   Contact,
 } from './components/sections';
 
@@ -29,6 +30,7 @@ function App() {
           <Route path="/publications" element={<Publications />} />
           <Route path="/volunteering" element={<Volunteering />} />
           <Route path="/awards" element={<Awards />} />
+          <Route path="/organizations" element={<Organizations />} />
           <Route path="/contact" element={<Contact />} />
         </Route>
       </Routes>

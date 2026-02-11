@@ -1,30 +1,30 @@
 [
   {
     "id": "imf-recognition",
-    "title": "IMF Annual Meetings & Civil Society Policy Forum Recognition",
+    "title": "IMF Annual Summit Volunteer Recognition",
     "issuer": "International Monetary Fund",
-    "date": "Oct 2024",
-    "description": "Recognized for outstanding volunteer contributions at the IMF Annual Meetings and Civil Society Policy Forum in Washington, D.C."
+    "date": "Apr 2024",
+    "description": "Acknowledged for outstanding volunteer service during the IMF Annual Summit, contributing to the successful organization of the event and providing support to international delegates."
   },
   {
     "id": "yrc-excellence",
-    "title": "Youth Red Cross Excellence Award",
-    "issuer": "Indian Red Cross Society",
-    "date": "2022",
-    "description": "Awarded for exceptional service and leadership in organizing blood donation drives, health awareness campaigns, and community service activities."
+    "title": "Volunteer Excellence Award",
+    "issuer": "Youth Red Cross",
+    "date": "Apr 2023",
+    "description": "Honored for exceptional dedication and service in organizing blood donation drives, first-aid training, and disaster relief programs in underprivileged communities."
   },
   {
-    "id": "equinox-award",
-    "title": "Equinox National Level Technical Symposium Award",
-    "issuer": "Anna University - Department of EEE",
-    "date": "2022",
-    "description": "Recognized for outstanding coordination and technical contributions at the national-level technical symposium."
+    "id": "springer-research",
+    "title": "Best Student Research Paper Award",
+    "issuer": "Springer International Conference",
+    "date": "Dec 2022",
+    "description": "Awarded for publishing a research paper on XGBoost-based predictive modeling to enhance customer engagement strategies in the industrial sector."
   },
   {
-    "id": "academic-excellence",
-    "title": "Academic Excellence - 9.21 CGPA",
-    "issuer": "Anna University",
-    "date": "2023",
-    "description": "Graduated with distinction in Bachelor of Engineering (EEE) with a cumulative GPA of 9.21 out of 10."
+    "id": "hackathon-first",
+    "title": "First Place - Data Science Hackathon",
+    "issuer": "Sri Venkateswara College of Engineering",
+    "date": "Dec 2020",
+    "description": "Won first place in a national data science hackathon, developing a predictive model to optimize inventory management for an e-commerce platform, improving demand forecasting accuracy by 25%."
   }
 ]

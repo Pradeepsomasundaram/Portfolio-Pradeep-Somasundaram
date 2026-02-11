@@ -19,6 +19,7 @@ const moreNav = [
   { label: 'Publications', to: '/publications' },
   { label: 'Awards', to: '/awards' },
   { label: 'Volunteering', to: '/volunteering' },
+  { label: 'Organizations', to: '/organizations' },
 ];
 
 export const Navigation = () => {
