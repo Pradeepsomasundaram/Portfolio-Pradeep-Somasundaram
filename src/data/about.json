@@ -1,0 +1,28 @@
+{
+  "name": "Pradeep Somasundaram",
+  "tagline": "Data Scientist | AI/ML Engineer | Full-Stack Developer",
+  "roles": [
+    "Data Scientist",
+    "Data Engineer",
+    "AI/ML Engineer",
+    "Full-Stack Developer"
+  ],
+  "bio": "Master of Science in Data Science graduate from The George Washington University, specializing in Machine Learning, AI Engineering, and scalable data solutions. Starting as a Junior Data Scientist at UPS in February 2026. My expertise spans the full data lifecycle—from building AWS data lakes and ETL pipelines to developing ML models for forecasting and anomaly detection. I'm passionate about leveraging data and AI to drive business decisions and solve complex problems.",
+  "stats": {
+    "yearsExperience": "4+",
+    "projectsCompleted": "25+",
+    "skillsLearned": "70+",
+    "certifications": "3"
+  },
+  "social": {
+    "github": "https://github.com/PradeepSomasundaram1512",
+    "linkedin": "https://www.linkedin.com/in/pradeep-somasundaram-835230192/",
+    "email": "aadhi1501@gmail.com"
+  },
+  "education": {
+    "degree": "Master of Science in Data Science",
+    "school": "The George Washington University",
+    "location": "Washington, DC",
+    "status": "Graduated May 2025"
+  }
+}

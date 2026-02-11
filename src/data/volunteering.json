@@ -1,0 +1,26 @@
+[
+  {
+    "id": "imf-volunteer",
+    "organization": "International Monetary Fund",
+    "role": "Volunteer",
+    "dateRange": "Oct 2024",
+    "description": "Volunteered at the IMF Annual Meetings and Civil Society Policy Forum in Washington, D.C. Assisted with event coordination, attendee support, and logistics management for international policy discussions.",
+    "cause": "Economic Empowerment"
+  },
+  {
+    "id": "yrc-volunteer",
+    "organization": "Indian Red Cross Society - Youth Red Cross",
+    "role": "Youth Red Cross Volunteer",
+    "dateRange": "Aug 2019 - May 2023",
+    "description": "Active Youth Red Cross member throughout undergraduate studies. Organized blood donation drives, first aid training camps, health awareness campaigns, and community service activities. Led team of volunteers for disaster preparedness programs.",
+    "cause": "Humanitarian Aid & Health"
+  },
+  {
+    "id": "equinox-coordinator",
+    "organization": "Equinox - National Level Technical Symposium",
+    "role": "Event Coordinator",
+    "dateRange": "2021 - 2023",
+    "description": "Coordinated technical events, workshops, and competitions at the national-level symposium hosted by the Department of EEE. Managed logistics, participant registration, and cross-departmental collaboration.",
+    "cause": "Science & Technology"
+  }
+]

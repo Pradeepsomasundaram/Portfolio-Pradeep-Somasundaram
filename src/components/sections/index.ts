@@ -1,0 +1,12 @@
+export { Hero } from './Hero';
+export { About } from './About';
+export { Experience } from './Experience';
+export { Education } from './Education';
+export { Projects } from './Projects';
+export { Skills } from './Skills';
+export { Certifications } from './Certifications';
+export { Publications } from './Publications';
+export { Volunteering } from './Volunteering';
+export { Awards } from './Awards';
+export { Contact } from './Contact';
+export { Chatbot } from './Chatbot';

@@ -1,0 +1,26 @@
+[
+  {
+    "id": "gwu-ms",
+    "institution": "The George Washington University",
+    "degree": "Master of Science - MS",
+    "field": "Data Science",
+    "dateRange": "Aug 2023 - May 2025",
+    "grade": "A",
+    "location": "Washington, DC",
+    "description": "Focused on advanced machine learning, statistical modeling, deep learning, NLP, and scalable data systems. Coursework included Data Mining, Time Series Analysis, Applied Machine Learning, Cloud Computing, and Big Data Analytics.",
+    "activities": "Graduate Research Assistant, Data Science Club",
+    "logo": "gwu"
+  },
+  {
+    "id": "anna-be",
+    "institution": "Anna University",
+    "degree": "Bachelor of Engineering - BE",
+    "field": "Electrical and Electronics Engineering",
+    "dateRange": "Aug 2019 - May 2023",
+    "grade": "9.21 CGPA",
+    "location": "Chennai, India",
+    "description": "Strong foundation in electrical engineering with a growing focus on data science, IoT, and machine learning applications. Completed projects in predictive maintenance, smart grid analytics, and real-time sensor monitoring systems.",
+    "activities": "IEEE Student Member, Youth Red Cross, Equinox Technical Fest Coordinator",
+    "logo": "anna"
+  }
+]

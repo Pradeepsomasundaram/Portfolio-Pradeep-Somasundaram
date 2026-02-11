@@ -1,0 +1,130 @@
+[
+  {
+    "id": "ups-2026",
+    "company": "UPS",
+    "role": "Junior Data Scientist",
+    "dateRange": "Feb 2026 - Present",
+    "duration": "Starting",
+    "location": "Atlanta, Georgia, United States",
+    "type": "Full-time",
+    "skills": ["Python", "SQL", "Machine Learning", "Data Science", "Analytics"],
+    "technologies": ["Python", "SQL", "Machine Learning", "Data Analytics"],
+    "description": "Starting as a Junior Data Scientist at UPS, applying data science and machine learning expertise to drive logistics and operational insights.",
+    "achievements": [],
+    "featured": true
+  },
+  {
+    "id": "bmsc-2025",
+    "company": "Beauty Manufacturing Solutions Corp",
+    "role": "Data Engineer / Data Scientist",
+    "dateRange": "Oct 2025 - Feb 2026",
+    "duration": "5 mos",
+    "location": "Coppell, Texas, United States",
+    "type": "Full-time",
+    "skills": ["Python", "SQL", "Amazon EC2", "AWS S3", "REST APIs", "Power BI"],
+    "technologies": ["AWS (S3, Glue, Lambda, Step Functions, Athena)", "Sage X3", "MaintainX", "Redzone", "ETQ Reliance", "NinjaOne", "SQL Server", "n8n", "IAM/KMS"],
+    "description": "At Beauty Manufacturing Solutions Corp (BMSC), I lead development of scalable data engineering and analytics solutions across ERP, IoT, and operational systems. I built a unified AWS-based data lake integrating Sage X3, MaintainX, Redzone, ETQ Reliance, NinjaOne, and SQL Server using S3, Glue, Lambda, Step Functions, Athena, and n8n. I design end-to-end ETL pipelines, implement strong data governance with IAM/KMS, and optimize schema performance to support high-impact analytics. I also develop forecasting, anomaly detection, and operational insights models that improve manufacturing, quality, and finance decision-making. Alongside this, I administer and optimize the Sage X3 environment—resolving system issues, managing SQL Server performance, automating reports, enhancing workflows, and streamlining cross-functional data processes. My role blends data engineering, data science, and ERP system administration to deliver reliable, scalable, and data-driven solutions across the company.",
+    "achievements": [
+      "Built unified AWS data lake integrating 6+ enterprise systems",
+      "Designed end-to-end ETL pipelines with strong data governance (IAM/KMS)",
+      "Developed forecasting and anomaly detection models for manufacturing optimization",
+      "Administered and optimized Sage X3 ERP environment"
+    ],
+    "featured": false
+  },
+  {
+    "id": "ceac-2025",
+    "company": "Chicago Education Advocacy Cooperative",
+    "role": "Data Science Fellow",
+    "dateRange": "Aug 2025 - Nov 2025",
+    "duration": "4 mos",
+    "location": "Chicago, Illinois, United States",
+    "type": "Full-time",
+    "skills": ["CRM", "Python", "ETL", "SQL", "Tableau"],
+    "technologies": ["Power BI", "Excel", "SQL", "Python", "Tableau"],
+    "description": "At Chicago Education Advocacy Cooperative, I focus on building and maintaining reporting solutions. I design Power BI dashboards and automate Excel reports that track labor utilization and compliance. I also use SQL to extract and analyze large datasets often 100K+ rows which helps us reconcile payroll and project-level data more accurately. A key part of my work is partnering with finance and HR teams to troubleshoot discrepancies and document SOPs, which has improved reporting accuracy by around 25%.",
+    "achievements": [
+      "Designed Power BI dashboards and automated Excel reports for labor utilization tracking",
+      "Used SQL to extract and analyze 100K+ row datasets for payroll reconciliation",
+      "Partnered with finance and HR teams to improve reporting accuracy by 25%",
+      "Documented SOPs for data processes and troubleshooting"
+    ],
+    "featured": false
+  },
+  {
+    "id": "skva-2023",
+    "company": "Shree Kay Vee Automation",
+    "role": "Data Scientist / Systems Developer",
+    "dateRange": "May 2023 - Jul 2023",
+    "duration": "3 mos",
+    "location": "Chennai, Tamil Nadu, India",
+    "type": "Full-time",
+    "skills": ["Python", "SQL", "AWS Lambda", "PostgreSQL", "Power BI", "Snowflake", "ETL", "C++"],
+    "technologies": ["C++", "Python", "AWS Lambda", "Snowflake", "Power BI", "Linux", "LSTM", "ARIMA", "SQL"],
+    "description": "At Shree Kay Vee Automation, I combined my expertise in C++ and Python with distributed data engineering to optimize industrial automation and IoT-driven processes. I designed and deployed ETL pipelines in Linux-based environments using AWS Lambda and Snowflake, cutting manual data processing time by 50%. I built predictive maintenance algorithms using LSTM and ARIMA to anticipate machine failures, which helped reduce unplanned downtime by 20%. My role also involved creating advanced Power BI dashboards for real-time KPI monitoring and implementing white-box testing practices to ensure accuracy and reliability in predictive models and workflows. Automated SQL pipelines and payroll reporting from 1M+ labor records, reducing manual entry by 40% and improving ERP-driven reconciliation.",
+    "achievements": [
+      "Designed and deployed ETL pipelines cutting manual data processing time by 50%",
+      "Built predictive maintenance algorithms (LSTM, ARIMA) reducing unplanned downtime by 20%",
+      "Created advanced Power BI dashboards for real-time KPI monitoring",
+      "Automated SQL pipelines and payroll reporting from 1M+ labor records"
+    ],
+    "featured": false
+  },
+  {
+    "id": "kaashiv-2023",
+    "company": "KaaShiv InfoTech",
+    "role": "Data Scientist Intern",
+    "dateRange": "Jan 2023 - Mar 2023",
+    "duration": "3 mos",
+    "location": "Chennai, Tamil Nadu, India",
+    "type": "Internship",
+    "skills": ["React.js", "AWS Lambda", "Python", "TensorFlow", "SQL", "REST APIs"],
+    "technologies": ["C++", "Python", "AWS S3", "AWS Lambda", "React", "Tailwind CSS", "RAG", "Linux"],
+    "description": "During my internship at KaaShiv InfoTech, I worked on AI-powered financial analytics solutions while building scalable systems from the ground up. I developed microservices in C++ and Python, integrated AWS S3 and Lambda in Linux environments, and set up distributed ETL pipelines that improved data ingestion efficiency by 40%. I led a small team to design retrieval-augmented generation (RAG) pipelines for context-aware data retrieval and implemented unit and integration testing to maintain high code quality. I also developed React-based dashboards using Tailwind CSS to deliver seamless, real-time investment insights. Developed Excel VBA macros for timesheet reconciliation across 10K+ entries, cutting processing time by 30%.",
+    "achievements": [
+      "Set up distributed ETL pipelines improving data ingestion efficiency by 40%",
+      "Led design of RAG pipelines for context-aware data retrieval",
+      "Developed React-based dashboards with Tailwind CSS for real-time investment insights",
+      "Developed Excel VBA macros cutting timesheet processing time by 30%"
+    ],
+    "featured": false
+  },
+  {
+    "id": "ibm-2022",
+    "company": "IBM",
+    "role": "Machine Learning & AI Intern",
+    "dateRange": "Aug 2022 - Dec 2022",
+    "duration": "5 mos",
+    "location": "Chennai, Tamil Nadu, India",
+    "type": "Apprenticeship",
+    "skills": ["Python", "TensorFlow", "OpenCV", "BERT", "Pinecone", "Flask", "AWS SageMaker"],
+    "technologies": ["C++", "Python", "gRPC", "LLMs", "Pinecone", "Linux", "SAP/ERP"],
+    "description": "At IBM, I gained experience developing enterprise-grade AI pipelines and integrating them with distributed systems. I built multi-threaded applications in C++ and Python, deployed on Linux servers, which improved financial reporting efficiency by 15%. I implemented gRPC-based microservices to support scalable AI-driven financial analytics and worked with large language models (LLMs) and Pinecone vector databases to enhance financial data retrieval. To ensure robustness, I applied white-box testing, automated QA processes, and conducted code reviews, which significantly improved system reliability and performance. Optimized payroll-related reporting pipelines and integrated SAP/ERP data with analytics systems, improving data availability by 20%.",
+    "achievements": [
+      "Built multi-threaded applications improving financial reporting efficiency by 15%",
+      "Implemented gRPC-based microservices for scalable AI-driven financial analytics",
+      "Worked with LLMs and Pinecone vector databases for enhanced data retrieval",
+      "Integrated SAP/ERP data with analytics systems, improving data availability by 20%"
+    ],
+    "featured": false
+  },
+  {
+    "id": "skva-2020",
+    "company": "Shree Kay Vee Automation",
+    "role": "Data Analyst Intern",
+    "dateRange": "Mar 2020 - Jul 2022",
+    "duration": "2 yrs 5 mos",
+    "location": "Chennai, Tamil Nadu, India",
+    "type": "Internship",
+    "skills": ["Python", "SQL", "Power BI", "Tableau", "AWS Lambda", "Snowflake", "IIoT"],
+    "technologies": ["C++", "Python", "IoT Sensors", "Power BI", "Tableau", "AWS Lambda", "SQL", "Linux"],
+    "description": "In my long-term internship at Shree Kay Vee Automation, I focused on IoT-driven analytics and predictive maintenance solutions. I developed predictive models in C++ and Python using IoT sensor data to forecast equipment failures, improving operational planning. I hosted dashboards on Linux servers using Power BI and Tableau for real-time KPI tracking, and automated data workflows with AWS Lambda and SQL in a distributed data processing setup. I also applied unit testing to validate pipeline integrity, ensuring the accuracy and reliability of automated reporting systems.",
+    "achievements": [
+      "Developed predictive models using IoT sensor data for equipment failure forecasting",
+      "Hosted real-time KPI dashboards on Linux servers using Power BI and Tableau",
+      "Automated data workflows with AWS Lambda and SQL",
+      "Applied unit testing to validate pipeline integrity and reporting accuracy"
+    ],
+    "featured": false
+  }
+]

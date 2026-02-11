@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <rect width="400" height="400" fill="#926F34"/>
+  <circle cx="200" cy="150" r="70" fill="rgba(255,255,255,0.2)"/>
+  <ellipse cx="200" cy="320" rx="110" ry="80" fill="rgba(255,255,255,0.2)"/>
+  <text x="200" y="210" font-family="Poppins, Arial, sans-serif" font-size="48" font-weight="bold" fill="white" text-anchor="middle">PS</text>
+</svg>

@@ -1,0 +1,20 @@
+[
+  {
+    "id": "ieee-semiconductor",
+    "title": "Classification of Semiconductor Wafer Defects using Deep Transfer Learning-based Approaches",
+    "publisher": "IEEE",
+    "date": "Mar 2023",
+    "description": "Developed deep transfer learning models for automated semiconductor wafer defect classification, improving quality control in manufacturing. Applied ResNet, VGG, and custom CNN architectures to achieve high-accuracy defect detection.",
+    "link": "https://ieeexplore.ieee.org",
+    "type": "Conference Paper"
+  },
+  {
+    "id": "springer-xgboost",
+    "title": "Classification of Emotional States from Electrocardiogram Signals using XGBoost",
+    "publisher": "Springer",
+    "date": "Jan 2023",
+    "description": "Implemented XGBoost-based classification of emotional states using ECG signal features. Achieved robust classification performance through feature engineering and hyperparameter optimization of gradient boosting models.",
+    "link": "https://link.springer.com",
+    "type": "Book Chapter"
+  }
+]

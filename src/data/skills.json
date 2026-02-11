@@ -1,0 +1,123 @@
+{
+  "Programming Languages": [
+    "Python",
+    "C++",
+    "Java",
+    "SQL",
+    "JavaScript",
+    "R",
+    "HTML",
+    "CSS",
+    "Dart"
+  ],
+  "Data Science & Machine Learning": [
+    "TensorFlow",
+    "PyTorch",
+    "Scikit-Learn",
+    "XGBoost",
+    "LightGBM",
+    "CatBoost",
+    "Keras",
+    "BERT",
+    "Transformers",
+    "GPT",
+    "LLMs",
+    "NLP",
+    "Computer Vision",
+    "Deep Learning",
+    "Machine Learning",
+    "Statistical Analysis",
+    "Pandas",
+    "NumPy",
+    "SciPy",
+    "MLflow",
+    "Kubeflow",
+    "Feature Engineering",
+    "Model Deployment",
+    "A/B Testing",
+    "Time Series Analysis",
+    "Survival Analysis",
+    "Forecasting",
+    "Anomaly Detection",
+    "Recommendation Systems"
+  ],
+  "Databases & Cloud": [
+    "PostgreSQL",
+    "MySQL",
+    "MongoDB",
+    "Redis",
+    "BigQuery",
+    "AWS",
+    "Amazon EC2",
+    "AWS S3",
+    "AWS Glue",
+    "AWS Lambda",
+    "AWS Athena",
+    "GCP",
+    "Azure"
+  ],
+  "Web Development": [
+    "React",
+    "Node.js",
+    "Express",
+    "Flask",
+    "Django",
+    "FastAPI",
+    "REST APIs",
+    "GraphQL",
+    "TypeScript",
+    "Tailwind CSS",
+    "Bootstrap",
+    "jQuery",
+    "WebSockets",
+    "Next.js"
+  ],
+  "Data Visualization & BI": [
+    "Power BI",
+    "Tableau",
+    "Matplotlib",
+    "Seaborn",
+    "Plotly"
+  ],
+  "DevOps & Tools": [
+    "Docker",
+    "Kubernetes",
+    "Git",
+    "CI/CD",
+    "Linux"
+  ],
+  "Optimization & Solvers": [
+    "CPLEX",
+    "Gurobi",
+    "OR-Tools",
+    "Linear Programming",
+    "Integer Programming",
+    "Network Optimization",
+    "Multi-Objective Optimization"
+  ],
+  "IoT & Hardware": [
+    "Arduino",
+    "Raspberry Pi",
+    "Sensors",
+    "MQTT",
+    "Edge Computing"
+  ],
+  "Big Data": [
+    "Apache Spark",
+    "Apache Kafka",
+    "Hadoop"
+  ],
+  "Financial APIs": [
+    "Yahoo Finance",
+    "Alpha Vantage",
+    "Plaid"
+  ],
+  "ERP & Enterprise Systems": [
+    "Sage X3",
+    "MaintainX",
+    "Redzone",
+    "ETQ Reliance",
+    "NinjaOne",
+    "n8n"
+  ]
+}

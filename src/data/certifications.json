@@ -1,0 +1,44 @@
+[
+  {
+    "id": "micro1-ds",
+    "name": "Certified Data Scientist",
+    "issuer": "micro1",
+    "date": "Nov 2024",
+    "description": "Certified proficiency in data science methodologies, machine learning algorithms, and statistical analysis."
+  },
+  {
+    "id": "kaashiv-iot",
+    "name": "Internet of Things",
+    "issuer": "KaaShiv InfoTech",
+    "date": "Mar 2023",
+    "description": "Certified in IoT architecture, sensor networks, real-time data processing, and embedded systems integration."
+  },
+  {
+    "id": "ibm-ds",
+    "name": "Data Science Foundations",
+    "issuer": "IBM",
+    "date": "Dec 2022",
+    "description": "Foundation-level certification covering data science methodology, Python programming, and data visualization."
+  },
+  {
+    "id": "cisco-intro",
+    "name": "Introduction to IoT",
+    "issuer": "Cisco",
+    "date": "Sep 2022",
+    "description": "Certification covering IoT concepts, networking fundamentals, and connected device architectures."
+  },
+  {
+    "id": "nptel-python",
+    "name": "Python for Data Science",
+    "issuer": "NPTEL",
+    "date": "Jul 2022",
+    "description": "Certification in Python programming for data analysis, scientific computing, and machine learning applications."
+  },
+  {
+    "id": "aws-cloud",
+    "name": "AWS Cloud Practitioner Essentials",
+    "issuer": "Amazon Web Services (AWS)",
+    "date": "Jun 2022",
+    "description": "Foundation-level understanding of AWS Cloud services, architecture, security, and pricing models."
+  }
+]
