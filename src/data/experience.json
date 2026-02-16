@@ -1,9 +1,26 @@
 [
   {
+    "id": "ups-2026",
+    "company": "UPS",
+    "role": "Junior Data Scientist",
+    "dateRange": "Feb 2026 - Present",
+    "duration": "Starting",
+    "location": "Atlanta, Georgia, United States",
+    "type": "Full-time",
+    "skills": ["Python", "SQL", "Machine Learning", "Data Science", "Analytics"],
+    "technologies": ["Python", "SQL", "Machine Learning", "Data Analytics", "Cloud Computing"],
+    "description": "Junior Data Scientist at UPS, applying data science and machine learning expertise to drive logistics and operational insights across one of the world's largest supply chain organizations.",
+    "achievements": [
+      "Applying ML models to optimize logistics and supply chain operations",
+      "Leveraging data analytics for operational decision-making"
+    ],
+    "featured": true
+  },
+  {
     "id": "bmsc-2025",
     "company": "Beauty Manufacturing Solutions Corp",
     "role": "Data Engineer / Data Scientist",
-    "dateRange": "Oct 2025 - Present",
+    "dateRange": "Oct 2025 - Feb 2026",
     "duration": "5 mos",
     "location": "Coppell, Texas, United States",
     "type": "Full-time",
@@ -16,7 +33,7 @@
       "Developed forecasting and anomaly detection models for manufacturing optimization",
       "Administered and optimized Sage X3 ERP environment"
     ],
-    "featured": true
+    "featured": false
   },
   {
     "id": "ceac-2025",

@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { TypeAnimation } from 'react-type-animation';
 import { HiDownload } from 'react-icons/hi';
 import { FaGithub, FaLinkedin } from 'react-icons/fa';
-import { Button } from '../ui';
+import { Button, ParticleBackground } from '../ui';
 
 const roles = [
   'Data Scientist',
@@ -22,9 +22,10 @@ export const Hero = () => {
   return (
     <section
       id="hero"
-      className="min-h-screen flex items-center justify-center px-4"
+      className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden"
     >
-      <div className="max-w-7xl mx-auto w-full">
+      <ParticleBackground />
+      <div className="max-w-7xl mx-auto w-full relative z-10">
         <div className="flex flex-col md:flex-row items-center justify-between gap-12">
           {/* Text Content */}
           <motion.div
@@ -49,8 +50,8 @@ export const Hero = () => {
             </div>
             <p className="text-lg text-gray-600 dark:text-gray-400 mb-8 max-w-2xl">
               MS in Data Science graduate from The George Washington University.
-              Data Engineer / Data Scientist at Beauty Manufacturing Solutions Corp,
-              specializing in Machine Learning, AI Engineering, and scalable data solutions.
+              Junior Data Scientist at UPS, specializing in Machine Learning,
+              AI Engineering, and scalable data solutions.
             </p>
 
             {/* CTA Buttons */}
