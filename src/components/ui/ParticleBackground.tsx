@@ -67,7 +67,7 @@ export const ParticleBackground = () => {
 
   if (!init) {
     return (
-      <div className="absolute inset-0 z-0 flex items-center justify-center">
+      <div className="fixed inset-0 z-0 flex items-center justify-center">
         <div className="flex gap-2">
           {[0, 1, 2].map((i) => (
             <div
@@ -85,7 +85,7 @@ export const ParticleBackground = () => {
     <Particles
       id="tsparticles"
       options={particlesOptions}
-      className="absolute inset-0 z-0"
+      className="fixed inset-0 z-0"
     />
   );
 };

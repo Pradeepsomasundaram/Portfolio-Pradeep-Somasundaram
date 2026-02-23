@@ -15,7 +15,7 @@ export const Card = ({
   onClick,
 }: CardProps) => {
   const baseClasses =
-    'bg-white dark:bg-gray-800 rounded-lg p-6 transition-all duration-300';
+    'bg-gray-800/80 backdrop-blur-sm border border-gray-700/50 rounded-lg p-6 transition-all duration-300';
   const shadowClasses = 'shadow-md';
   const hoverClasses = hover
     ? 'hover:shadow-lg transform hover:-translate-y-1'

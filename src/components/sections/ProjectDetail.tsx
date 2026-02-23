@@ -17,7 +17,7 @@ export const ProjectDetail = () => {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+          <h2 className="text-3xl font-bold text-white mb-4">
             Project Not Found
           </h2>
           <button
@@ -41,7 +41,7 @@ export const ProjectDetail = () => {
         {/* Back button */}
         <motion.button
           onClick={() => navigate('/projects')}
-          className="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-primary mb-8 transition-colors"
+          className="flex items-center gap-2 text-gray-300 hover:text-primary mb-8 transition-colors"
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
         >
@@ -59,16 +59,16 @@ export const ProjectDetail = () => {
             <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium">
               {project.category}
             </span>
-            <span className="text-sm text-gray-500 dark:text-gray-400">
+            <span className="text-sm text-gray-400">
               {project.dateRange}
             </span>
           </div>
 
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6">
+          <h1 className="text-3xl md:text-4xl font-bold text-white mb-6">
             {project.title}
           </h1>
 
-          <p className="text-lg text-gray-600 dark:text-gray-300 mb-8 leading-relaxed">
+          <p className="text-lg text-gray-300 mb-8 leading-relaxed">
             {project.description}
           </p>
         </motion.div>
@@ -80,7 +80,7 @@ export const ProjectDetail = () => {
           transition={{ delay: 0.2 }}
           className="mb-8"
         >
-          <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+          <h3 className="text-xl font-semibold text-white mb-4">
             Tech Stack
           </h3>
           <div className="flex flex-wrap gap-3">
@@ -127,7 +127,7 @@ export const ProjectDetail = () => {
             transition={{ delay: 0.4 }}
             className="border-t border-gray-200 dark:border-gray-700 pt-12"
           >
-            <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+            <h3 className="text-2xl font-bold text-white mb-6">
               Related Projects
             </h3>
             <div className="grid md:grid-cols-3 gap-6">
@@ -137,10 +137,10 @@ export const ProjectDetail = () => {
                   onClick={() => navigate(`/projects/${rp.id}`)}
                   className="text-left p-4 bg-gray-50 dark:bg-gray-800 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                 >
-                  <h4 className="font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2">
+                  <h4 className="font-semibold text-white mb-2 line-clamp-2">
                     {rp.title}
                   </h4>
-                  <p className="text-sm text-gray-500 dark:text-gray-400 line-clamp-2">
+                  <p className="text-sm text-gray-400 line-clamp-2">
                     {rp.description}
                   </p>
                 </button>

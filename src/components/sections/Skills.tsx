@@ -19,14 +19,14 @@ export const Skills = () => {
     <section id="skills" className="py-20 px-4">
       <div className="max-w-7xl mx-auto">
         <AnimatedSection>
-          <h2 className="text-4xl md:text-5xl font-bold text-center mb-12 text-gray-900 dark:text-white">
+          <h2 className="text-4xl md:text-5xl font-bold text-center mb-12 text-white">
             Skills & Technologies
           </h2>
 
           {/* Animated Proficiency Bars */}
           <div className="max-w-3xl mx-auto mb-16">
             <AnimatedSection delay={0.1}>
-              <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+              <h3 className="text-2xl font-bold text-white mb-6">
                 Core Proficiencies
               </h3>
               {proficiencyLevels.map((skill) => (
@@ -45,7 +45,7 @@ export const Skills = () => {
             {Object.entries(skillCategories).map(([category, skills], index) => (
               <AnimatedSection key={category} delay={index * 0.1}>
                 <div>
-                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+                  <h3 className="text-2xl font-bold text-white mb-6">
                     {category}
                   </h3>
                   <div className="flex flex-wrap gap-3">

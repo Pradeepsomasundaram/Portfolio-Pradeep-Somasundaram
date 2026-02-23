@@ -7,7 +7,7 @@ export const Awards = () => {
     <section id="awards" className="py-20 px-4">
       <div className="max-w-7xl mx-auto">
         <AnimatedSection>
-          <h2 className="text-4xl md:text-5xl font-bold text-center mb-12 text-gray-900 dark:text-white">
+          <h2 className="text-4xl md:text-5xl font-bold text-center mb-12 text-white">
             Honors & Awards
           </h2>
 
@@ -21,7 +21,7 @@ export const Awards = () => {
                         <HiStar className="w-6 h-6 text-yellow-500" />
                       </div>
                       <div className="flex-1">
-                        <h3 className="text-lg font-bold text-gray-900 dark:text-white">
+                        <h3 className="text-lg font-bold text-white">
                           {award.title}
                         </h3>
                         <p className="text-primary font-semibold text-sm">
@@ -30,11 +30,11 @@ export const Awards = () => {
                       </div>
                     </div>
 
-                    <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed flex-1 mb-3">
+                    <p className="text-gray-300 text-sm leading-relaxed flex-1 mb-3">
                       {award.description}
                     </p>
 
-                    <p className="text-xs text-gray-500 dark:text-gray-400 font-medium">
+                    <p className="text-xs text-gray-400 font-medium">
                       {award.date}
                     </p>
                   </div>

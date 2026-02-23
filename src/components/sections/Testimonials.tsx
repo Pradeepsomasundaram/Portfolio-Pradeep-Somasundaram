@@ -21,10 +21,10 @@ export const Testimonials = () => {
     setCurrent((c) => (c + 1) % testimonialsData.length);
 
   return (
-    <section className="py-20 px-4 bg-gray-50 dark:bg-gray-800">
+    <section className="py-20 px-4 bg-white/5">
       <div className="max-w-4xl mx-auto">
         <AnimatedSection>
-          <h2 className="text-4xl md:text-5xl font-bold text-center mb-12 text-gray-900 dark:text-white">
+          <h2 className="text-4xl md:text-5xl font-bold text-center mb-12 text-white">
             Testimonials
           </h2>
 
@@ -39,7 +39,7 @@ export const Testimonials = () => {
                 className="bg-white dark:bg-gray-900 rounded-2xl p-8 md:p-12 shadow-lg"
               >
                 <FaQuoteLeft className="text-primary/20 text-4xl mb-6" />
-                <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-8 leading-relaxed italic">
+                <p className="text-lg md:text-xl text-gray-300 mb-8 leading-relaxed italic">
                   "{testimonialsData[current].text}"
                 </p>
                 <div className="flex items-center gap-4">
@@ -49,10 +49,10 @@ export const Testimonials = () => {
                     </span>
                   </div>
                   <div>
-                    <h4 className="font-semibold text-gray-900 dark:text-white">
+                    <h4 className="font-semibold text-white">
                       {testimonialsData[current].name}
                     </h4>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                    <p className="text-sm text-gray-400">
                       {testimonialsData[current].role}
                     </p>
                   </div>
@@ -66,7 +66,7 @@ export const Testimonials = () => {
                 onClick={prev}
                 className="p-2 rounded-full bg-white dark:bg-gray-700 shadow-md hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
               >
-                <HiChevronLeft className="w-5 h-5 text-gray-700 dark:text-gray-300" />
+                <HiChevronLeft className="w-5 h-5 text-gray-300" />
               </button>
               <div className="flex gap-2">
                 {testimonialsData.map((_, index) => (
@@ -85,7 +85,7 @@ export const Testimonials = () => {
                 onClick={next}
                 className="p-2 rounded-full bg-white dark:bg-gray-700 shadow-md hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
               >
-                <HiChevronRight className="w-5 h-5 text-gray-700 dark:text-gray-300" />
+                <HiChevronRight className="w-5 h-5 text-gray-300" />
               </button>
             </div>
           </div>

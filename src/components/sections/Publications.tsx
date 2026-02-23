@@ -7,7 +7,7 @@ export const Publications = () => {
     <section id="publications" className="py-20 px-4">
       <div className="max-w-7xl mx-auto">
         <AnimatedSection>
-          <h2 className="text-4xl md:text-5xl font-bold text-center mb-12 text-gray-900 dark:text-white">
+          <h2 className="text-4xl md:text-5xl font-bold text-center mb-12 text-white">
             Publications
           </h2>
 
@@ -24,7 +24,7 @@ export const Publications = () => {
 
                     <div className="flex-1">
                       <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-2 mb-3">
-                        <h3 className="text-xl font-bold text-gray-900 dark:text-white leading-tight">
+                        <h3 className="text-xl font-bold text-white leading-tight">
                           {pub.title}
                         </h3>
                       </div>
@@ -32,12 +32,12 @@ export const Publications = () => {
                       <div className="flex flex-wrap items-center gap-3 mb-3">
                         <Badge text={pub.publisher} />
                         <Badge text={pub.type} />
-                        <span className="text-sm text-gray-500 dark:text-gray-400">
+                        <span className="text-sm text-gray-400">
                           {pub.date}
                         </span>
                       </div>
 
-                      <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
+                      <p className="text-gray-300 leading-relaxed mb-4">
                         {pub.description}
                       </p>
 

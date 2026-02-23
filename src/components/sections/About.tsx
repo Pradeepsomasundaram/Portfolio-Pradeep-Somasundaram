@@ -14,10 +14,10 @@ export const About = () => {
   const secondParagraph = rest.length > 0 ? 'My expertise' + rest.join('. My expertise') : '';
 
   return (
-    <section id="about" className="py-20 px-4 bg-gray-50 dark:bg-gray-800">
+    <section id="about" className="py-20 px-4 bg-white/5">
       <div className="max-w-7xl mx-auto">
         <AnimatedSection>
-          <h2 className="text-4xl md:text-5xl font-bold text-center mb-12 text-gray-900 dark:text-white">
+          <h2 className="text-4xl md:text-5xl font-bold text-center mb-12 text-white">
             About Me
           </h2>
 
@@ -41,11 +41,11 @@ export const About = () => {
 
             {/* About Content */}
             <div>
-              <p className="text-lg text-gray-700 dark:text-gray-300 mb-6 leading-relaxed">
+              <p className="text-lg text-gray-300 mb-6 leading-relaxed">
                 {firstParagraph}.
               </p>
               {secondParagraph && (
-                <p className="text-lg text-gray-700 dark:text-gray-300 mb-8 leading-relaxed">
+                <p className="text-lg text-gray-300 mb-8 leading-relaxed">
                   {secondParagraph}
                 </p>
               )}
@@ -58,7 +58,7 @@ export const About = () => {
                       <h3 className="text-3xl font-bold text-primary mb-2">
                         {stat.value}
                       </h3>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                      <p className="text-sm text-gray-300">
                         {stat.label}
                       </p>
                     </div>

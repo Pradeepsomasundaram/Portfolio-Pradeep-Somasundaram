@@ -34,16 +34,16 @@ export const Contact = () => {
   return (
     <section
       id="contact"
-      className="py-20 px-4 bg-gray-50 dark:bg-gray-800"
+      className="py-20 px-4 bg-white/5"
     >
       <div className="max-w-7xl mx-auto">
         <AnimatedSection>
-          <h2 className="text-4xl md:text-5xl font-bold text-center mb-12 text-gray-900 dark:text-white">
+          <h2 className="text-4xl md:text-5xl font-bold text-center mb-12 text-white">
             Get In Touch
           </h2>
 
           <div className="max-w-4xl mx-auto">
-            <p className="text-xl text-center text-gray-600 dark:text-gray-400 mb-12">
+            <p className="text-xl text-center text-gray-300 mb-12">
               I'm currently open to exploring new technologies and collaborations. Feel
               free to reach out if you'd like to connect!
             </p>
@@ -57,18 +57,18 @@ export const Contact = () => {
                       <item.icon className="w-6 h-6 text-primary" />
                     </div>
                     <div>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                      <p className="text-sm text-gray-300">
                         {item.label}
                       </p>
                       {item.href ? (
                         <a
                           href={item.href}
-                          className="text-lg font-medium text-gray-900 dark:text-white hover:text-primary transition-colors"
+                          className="text-lg font-medium text-white hover:text-primary transition-colors"
                         >
                           {item.value}
                         </a>
                       ) : (
-                        <p className="text-lg font-medium text-gray-900 dark:text-white">
+                        <p className="text-lg font-medium text-white">
                           {item.value}
                         </p>
                       )}
@@ -86,7 +86,7 @@ export const Contact = () => {
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex flex-col items-center gap-2 text-gray-700 dark:text-gray-300 hover:text-primary transition-colors"
+                  className="flex flex-col items-center gap-2 text-gray-300 hover:text-primary transition-colors"
                   whileHover={{ scale: 1.1 }}
                 >
                   <div className="p-4 bg-white dark:bg-gray-700 rounded-full shadow-md">

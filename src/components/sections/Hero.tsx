@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { TypeAnimation } from 'react-type-animation';
 import { HiDownload, HiEye } from 'react-icons/hi';
 import { FaGithub, FaLinkedin } from 'react-icons/fa';
-import { Button, ParticleBackground, CounterAnimation, ResumeModal } from '../ui';
+import { Button, CounterAnimation, ResumeModal } from '../ui';
 
 const roles = [
   'Data Scientist',
@@ -24,10 +24,9 @@ export const Hero = () => {
   return (
     <section
       id="hero"
-      className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden bg-gray-900"
+      className="min-h-screen flex items-center justify-center px-4"
     >
-      <ParticleBackground />
-      <div className="max-w-7xl mx-auto w-full relative z-10">
+      <div className="max-w-7xl mx-auto w-full">
         <div className="flex flex-col md:flex-row items-center justify-between gap-12">
           {/* Text Content */}
           <motion.div
