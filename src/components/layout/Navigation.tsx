@@ -27,12 +27,15 @@ export const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
   const { theme, toggleTheme } = useAppStore();
   const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
+      const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+      setScrollProgress(totalHeight > 0 ? (window.scrollY / totalHeight) * 100 : 0);
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
@@ -71,6 +74,12 @@ export const Navigation = () => {
       animate={{ y: 0 }}
       transition={{ duration: 0.5 }}
     >
+      {/* Scroll Progress Bar */}
+      <div
+        className="absolute bottom-0 left-0 h-0.5 bg-primary no-theme-transition"
+        style={{ width: `${scrollProgress}%` }}
+      />
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <motion.div whileHover={{ scale: 1.05 }}>

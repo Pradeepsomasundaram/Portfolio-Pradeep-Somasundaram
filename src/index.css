@@ -45,10 +45,77 @@
     color: var(--color-text);
     line-height: 1.6;
   }
+
+  /* Smooth theme transition */
+  *,
+  *::before,
+  *::after {
+    transition-property: background-color, border-color, color;
+    transition-duration: 300ms;
+    transition-timing-function: ease-in-out;
+  }
+
+  /* Exclude elements that already have their own transitions */
+  .no-theme-transition,
+  .no-theme-transition *,
+  [class*="animate-"],
+  [class*="transition-transform"] {
+    transition-property: none;
+  }
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
+}
+
+/* Gradient shimmer animation for headings */
+@keyframes shimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+.heading-shimmer {
+  background: linear-gradient(
+    90deg,
+    currentColor 0%,
+    var(--color-primary) 25%,
+    currentColor 50%,
+    var(--color-primary) 75%,
+    currentColor 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 6s linear infinite;
+}
+
+/* Typing indicator animation */
+@keyframes typingDot {
+  0%, 60%, 100% {
+    transform: translateY(0);
+    opacity: 0.4;
+  }
+  30% {
+    transform: translateY(-6px);
+    opacity: 1;
+  }
+}
+
+.typing-dot {
+  animation: typingDot 1.4s ease-in-out infinite;
+}
+
+.typing-dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.typing-dot:nth-child(3) {
+  animation-delay: 0.4s;
 }

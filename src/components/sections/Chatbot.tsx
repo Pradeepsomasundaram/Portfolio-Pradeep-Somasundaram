@@ -273,11 +273,12 @@ export const Chatbot = () => {
     },
   ]);
   const [input, setInput] = useState('');
+  const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+  }, [messages, isTyping]);
 
   const handleSend = (text?: string) => {
     const messageText = text || input.trim();
@@ -292,6 +293,7 @@ export const Chatbot = () => {
 
     setMessages((prev) => [...prev, userMessage]);
     setInput('');
+    setIsTyping(true);
 
     setTimeout(() => {
       const response = generateResponse(messageText);
@@ -301,8 +303,9 @@ export const Chatbot = () => {
         content: response,
         timestamp: new Date(),
       };
+      setIsTyping(false);
       setMessages((prev) => [...prev, botMessage]);
-    }, 500);
+    }, 800);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -379,6 +382,15 @@ export const Chatbot = () => {
                   </div>
                 </div>
               ))}
+              {isTyping && (
+                <div className="flex justify-start">
+                  <div className="bg-gray-100 dark:bg-gray-700 px-4 py-3 rounded-2xl rounded-bl-sm flex gap-1.5">
+                    <span className="w-2 h-2 bg-gray-400 dark:bg-gray-500 rounded-full typing-dot" />
+                    <span className="w-2 h-2 bg-gray-400 dark:bg-gray-500 rounded-full typing-dot" />
+                    <span className="w-2 h-2 bg-gray-400 dark:bg-gray-500 rounded-full typing-dot" />
+                  </div>
+                </div>
+              )}
               <div ref={messagesEndRef} />
             </div>
 

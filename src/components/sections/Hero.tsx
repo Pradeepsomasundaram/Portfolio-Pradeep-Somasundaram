@@ -38,7 +38,7 @@ export const Hero = () => {
             <p className="text-lg text-gray-600 dark:text-gray-300 mb-2">
               Hello, I'm
             </p>
-            <h1 className="text-5xl md:text-6xl font-bold text-gray-900 dark:text-white mb-4">
+            <h1 className="text-5xl md:text-6xl font-bold text-gray-900 dark:text-white mb-4 heading-shimmer">
               Pradeep Somasundaram
             </h1>
             <div className="text-2xl md:text-3xl text-primary font-semibold h-12 mb-6">

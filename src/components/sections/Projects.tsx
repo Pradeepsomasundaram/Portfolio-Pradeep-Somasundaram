@@ -85,8 +85,21 @@ export const Projects = () => {
                   exit={{ opacity: 0, scale: 0.9 }}
                   transition={{ duration: 0.3, delay: index * 0.05 }}
                 >
-                  <Card hover>
+                  <Card hover className="!p-0 overflow-hidden">
                     <div className="h-full flex flex-col">
+                      {/* Project Thumbnail */}
+                      <div className={`h-32 flex items-center justify-center text-white text-3xl font-bold opacity-80 ${
+                        project.category === 'Machine Learning' ? 'bg-gradient-to-br from-indigo-500 to-purple-600' :
+                        project.category === 'AI/NLP' ? 'bg-gradient-to-br from-pink-500 to-rose-600' :
+                        project.category === 'Data Engineering' ? 'bg-gradient-to-br from-emerald-500 to-teal-600' :
+                        project.category === 'Deep Learning' ? 'bg-gradient-to-br from-blue-500 to-cyan-600' :
+                        project.category === 'Full Stack' ? 'bg-gradient-to-br from-orange-500 to-amber-600' :
+                        project.category === 'IoT' ? 'bg-gradient-to-br from-green-500 to-lime-600' :
+                        'bg-gradient-to-br from-gray-500 to-gray-600'
+                      }`}>
+                        {project.category}
+                      </div>
+                      <div className="p-6 flex-1 flex flex-col">
                       {/* Featured Badge */}
                       {project.featured && (
                         <div className="flex items-center gap-1 mb-3">
@@ -138,6 +151,7 @@ export const Projects = () => {
                           Details
                           <HiArrowRight className="w-4 h-4" />
                         </button>
+                      </div>
                       </div>
                     </div>
                   </Card>

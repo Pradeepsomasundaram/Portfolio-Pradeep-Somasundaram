@@ -32,7 +32,7 @@ export const Experience = () => {
                               {exp.role}
                             </h3>
                             {exp.featured && (
-                              <span className="px-3 py-1 bg-primary text-gray-900 dark:text-white text-xs font-semibold rounded-full">
+                              <span className="px-3 py-1 bg-primary text-white text-xs font-semibold rounded-full">
                                 Current
                               </span>
                             )}
