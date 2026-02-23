@@ -7,7 +7,7 @@ export const Education = () => {
     <section id="education" className="py-20 px-4">
       <div className="max-w-7xl mx-auto">
         <AnimatedSection>
-          <h2 className="text-4xl md:text-5xl font-bold text-center mb-12 text-white">
+          <h2 className="text-4xl md:text-5xl font-bold text-center mb-12 text-gray-900 dark:text-white">
             Education
           </h2>
 
@@ -20,7 +20,7 @@ export const Education = () => {
                 <AnimatedSection key={edu.id} delay={index * 0.15}>
                   <div className="relative md:pl-20">
                     {/* Timeline dot */}
-                    <div className="absolute left-6 top-8 w-5 h-5 rounded-full border-4 border-primary bg-gray-900 z-10 hidden md:block" />
+                    <div className="absolute left-6 top-8 w-5 h-5 rounded-full border-4 border-primary bg-white dark:bg-gray-900 z-10 hidden md:block" />
 
                     <Card>
                       <div className="flex flex-col md:flex-row gap-6">
@@ -33,14 +33,14 @@ export const Education = () => {
                         <div className="flex-1">
                           <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-2 mb-3">
                             <div>
-                              <h3 className="text-2xl font-bold text-white">
+                              <h3 className="text-2xl font-bold text-gray-900 dark:text-white">
                                 {edu.institution}
                               </h3>
                               <p className="text-lg text-primary font-semibold">
                                 {edu.degree}, {edu.field}
                               </p>
                             </div>
-                            <div className="text-gray-300 text-sm text-right">
+                            <div className="text-gray-600 dark:text-gray-300 text-sm text-right">
                               <p className="font-medium">{edu.dateRange}</p>
                               <p>{edu.location}</p>
                             </div>
@@ -50,7 +50,7 @@ export const Education = () => {
                             <Badge text={`Grade: ${edu.grade}`} />
                           </div>
 
-                          <p className="text-gray-300 leading-relaxed mb-3">
+                          <p className="text-gray-600 dark:text-gray-300 leading-relaxed mb-3">
                             {edu.description}
                           </p>
 
@@ -59,7 +59,7 @@ export const Education = () => {
                               {edu.activities.split(', ').map((activity: string) => (
                                 <span
                                   key={activity}
-                                  className="text-xs px-2 py-1 bg-gray-700/50 text-gray-300 rounded-full"
+                                  className="text-xs px-2 py-1 bg-gray-700/50 text-gray-600 dark:text-gray-300 rounded-full"
                                 >
                                   {activity}
                                 </span>

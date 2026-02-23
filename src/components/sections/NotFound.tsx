@@ -21,10 +21,10 @@ export const NotFound = () => {
         >
           404
         </motion.h1>
-        <h2 className="text-2xl md:text-3xl font-semibold text-white mb-4">
+        <h2 className="text-2xl md:text-3xl font-semibold text-gray-900 dark:text-white mb-4">
           Page Not Found
         </h2>
-        <p className="text-gray-400 mb-8 max-w-md mx-auto">
+        <p className="text-gray-500 dark:text-gray-400 mb-8 max-w-md mx-auto">
           The page you're looking for doesn't exist or has been moved.
         </p>
         <button

@@ -10,7 +10,7 @@ export const Certifications = () => {
     >
       <div className="max-w-7xl mx-auto">
         <AnimatedSection>
-          <h2 className="text-4xl md:text-5xl font-bold text-center mb-12 text-white">
+          <h2 className="text-4xl md:text-5xl font-bold text-center mb-12 text-gray-900 dark:text-white">
             Certifications
           </h2>
 
@@ -24,7 +24,7 @@ export const Certifications = () => {
                         <HiBadgeCheck className="w-5 h-5 text-primary" />
                       </div>
                       <div className="flex-1">
-                        <h3 className="text-lg font-bold text-white">
+                        <h3 className="text-lg font-bold text-gray-900 dark:text-white">
                           {cert.name}
                         </h3>
                         <p className="text-primary font-semibold text-sm">
@@ -33,11 +33,11 @@ export const Certifications = () => {
                       </div>
                     </div>
 
-                    <p className="text-gray-300 text-sm leading-relaxed flex-1 mb-3">
+                    <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed flex-1 mb-3">
                       {cert.description}
                     </p>
 
-                    <p className="text-xs text-gray-400 font-medium">
+                    <p className="text-xs text-gray-500 dark:text-gray-400 font-medium">
                       Issued {cert.date}
                     </p>
                   </div>

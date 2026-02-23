@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion';
 import { AnimatedSection, Badge, SkillBar } from '../ui';
 import skillsData from '../../data/skills.json';
 
@@ -14,19 +15,31 @@ const proficiencyLevels = [
   { name: 'Data Visualization', level: 85, color: '#14B8A6' },
 ];
 
+const containerVariants = {
+  hidden: {},
+  visible: {
+    transition: { staggerChildren: 0.05 },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 10 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.3 } },
+};
+
 export const Skills = () => {
   return (
     <section id="skills" className="py-20 px-4">
       <div className="max-w-7xl mx-auto">
         <AnimatedSection>
-          <h2 className="text-4xl md:text-5xl font-bold text-center mb-12 text-white">
+          <h2 className="text-4xl md:text-5xl font-bold text-center mb-12 text-gray-900 dark:text-white">
             Skills & Technologies
           </h2>
 
           {/* Animated Proficiency Bars */}
           <div className="max-w-3xl mx-auto mb-16">
             <AnimatedSection delay={0.1}>
-              <h3 className="text-2xl font-bold text-white mb-6">
+              <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
                 Core Proficiencies
               </h3>
               {proficiencyLevels.map((skill) => (
@@ -45,14 +58,22 @@ export const Skills = () => {
             {Object.entries(skillCategories).map(([category, skills], index) => (
               <AnimatedSection key={category} delay={index * 0.1}>
                 <div>
-                  <h3 className="text-2xl font-bold text-white mb-6">
+                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
                     {category}
                   </h3>
-                  <div className="flex flex-wrap gap-3">
+                  <motion.div
+                    className="flex flex-wrap gap-3"
+                    variants={containerVariants}
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true }}
+                  >
                     {skills.map((skill) => (
-                      <Badge key={skill} text={skill} />
+                      <motion.div key={skill} variants={itemVariants}>
+                        <Badge text={skill} />
+                      </motion.div>
                     ))}
-                  </div>
+                  </motion.div>
                 </div>
               </AnimatedSection>
             ))}

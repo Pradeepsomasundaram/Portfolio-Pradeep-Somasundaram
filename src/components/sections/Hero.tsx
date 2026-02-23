@@ -35,10 +35,10 @@ export const Hero = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <p className="text-lg text-gray-300 mb-2">
+            <p className="text-lg text-gray-600 dark:text-gray-300 mb-2">
               Hello, I'm
             </p>
-            <h1 className="text-5xl md:text-6xl font-bold text-white mb-4">
+            <h1 className="text-5xl md:text-6xl font-bold text-gray-900 dark:text-white mb-4">
               Pradeep Somasundaram
             </h1>
             <div className="text-2xl md:text-3xl text-primary font-semibold h-12 mb-6">
@@ -49,7 +49,7 @@ export const Hero = () => {
                 repeat={Infinity}
               />
             </div>
-            <p className="text-lg text-gray-300 mb-8 max-w-2xl">
+            <p className="text-lg text-gray-600 dark:text-gray-300 mb-8 max-w-2xl">
               MS in Data Science graduate from The George Washington University.
               Junior Data Scientist at UPS, specializing in Machine Learning,
               AI Engineering, and scalable data solutions.
@@ -85,8 +85,9 @@ export const Hero = () => {
                 href="https://github.com/PradeepSomasundaram1512"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-300 hover:text-primary transition-colors"
+                className="text-gray-600 dark:text-gray-300 hover:text-primary transition-colors"
                 whileHover={{ scale: 1.2 }}
+                aria-label="GitHub profile"
               >
                 <FaGithub className="w-8 h-8" />
               </motion.a>
@@ -94,8 +95,9 @@ export const Hero = () => {
                 href="https://www.linkedin.com/in/pradeep-somasundaram-835230192/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-300 hover:text-primary transition-colors"
+                className="text-gray-600 dark:text-gray-300 hover:text-primary transition-colors"
                 whileHover={{ scale: 1.2 }}
+                aria-label="LinkedIn profile"
               >
                 <FaLinkedin className="w-8 h-8" />
               </motion.a>
@@ -131,7 +133,7 @@ export const Hero = () => {
 
         {/* Stats Counters */}
         <motion.div
-          className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-16 pt-12 border-t border-gray-700"
+          className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-16 pt-12 border-t border-gray-200 dark:border-gray-700"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.6 }}

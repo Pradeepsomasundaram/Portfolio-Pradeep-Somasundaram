@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1f2937;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#111827;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#926F34;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#b8933e;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect x="0" y="0" width="8" height="630" fill="url(#accent)"/>
+  <circle cx="1050" cy="120" r="200" fill="#926F34" opacity="0.06"/>
+  <circle cx="150" cy="500" r="150" fill="#926F34" opacity="0.04"/>
+  <text x="80" y="220" font-family="Arial, sans-serif" font-size="28" fill="#926F34" font-weight="600" letter-spacing="4">PORTFOLIO</text>
+  <text x="80" y="300" font-family="Arial, sans-serif" font-size="64" fill="white" font-weight="bold">Pradeep</text>
+  <text x="80" y="380" font-family="Arial, sans-serif" font-size="64" fill="white" font-weight="bold">Somasundaram</text>
+  <text x="80" y="440" font-family="Arial, sans-serif" font-size="28" fill="#9ca3af">Data Scientist &amp; AI/ML Engineer</text>
+  <rect x="80" y="480" width="120" height="4" rx="2" fill="#926F34"/>
+  <text x="80" y="530" font-family="Arial, sans-serif" font-size="18" fill="#6b7280">Machine Learning | Data Engineering | Full-Stack Development</text>
+</svg>

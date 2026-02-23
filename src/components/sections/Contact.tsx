@@ -56,15 +56,15 @@ export const Contact = () => {
   };
 
   return (
-    <section id="contact" className="py-20 px-4 bg-white/5">
+    <section id="contact" className="py-20 px-4 bg-gray-100/50 dark:bg-white/5">
       <div className="max-w-7xl mx-auto">
         <AnimatedSection>
-          <h2 className="text-4xl md:text-5xl font-bold text-center mb-12 text-white">
+          <h2 className="text-4xl md:text-5xl font-bold text-center mb-12 text-gray-900 dark:text-white">
             Get In Touch
           </h2>
 
           <div className="max-w-4xl mx-auto">
-            <p className="text-xl text-center text-gray-300 mb-12">
+            <p className="text-xl text-center text-gray-600 dark:text-gray-300 mb-12">
               I'm currently open to exploring new technologies and collaborations. Feel
               free to reach out if you'd like to connect!
             </p>
@@ -75,7 +75,7 @@ export const Contact = () => {
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="grid md:grid-cols-2 gap-6">
                     <div>
-                      <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-2">
+                      <label htmlFor="name" className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
                         Name
                       </label>
                       <input
@@ -84,12 +84,12 @@ export const Contact = () => {
                         required
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                        className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-colors"
+                        className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-colors"
                         placeholder="Your name"
                       />
                     </div>
                     <div>
-                      <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">
+                      <label htmlFor="email" className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
                         Email
                       </label>
                       <input
@@ -98,13 +98,13 @@ export const Contact = () => {
                         required
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-colors"
+                        className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-colors"
                         placeholder="your@email.com"
                       />
                     </div>
                   </div>
                   <div>
-                    <label htmlFor="message" className="block text-sm font-medium text-gray-300 mb-2">
+                    <label htmlFor="message" className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
                       Message
                     </label>
                     <textarea
@@ -113,7 +113,7 @@ export const Contact = () => {
                       rows={5}
                       value={formData.message}
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                      className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-colors resize-none"
+                      className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-colors resize-none"
                       placeholder="Your message..."
                     />
                   </div>
@@ -157,16 +157,16 @@ export const Contact = () => {
                       <item.icon className="w-6 h-6 text-primary" />
                     </div>
                     <div>
-                      <p className="text-sm text-gray-300">{item.label}</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-300">{item.label}</p>
                       {item.href ? (
                         <a
                           href={item.href}
-                          className="text-lg font-medium text-white hover:text-primary transition-colors"
+                          className="text-lg font-medium text-gray-900 dark:text-white hover:text-primary transition-colors"
                         >
                           {item.value}
                         </a>
                       ) : (
-                        <p className="text-lg font-medium text-white">{item.value}</p>
+                        <p className="text-lg font-medium text-gray-900 dark:text-white">{item.value}</p>
                       )}
                     </div>
                   </div>
@@ -182,7 +182,7 @@ export const Contact = () => {
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex flex-col items-center gap-2 text-gray-300 hover:text-primary transition-colors"
+                  className="flex flex-col items-center gap-2 text-gray-600 dark:text-gray-300 hover:text-primary transition-colors"
                   whileHover={{ scale: 1.1 }}
                 >
                   <div className="p-4 bg-gray-700/50 rounded-full shadow-md">

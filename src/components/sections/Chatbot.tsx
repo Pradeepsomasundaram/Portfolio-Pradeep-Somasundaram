@@ -310,6 +310,9 @@ export const Chatbot = () => {
       e.preventDefault();
       handleSend();
     }
+    if (e.key === 'Escape') {
+      toggleChatbot();
+    }
   };
 
   return (
@@ -337,6 +340,8 @@ export const Chatbot = () => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             transition={{ duration: 0.2 }}
+            role="dialog"
+            aria-label="Portfolio chat assistant"
             className="fixed bottom-24 right-6 z-50 w-[380px] max-h-[520px] bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 flex flex-col overflow-hidden"
           >
             {/* Header */}
@@ -357,7 +362,7 @@ export const Chatbot = () => {
             </div>
 
             {/* Messages */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-3 min-h-[250px] max-h-[340px]">
+            <div className="flex-1 overflow-y-auto p-4 space-y-3 min-h-[250px] max-h-[340px]" aria-live="polite">
               {messages.map((msg) => (
                 <div
                   key={msg.id}

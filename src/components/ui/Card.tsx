@@ -28,10 +28,10 @@ export const Card = ({
   };
 
   const baseClasses =
-    'relative overflow-hidden bg-gray-800/80 backdrop-blur-sm border border-gray-700/50 rounded-lg p-6 transition-all duration-300';
+    'relative overflow-hidden bg-white dark:bg-gray-800/80 backdrop-blur-sm border border-gray-200 dark:border-gray-700/50 rounded-lg p-6 transition-all duration-300';
   const shadowClasses = 'shadow-md';
   const hoverClasses = hover
-    ? 'hover:shadow-lg hover:shadow-primary/10 transform hover:-translate-y-1 hover:border-gray-600/50'
+    ? 'hover:shadow-lg hover:shadow-primary/10 transform hover:-translate-y-1 hover:border-gray-300 dark:hover:border-gray-600/50'
     : '';
   const cursorClass = onClick ? 'cursor-pointer' : '';
 

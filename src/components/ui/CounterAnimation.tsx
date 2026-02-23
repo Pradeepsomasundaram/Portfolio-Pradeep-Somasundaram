@@ -43,7 +43,7 @@ export const CounterAnimation = ({
       <div className="text-4xl md:text-5xl font-bold text-primary mb-2">
         {prefix}{count}{suffix}
       </div>
-      <div className="text-sm text-gray-400 uppercase tracking-wider font-medium">
+      <div className="text-sm text-gray-500 dark:text-gray-400 uppercase tracking-wider font-medium">
         {label}
       </div>
     </div>

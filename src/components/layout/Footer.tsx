@@ -22,7 +22,7 @@ export const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-gray-900 text-white">
+    <footer className="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="py-12 grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Brand */}
@@ -30,7 +30,7 @@ export const Footer = () => {
             <Link to="/" className="text-2xl font-bold text-primary">
               Pradeep S.
             </Link>
-            <p className="mt-4 text-gray-400 text-sm leading-relaxed">
+            <p className="mt-4 text-gray-500 dark:text-gray-400 text-sm leading-relaxed">
               Data Scientist & AI/ML Engineer passionate about building
               scalable data solutions and leveraging machine learning
               to drive impactful insights.
@@ -40,7 +40,7 @@ export const Footer = () => {
                 href="https://github.com/PradeepSomasundaram1512"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-2 bg-gray-800 rounded-lg hover:bg-primary transition-colors"
+                className="p-2 bg-gray-200 dark:bg-gray-800 rounded-lg hover:bg-primary transition-colors"
                 aria-label="GitHub"
               >
                 <FaGithub className="w-5 h-5" />
@@ -49,14 +49,14 @@ export const Footer = () => {
                 href="https://www.linkedin.com/in/pradeep-somasundaram-835230192/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-2 bg-gray-800 rounded-lg hover:bg-primary transition-colors"
+                className="p-2 bg-gray-200 dark:bg-gray-800 rounded-lg hover:bg-primary transition-colors"
                 aria-label="LinkedIn"
               >
                 <FaLinkedin className="w-5 h-5" />
               </a>
               <a
                 href="mailto:aadhi1501@gmail.com"
-                className="p-2 bg-gray-800 rounded-lg hover:bg-primary transition-colors"
+                className="p-2 bg-gray-200 dark:bg-gray-800 rounded-lg hover:bg-primary transition-colors"
                 aria-label="Email"
               >
                 <HiMail className="w-5 h-5" />
@@ -66,7 +66,7 @@ export const Footer = () => {
 
           {/* Quick Links */}
           <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-400 mb-4">
+            <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-4">
               Quick Links
             </h3>
             <ul className="space-y-2">
@@ -74,7 +74,7 @@ export const Footer = () => {
                 <li key={link.label}>
                   <Link
                     to={link.to}
-                    className="text-gray-300 hover:text-primary transition-colors text-sm"
+                    className="text-gray-600 dark:text-gray-300 hover:text-primary transition-colors text-sm"
                   >
                     {link.label}
                   </Link>
@@ -85,7 +85,7 @@ export const Footer = () => {
 
           {/* More */}
           <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-400 mb-4">
+            <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-4">
               More
             </h3>
             <ul className="space-y-2">
@@ -93,7 +93,7 @@ export const Footer = () => {
                 <li key={link.label}>
                   <Link
                     to={link.to}
-                    className="text-gray-300 hover:text-primary transition-colors text-sm"
+                    className="text-gray-600 dark:text-gray-300 hover:text-primary transition-colors text-sm"
                   >
                     {link.label}
                   </Link>
@@ -104,11 +104,11 @@ export const Footer = () => {
         </div>
 
         {/* Bottom Bar */}
-        <div className="py-6 border-t border-gray-800 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-sm text-gray-400">
+        <div className="py-6 border-t border-gray-200 dark:border-gray-800 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="text-sm text-gray-500 dark:text-gray-400">
             &copy; {currentYear} Pradeep Somasundaram. All rights reserved.
           </p>
-          <p className="text-sm text-gray-400 flex items-center gap-1">
+          <p className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-1">
             Made with <HiHeart className="w-4 h-4 text-red-500" /> using React & TypeScript
           </p>
         </div>

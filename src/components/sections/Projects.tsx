@@ -34,11 +34,11 @@ export const Projects = () => {
   return (
     <section
       id="projects"
-      className="py-20 px-4 bg-white/5"
+      className="py-20 px-4 bg-gray-100/50 dark:bg-white/5"
     >
       <div className="max-w-7xl mx-auto">
         <AnimatedSection>
-          <h2 className="text-4xl md:text-5xl font-bold text-center mb-12 text-white">
+          <h2 className="text-4xl md:text-5xl font-bold text-center mb-12 text-gray-900 dark:text-white">
             Projects
           </h2>
 
@@ -47,9 +47,10 @@ export const Projects = () => {
             <input
               type="text"
               placeholder="Search projects..."
+              aria-label="Search projects"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full max-w-md mx-auto block px-6 py-3 rounded-full border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-white focus:border-primary focus:outline-none transition-colors"
+              className="w-full max-w-md mx-auto block px-6 py-3 rounded-full border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:border-primary focus:outline-none transition-colors"
             />
           </div>
 
@@ -96,7 +97,7 @@ export const Projects = () => {
                         </div>
                       )}
 
-                      <h3 className="text-xl font-bold text-white mb-2">
+                      <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
                         {project.title}
                       </h3>
 

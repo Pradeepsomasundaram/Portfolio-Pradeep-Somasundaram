@@ -10,7 +10,7 @@ export const Volunteering = () => {
     >
       <div className="max-w-7xl mx-auto">
         <AnimatedSection>
-          <h2 className="text-4xl md:text-5xl font-bold text-center mb-12 text-white">
+          <h2 className="text-4xl md:text-5xl font-bold text-center mb-12 text-gray-900 dark:text-white">
             Volunteering
           </h2>
 
@@ -28,19 +28,19 @@ export const Volunteering = () => {
                     <div className="flex-1">
                       <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-2 mb-2">
                         <div>
-                          <h3 className="text-xl font-bold text-white">
+                          <h3 className="text-xl font-bold text-gray-900 dark:text-white">
                             {vol.organization}
                           </h3>
                           <p className="text-primary font-semibold">
                             {vol.role}
                           </p>
                         </div>
-                        <p className="text-sm text-gray-300 font-medium">
+                        <p className="text-sm text-gray-600 dark:text-gray-300 font-medium">
                           {vol.dateRange}
                         </p>
                       </div>
 
-                      <p className="text-gray-300 leading-relaxed mb-3">
+                      <p className="text-gray-600 dark:text-gray-300 leading-relaxed mb-3">
                         {vol.description}
                       </p>
 
