@@ -1,7 +1,9 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { AnimatedSection, Card, Badge } from '../ui';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaGithub, FaStar } from 'react-icons/fa';
+import { HiArrowRight } from 'react-icons/hi';
 import type { Project } from '../../types/project.types';
 import projectsData from '../../data/projects.json';
 
@@ -15,6 +17,7 @@ const categories = [
 export const Projects = () => {
   const [activeCategory, setActiveCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
+  const navigate = useNavigate();
 
   const filteredProjects = projects.filter((project) => {
     const matchesCategory =
@@ -101,25 +104,40 @@ export const Projects = () => {
                         {project.dateRange}
                       </p>
 
-                      <p className="text-gray-600 dark:text-gray-400 mb-4 flex-1">
+                      <p className="text-gray-600 dark:text-gray-400 mb-4 flex-1 line-clamp-3">
                         {project.description}
                       </p>
 
                       <div className="flex flex-wrap gap-2 mb-4">
-                        {project.technologies.map((tech) => (
+                        {project.technologies.slice(0, 4).map((tech) => (
                           <Badge key={tech} text={tech} />
                         ))}
+                        {project.technologies.length > 4 && (
+                          <span className="text-xs text-gray-500 dark:text-gray-400 self-center">
+                            +{project.technologies.length - 4} more
+                          </span>
+                        )}
                       </div>
 
-                      <a
-                        href={project.githubUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 text-primary hover:underline"
-                      >
-                        <FaGithub />
-                        View on GitHub
-                      </a>
+                      <div className="flex items-center justify-between mt-auto pt-2">
+                        <a
+                          href={project.githubUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-2 text-primary hover:underline"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <FaGithub />
+                          GitHub
+                        </a>
+                        <button
+                          onClick={() => navigate(`/projects/${project.id}`)}
+                          className="inline-flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400 hover:text-primary transition-colors"
+                        >
+                          Details
+                          <HiArrowRight className="w-4 h-4" />
+                        </button>
+                      </div>
                     </div>
                   </Card>
                 </motion.div>

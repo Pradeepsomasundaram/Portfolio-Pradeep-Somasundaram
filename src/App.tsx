@@ -6,12 +6,14 @@ import {
   Experience,
   Education,
   Projects,
+  ProjectDetail,
   Skills,
   Certifications,
   Publications,
   Volunteering,
   Awards,
   Organizations,
+  Testimonials,
   Contact,
 } from './components/sections';
 
@@ -25,12 +27,14 @@ function App() {
           <Route path="/experience" element={<Experience />} />
           <Route path="/education" element={<Education />} />
           <Route path="/projects" element={<Projects />} />
+          <Route path="/projects/:id" element={<ProjectDetail />} />
           <Route path="/skills" element={<Skills />} />
           <Route path="/certifications" element={<Certifications />} />
           <Route path="/publications" element={<Publications />} />
           <Route path="/volunteering" element={<Volunteering />} />
           <Route path="/awards" element={<Awards />} />
           <Route path="/organizations" element={<Organizations />} />
+          <Route path="/testimonials" element={<Testimonials />} />
           <Route path="/contact" element={<Contact />} />
         </Route>
       </Routes>

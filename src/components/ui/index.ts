@@ -3,3 +3,8 @@ export { Card } from './Card';
 export { Badge } from './Badge';
 export { AnimatedSection } from './AnimatedSection';
 export { ParticleBackground } from './ParticleBackground';
+export { CounterAnimation } from './CounterAnimation';
+export { ScrollToTop } from './ScrollToTop';
+export { PageTransition } from './PageTransition';
+export { SkillBar } from './SkillBar';
+export { ResumeModal } from './ResumeModal';

@@ -20,6 +20,7 @@ const moreNav = [
   { label: 'Awards', to: '/awards' },
   { label: 'Volunteering', to: '/volunteering' },
   { label: 'Organizations', to: '/organizations' },
+  { label: 'Testimonials', to: '/testimonials' },
 ];
 
 export const Navigation = () => {
@@ -47,7 +48,6 @@ export const Navigation = () => {
     }
   }, [theme]);
 
-  // Close mobile menu on route change
   useEffect(() => {
     setIsOpen(false);
     setMoreOpen(false);
@@ -55,10 +55,10 @@ export const Navigation = () => {
 
   const isActive = (to: string) => {
     if (to === '/') return location.pathname === '/';
-    return location.pathname === to;
+    return location.pathname.startsWith(to);
   };
 
-  const isMoreActive = moreNav.some((item) => location.pathname === item.to);
+  const isMoreActive = moreNav.some((item) => isActive(item.to));
 
   return (
     <motion.nav
@@ -73,7 +73,6 @@ export const Navigation = () => {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          {/* Logo */}
           <motion.div whileHover={{ scale: 1.05 }}>
             <Link to="/" className="text-2xl font-bold text-primary">
               Pradeep S.
@@ -81,18 +80,27 @@ export const Navigation = () => {
           </motion.div>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-6">
+          <div className="hidden md:flex items-center space-x-1">
             {primaryNav.map((item) => (
               <Link
                 key={item.label}
                 to={item.to}
-                className={`transition-colors duration-300 ${
+                className="relative px-4 py-2 transition-colors duration-300"
+              >
+                <span className={`relative z-10 ${
                   isActive(item.to)
                     ? 'text-primary font-semibold'
                     : 'text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary'
-                }`}
-              >
-                {item.label}
+                }`}>
+                  {item.label}
+                </span>
+                {isActive(item.to) && (
+                  <motion.div
+                    className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary mx-4"
+                    layoutId="navIndicator"
+                    transition={{ type: 'spring', stiffness: 350, damping: 30 }}
+                  />
+                )}
               </Link>
             ))}
 
@@ -103,7 +111,7 @@ export const Navigation = () => {
               onMouseLeave={() => setMoreOpen(false)}
             >
               <button
-                className={`flex items-center gap-1 transition-colors duration-300 ${
+                className={`relative flex items-center gap-1 px-4 py-2 transition-colors duration-300 ${
                   isMoreActive
                     ? 'text-primary font-semibold'
                     : 'text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary'
@@ -113,6 +121,13 @@ export const Navigation = () => {
                 <HiChevronDown
                   className={`w-4 h-4 transition-transform ${moreOpen ? 'rotate-180' : ''}`}
                 />
+                {isMoreActive && (
+                  <motion.div
+                    className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary mx-4"
+                    layoutId="navIndicator"
+                    transition={{ type: 'spring', stiffness: 350, damping: 30 }}
+                  />
+                )}
               </button>
 
               <AnimatePresence>
@@ -130,7 +145,7 @@ export const Navigation = () => {
                         to={item.to}
                         className={`block px-4 py-2 text-sm transition-colors ${
                           isActive(item.to)
-                            ? 'text-primary bg-primary bg-opacity-10 font-semibold'
+                            ? 'text-primary bg-primary/10 font-semibold'
                             : 'text-gray-700 dark:text-gray-300 hover:text-primary hover:bg-gray-50 dark:hover:bg-gray-700'
                         }`}
                       >
@@ -143,42 +158,41 @@ export const Navigation = () => {
             </div>
 
             {/* Theme Toggle */}
-            <button
+            <motion.button
               onClick={toggleTheme}
-              className="p-2 rounded-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+              className="p-2 rounded-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors ml-4"
               aria-label="Toggle theme"
+              whileTap={{ scale: 0.9, rotate: 180 }}
+              transition={{ duration: 0.3 }}
             >
               {theme === 'light' ? (
                 <HiMoon className="w-5 h-5" />
               ) : (
                 <HiSun className="w-5 h-5" />
               )}
-            </button>
+            </motion.button>
           </div>
 
           {/* Mobile menu button */}
           <div className="md:hidden flex items-center gap-4">
-            <button
+            <motion.button
               onClick={toggleTheme}
               className="p-2 rounded-full bg-gray-200 dark:bg-gray-700"
               aria-label="Toggle theme"
+              whileTap={{ scale: 0.9, rotate: 180 }}
             >
               {theme === 'light' ? (
                 <HiMoon className="w-5 h-5" />
               ) : (
                 <HiSun className="w-5 h-5" />
               )}
-            </button>
+            </motion.button>
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="text-gray-700 dark:text-gray-300"
               aria-label="Toggle menu"
             >
-              {isOpen ? (
-                <HiX className="w-6 h-6" />
-              ) : (
-                <HiMenu className="w-6 h-6" />
-              )}
+              {isOpen ? <HiX className="w-6 h-6" /> : <HiMenu className="w-6 h-6" />}
             </button>
           </div>
         </div>
@@ -200,15 +214,13 @@ export const Navigation = () => {
                   to={item.to}
                   className={`block px-3 py-2 rounded-md transition-colors ${
                     isActive(item.to)
-                      ? 'text-primary bg-primary bg-opacity-10 font-semibold'
-                      : 'text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary'
+                      ? 'text-primary bg-primary/10 font-semibold'
+                      : 'text-gray-700 dark:text-gray-300 hover:text-primary'
                   }`}
                 >
                   {item.label}
                 </Link>
               ))}
-
-              {/* More section in mobile */}
               <div className="border-t border-gray-200 dark:border-gray-700 mt-2 pt-2">
                 <p className="px-3 py-1 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                   More
@@ -219,8 +231,8 @@ export const Navigation = () => {
                     to={item.to}
                     className={`block px-3 py-2 rounded-md transition-colors ${
                       isActive(item.to)
-                        ? 'text-primary bg-primary bg-opacity-10 font-semibold'
-                        : 'text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary'
+                        ? 'text-primary bg-primary/10 font-semibold'
+                        : 'text-gray-700 dark:text-gray-300 hover:text-primary'
                     }`}
                   >
                     {item.label}

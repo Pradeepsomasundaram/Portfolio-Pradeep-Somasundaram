@@ -25,12 +25,12 @@ const particlesOptions: ISourceOptions = {
     },
   },
   particles: {
-    color: { value: '#6366f1' },
+    color: { value: '#818cf8' },
     links: {
-      color: '#6366f1',
+      color: '#818cf8',
       distance: 150,
       enable: true,
-      opacity: 0.3,
+      opacity: 0.4,
       width: 1,
     },
     move: {
@@ -65,13 +65,27 @@ export const ParticleBackground = () => {
     }).then(() => setInit(true));
   }, []);
 
-  if (!init) return null;
+  if (!init) {
+    return (
+      <div className="absolute inset-0 z-0 flex items-center justify-center">
+        <div className="flex gap-2">
+          {[0, 1, 2].map((i) => (
+            <div
+              key={i}
+              className="w-2 h-2 bg-primary/40 rounded-full animate-pulse"
+              style={{ animationDelay: `${i * 0.2}s` }}
+            />
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <Particles
       id="tsparticles"
       options={particlesOptions}
-      className="absolute inset-0 -z-10"
+      className="absolute inset-0 z-0"
     />
   );
 };

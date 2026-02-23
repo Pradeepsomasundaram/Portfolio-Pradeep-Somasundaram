@@ -1,0 +1,23 @@
+[
+  {
+    "id": "testimonial-1",
+    "name": "Academic Advisor",
+    "role": "Professor, The George Washington University",
+    "text": "Pradeep demonstrated exceptional analytical skills and a deep understanding of machine learning concepts throughout his Master's program. His research contributions in semiconductor classification were truly outstanding.",
+    "image": null
+  },
+  {
+    "id": "testimonial-2",
+    "name": "Team Lead",
+    "role": "Senior Data Engineer, BMSC",
+    "text": "Pradeep's ability to architect scalable data solutions and automate complex ETL pipelines significantly improved our operational efficiency. A highly dedicated and skilled data professional.",
+    "image": null
+  },
+  {
+    "id": "testimonial-3",
+    "name": "Project Collaborator",
+    "role": "Research Partner, IEEE Publication",
+    "text": "Working with Pradeep on the semiconductor classifiers research was an excellent experience. His expertise in XGBoost and machine learning evaluation methods contributed greatly to our published work.",
+    "image": null
+  }
+]
