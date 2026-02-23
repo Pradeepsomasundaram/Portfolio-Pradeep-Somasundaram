@@ -28,7 +28,7 @@ export const Footer = () => {
           {/* Brand */}
           <div>
             <Link to="/" className="text-2xl font-bold text-primary">
-              Pradeep S.
+              Pradeep Somasundaram
             </Link>
             <p className="mt-4 text-gray-500 dark:text-gray-400 text-sm leading-relaxed">
               Data Scientist & AI/ML Engineer passionate about building
