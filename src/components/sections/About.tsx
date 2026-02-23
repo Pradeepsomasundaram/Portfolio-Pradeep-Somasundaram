@@ -31,6 +31,7 @@ export const About = () => {
                 <img
                   src="/assets/about.png"
                   alt={`About ${aboutData.name}`}
+                  loading="lazy"
                   className="w-full h-full object-cover scale-125"
                   onError={(e) => {
                     (e.target as HTMLImageElement).src = '/assets/about.svg';

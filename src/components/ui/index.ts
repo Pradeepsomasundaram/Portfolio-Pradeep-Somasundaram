@@ -8,3 +8,4 @@ export { ScrollToTop } from './ScrollToTop';
 export { PageTransition } from './PageTransition';
 export { SkillBar } from './SkillBar';
 export { ResumeModal } from './ResumeModal';
+export { BackToTop } from './BackToTop';

@@ -12,4 +12,5 @@ export { Awards } from './Awards';
 export { Organizations } from './Organizations';
 export { Testimonials } from './Testimonials';
 export { Contact } from './Contact';
+export { NotFound } from './NotFound';
 export { Chatbot } from './Chatbot';

@@ -4,7 +4,7 @@ import { AnimatePresence } from 'framer-motion';
 import { Navigation } from './Navigation';
 import { Footer } from './Footer';
 import { Chatbot } from '../sections/Chatbot';
-import { ScrollToTop, PageTransition, ParticleBackground } from '../ui';
+import { ScrollToTop, PageTransition, ParticleBackground, BackToTop } from '../ui';
 
 export const Layout = () => {
   const location = useLocation();
@@ -24,6 +24,7 @@ export const Layout = () => {
         </main>
         <Footer />
         <Chatbot />
+        <BackToTop />
       </div>
     </div>
   );

@@ -118,6 +118,7 @@ export const Hero = () => {
                 <img
                   src="/assets/profile.png"
                   alt="Pradeep Somasundaram"
+                  loading="lazy"
                   className="w-full h-full object-cover"
                   onError={(e) => {
                     (e.target as HTMLImageElement).src = '/assets/profile.svg';
