@@ -84,7 +84,7 @@ export const Navigation = () => {
         <div className="flex items-center justify-between h-16">
           <motion.div whileHover={{ scale: 1.05 }}>
             <Link to="/" className="text-2xl font-bold text-primary">
-              Pradeep S.
+              Pradeep Somasundaram
             </Link>
           </motion.div>
 
