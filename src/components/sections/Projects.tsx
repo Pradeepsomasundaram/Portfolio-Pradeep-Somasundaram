@@ -55,23 +55,45 @@ export const Projects = () => {
           </div>
 
           {/* Category Filters */}
-          <div className="flex flex-wrap justify-center gap-3 mb-12">
-            {categories.map((category) => (
-              <motion.button
-                key={category}
-                onClick={() => setActiveCategory(category)}
-                className={`px-6 py-2 rounded-full font-medium transition-all ${
-                  activeCategory === category
-                    ? 'bg-primary text-white shadow-lg'
-                    : 'bg-white dark:bg-gray-700 text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600'
-                }`}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                {category}
-              </motion.button>
-            ))}
+          <div className="flex flex-wrap justify-center gap-3 mb-4">
+            {categories.map((category) => {
+              const count = category === 'All'
+                ? projects.length
+                : projects.filter((p) => p.category === category).length;
+              return (
+                <motion.button
+                  key={category}
+                  onClick={() => setActiveCategory(category)}
+                  className={`px-6 py-2 rounded-full font-medium transition-all flex items-center gap-2 ${
+                    activeCategory === category
+                      ? 'bg-primary text-white shadow-lg'
+                      : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600'
+                  }`}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  {category}
+                  <span className={`text-xs px-1.5 py-0.5 rounded-full ${
+                    activeCategory === category
+                      ? 'bg-white/20'
+                      : 'bg-gray-200 dark:bg-gray-600'
+                  }`}>
+                    {count}
+                  </span>
+                </motion.button>
+              );
+            })}
           </div>
+
+          {/* Result count */}
+          <motion.p
+            key={filteredProjects.length}
+            initial={{ opacity: 0, y: -5 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-center text-sm text-gray-500 dark:text-gray-400 mb-8"
+          >
+            Showing {filteredProjects.length} of {projects.length} projects
+          </motion.p>
 
           {/* Projects Grid */}
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -114,11 +136,11 @@ export const Projects = () => {
                         {project.title}
                       </h3>
 
-                      <p className="text-sm text-gray-400 mb-3">
+                      <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">
                         {project.dateRange}
                       </p>
 
-                      <p className="text-gray-300 mb-4 flex-1 line-clamp-3">
+                      <p className="text-gray-600 dark:text-gray-300 mb-4 flex-1 line-clamp-3">
                         {project.description}
                       </p>
 
@@ -146,7 +168,7 @@ export const Projects = () => {
                         </a>
                         <button
                           onClick={() => navigate(`/projects/${project.id}`)}
-                          className="inline-flex items-center gap-1 text-sm text-gray-400 hover:text-primary transition-colors"
+                          className="inline-flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400 hover:text-primary transition-colors"
                         >
                           Details
                           <HiArrowRight className="w-4 h-4" />

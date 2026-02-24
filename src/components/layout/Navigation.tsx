@@ -1,8 +1,24 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { HiMenu, HiX, HiMoon, HiSun, HiChevronDown } from 'react-icons/hi';
 import { useAppStore } from '../../stores/appStore';
+
+// Preload map for lazy-loaded routes
+const routePreloaders: Record<string, () => void> = {
+  '/about': () => import('../sections/About'),
+  '/experience': () => import('../sections/Experience'),
+  '/projects': () => import('../sections/Projects'),
+  '/skills': () => import('../sections/Skills'),
+  '/contact': () => import('../sections/Contact'),
+  '/education': () => import('../sections/Education'),
+  '/certifications': () => import('../sections/Certifications'),
+  '/publications': () => import('../sections/Publications'),
+  '/awards': () => import('../sections/Awards'),
+  '/volunteering': () => import('../sections/Volunteering'),
+  '/organizations': () => import('../sections/Organizations'),
+  '/testimonials': () => import('../sections/Testimonials'),
+};
 
 const primaryNav = [
   { label: 'Home', to: '/' },
@@ -30,6 +46,11 @@ export const Navigation = () => {
   const [scrollProgress, setScrollProgress] = useState(0);
   const { theme, toggleTheme } = useAppStore();
   const location = useLocation();
+
+  const preloadRoute = useCallback((to: string) => {
+    const preloader = routePreloaders[to];
+    if (preloader) preloader();
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -95,6 +116,7 @@ export const Navigation = () => {
                 key={item.label}
                 to={item.to}
                 className="relative px-4 py-2 transition-colors duration-300"
+                onMouseEnter={() => preloadRoute(item.to)}
               >
                 <span className={`relative z-10 ${
                   isActive(item.to)
@@ -152,6 +174,7 @@ export const Navigation = () => {
                       <Link
                         key={item.label}
                         to={item.to}
+                        onMouseEnter={() => preloadRoute(item.to)}
                         className={`block px-4 py-2 text-sm transition-colors ${
                           isActive(item.to)
                             ? 'text-primary bg-primary/10 font-semibold'

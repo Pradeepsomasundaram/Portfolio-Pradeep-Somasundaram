@@ -120,15 +120,18 @@ export const Hero = () => {
                 whileHover={{ scale: 1.05 }}
                 transition={{ type: 'spring', stiffness: 300 }}
               >
-                <img
-                  src="/assets/profile.png"
-                  alt="Pradeep Somasundaram"
-                  loading="lazy"
-                  className="w-full h-full object-cover"
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).src = '/assets/profile.svg';
-                  }}
-                />
+                <picture>
+                  <source srcSet="/assets/profile.webp" type="image/webp" />
+                  <img
+                    src="/assets/profile.png"
+                    alt="Pradeep Somasundaram"
+                    loading="lazy"
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = '/assets/profile.svg';
+                    }}
+                  />
+                </picture>
               </motion.div>
             </div>
           </motion.div>

@@ -546,21 +546,37 @@ const initialQuickQuestions = [
   'Why hire Pradeep?',
 ];
 
+const welcomeMessage: Message = {
+  id: '1',
+  role: 'assistant',
+  content: `Hi! I'm Pradeep's portfolio assistant. I can tell you about his experience, projects, skills, education, and more.\n\nTry asking me a question or pick a topic below!`,
+  timestamp: new Date(),
+};
+
+function loadMessages(): Message[] {
+  try {
+    const saved = sessionStorage.getItem('chatbot-messages');
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      return parsed.map((m: Message) => ({ ...m, timestamp: new Date(m.timestamp) }));
+    }
+  } catch { /* ignore */ }
+  return [welcomeMessage];
+}
+
 export const Chatbot = () => {
   const { chatbotOpen, toggleChatbot } = useAppStore();
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: '1',
-      role: 'assistant',
-      content: `Hi! I'm Pradeep's portfolio assistant. I can tell you about his experience, projects, skills, education, and more.\n\nTry asking me a question or pick a topic below!`,
-      timestamp: new Date(),
-    },
-  ]);
+  const [messages, setMessages] = useState<Message[]>(loadMessages);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [followUps, setFollowUps] = useState<string[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // Persist messages to sessionStorage
+  useEffect(() => {
+    sessionStorage.setItem('chatbot-messages', JSON.stringify(messages));
+  }, [messages]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });

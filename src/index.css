@@ -133,3 +133,15 @@
 .animate-spin-slow {
   animation: spin-slow 20s linear infinite;
 }
+
+/* Keyboard focus indicators — only show for keyboard navigation */
+*:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Remove default outline for mouse users */
+*:focus:not(:focus-visible) {
+  outline: none;
+}
