@@ -111,7 +111,10 @@ export const Hero = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
           >
-            <div className="relative">
+            <div className="relative group">
+              {/* Animated outer ring */}
+              <div className="absolute -inset-3 rounded-full border-2 border-dashed border-primary/30 animate-spin-slow" />
+              <div className="absolute -inset-6 rounded-full border border-primary/10 group-hover:border-primary/25 transition-colors duration-500" />
               <motion.div
                 className="w-64 h-64 md:w-80 md:h-80 rounded-full overflow-hidden border-4 border-primary shadow-2xl"
                 whileHover={{ scale: 1.05 }}
