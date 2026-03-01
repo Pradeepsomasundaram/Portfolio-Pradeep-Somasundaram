@@ -144,8 +144,8 @@ export const Hero = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.6 }}
         >
-          <CounterAnimation end={7} suffix="+" label="Years Experience" />
-          <CounterAnimation end={14} suffix="+" label="Projects" />
+          <CounterAnimation end={6} suffix="+" label="Years Experience" />
+          <CounterAnimation end={15} suffix="+" label="Projects" />
           <CounterAnimation end={2} label="Publications" />
           <CounterAnimation end={6} label="Certifications" />
         </motion.div>
