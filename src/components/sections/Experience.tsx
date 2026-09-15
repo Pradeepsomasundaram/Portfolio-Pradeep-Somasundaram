@@ -1,7 +1,13 @@
-import { AnimatedSection, Card, Badge } from '../ui';
+import { useState } from 'react';
+import { AnimatedSection, Card, Badge, ShowMoreButton } from '../ui';
 import experiencesData from '../../data/experience.json';
 
+const INITIAL_COUNT = 4;
+
 export const Experience = () => {
+  const [expanded, setExpanded] = useState(false);
+  const visibleExperiences = expanded ? experiencesData : experiencesData.slice(0, INITIAL_COUNT);
+
   return (
     <section id="experience" className="py-20 px-4">
       <div className="max-w-7xl mx-auto">
@@ -15,11 +21,11 @@ export const Experience = () => {
             <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-primary via-primary/50 to-transparent hidden md:block" />
 
             <div className="space-y-8">
-              {experiencesData.map((exp, index) => (
+              {visibleExperiences.map((exp, index) => (
                 <AnimatedSection key={exp.id} delay={index * 0.1}>
                   <div className="relative md:pl-20">
                     {/* Timeline dot */}
-                    <div className="absolute left-6 top-8 w-5 h-5 rounded-full border-4 border-primary bg-white dark:bg-gray-900 z-10 hidden md:block" />
+                    <div className="absolute left-6 top-8 w-5 h-5 rounded-full border-4 border-primary bg-white dark:bg-void z-10 hidden md:block" />
                     {exp.featured && (
                       <div className="absolute left-[1.15rem] top-6 w-7 h-7 rounded-full bg-primary/20 animate-ping hidden md:block" />
                     )}
@@ -76,6 +82,15 @@ export const Experience = () => {
               ))}
             </div>
           </div>
+
+          {experiencesData.length > INITIAL_COUNT && (
+            <ShowMoreButton
+              expanded={expanded}
+              onClick={() => setExpanded((e) => !e)}
+              hiddenCount={experiencesData.length - INITIAL_COUNT}
+              itemLabel="earlier roles"
+            />
+          )}
         </AnimatedSection>
       </div>
     </section>

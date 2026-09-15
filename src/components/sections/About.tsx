@@ -14,7 +14,7 @@ export const About = () => {
   const secondParagraph = rest.length > 0 ? 'My expertise' + rest.join('. My expertise') : '';
 
   return (
-    <section id="about" className="py-20 px-4 bg-white/5">
+    <section id="about" className="py-20 px-4">
       <div className="max-w-7xl mx-auto">
         <AnimatedSection>
           <h2 className="text-4xl md:text-5xl font-display font-bold text-center mb-12 heading-shimmer">

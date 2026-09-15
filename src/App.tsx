@@ -1,4 +1,5 @@
 import { Layout } from './components/layout';
+import { SectionDivider, TechMarquee } from './components/ui';
 import {
   Hero,
   About,
@@ -20,16 +21,27 @@ function App() {
     <Layout>
       <Hero />
       <About />
+      <SectionDivider />
       <Experience />
+      <SectionDivider />
       <Education />
+      <SectionDivider />
       <Skills />
+      <TechMarquee />
       <Projects />
+      <SectionDivider />
       <Certifications />
+      <SectionDivider />
       <Publications />
+      <SectionDivider />
       <Awards />
+      <SectionDivider />
       <Volunteering />
+      <SectionDivider />
       <Organizations />
+      <SectionDivider />
       <Testimonials />
+      <SectionDivider />
       <Contact />
     </Layout>
   );

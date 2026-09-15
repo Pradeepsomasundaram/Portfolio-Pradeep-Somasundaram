@@ -9,6 +9,7 @@ import {
   CommandPalette,
   CustomCursor,
   BootIntro,
+  CinematicBackground,
 } from '../ui';
 import { useAppStore } from '../../stores/appStore';
 
@@ -39,6 +40,7 @@ export const Layout = ({ children }: LayoutProps) => {
         Skip to main content
       </a>
       <BootIntro />
+      {theme === 'dark' && <CinematicBackground />}
       {theme === 'dark' && <ParticleBackground />}
       <CursorSpotlight />
       <CustomCursor />
