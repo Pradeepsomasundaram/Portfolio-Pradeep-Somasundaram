@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { HiSparkles, HiArrowRight, HiSearch } from 'react-icons/hi';
+import { HiSparkles, HiArrowRight, HiSearch, HiOutlineClipboardCheck } from 'react-icons/hi';
 import { generateResponse, searchPages, type CommandResult } from '../../lib/assistantEngine';
+import { useAppStore } from '../../stores/appStore';
 
 interface CommandPaletteProps {
   open: boolean;
@@ -14,6 +15,7 @@ export const CommandPalette = ({ open, onClose }: CommandPaletteProps) => {
   const [thinking, setThinking] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
+  const requestJobMatch = useAppStore((s) => s.requestJobMatch);
 
   const pages = searchPages(query);
 
@@ -47,6 +49,11 @@ export const CommandPalette = ({ open, onClose }: CommandPaletteProps) => {
       document.getElementById(result.id)?.scrollIntoView({ behavior: 'smooth' });
     }, 50);
   }, [onClose]);
+
+  const openJobMatch = useCallback(() => {
+    requestJobMatch();
+    onClose();
+  }, [requestJobMatch, onClose]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Escape') {
@@ -180,10 +187,22 @@ export const CommandPalette = ({ open, onClose }: CommandPaletteProps) => {
               )}
 
               {!query.trim() && (
-                <p className="px-4 py-6 text-center text-sm text-gray-400">
-                  Type a page name to jump there, or ask a question like{' '}
-                  <span className="italic">&ldquo;what has he built with AI?&rdquo;</span>
-                </p>
+                <div className="p-2 border-t border-gray-100 dark:border-white/10">
+                  <p className="px-2 py-1 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
+                    Quick Actions
+                  </p>
+                  <button
+                    onClick={openJobMatch}
+                    className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-left text-secondary hover:bg-secondary/10 transition-colors"
+                  >
+                    <HiOutlineClipboardCheck className="w-4 h-4 shrink-0" />
+                    Match a job description
+                  </button>
+                  <p className="px-3 pt-3 pb-1 text-xs text-gray-400">
+                    Or ask a question like{' '}
+                    <span className="italic">&ldquo;what has he built with AI?&rdquo;</span>
+                  </p>
+                </div>
               )}
             </div>
           </motion.div>

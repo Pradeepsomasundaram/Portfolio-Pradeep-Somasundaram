@@ -569,3 +569,134 @@ export function searchPages(query: string): CommandResult[] {
       (p.sublabel && p.sublabel.toLowerCase().includes(lower))
   );
 }
+
+// --- Job description matcher ---
+// A broader vocabulary than Pradeep's own skill list, so requirements he
+// *doesn't* have show up as genuine gaps rather than the list just being a
+// mirror of his resume.
+const jdVocabulary = [
+  'Python', 'SQL', 'Java', 'C++', 'JavaScript', 'TypeScript', 'R', 'HTML', 'CSS', 'Dart', 'Scala', 'Go', 'Kotlin', 'Swift', 'PHP', 'Ruby',
+  'Machine Learning', 'Deep Learning', 'NLP', 'Computer Vision', 'TensorFlow', 'PyTorch', 'Scikit-learn', 'Keras', 'XGBoost', 'LightGBM',
+  'BERT', 'Transformers', 'GPT', 'LLM', 'LangChain', 'Generative AI', 'RAG', 'Prompt Engineering', 'Hugging Face', 'MLOps',
+  'MLflow', 'Feature Engineering', 'A/B Testing', 'Time Series Analysis', 'Forecasting', 'Anomaly Detection', 'Recommendation Systems',
+  'AWS', 'GCP', 'Azure', 'Docker', 'Kubernetes', 'Terraform', 'Spark', 'Hadoop', 'Airflow', 'Kafka', 'Snowflake', 'Databricks',
+  'Redshift', 'BigQuery', 'ETL', 'Data Pipeline', 'Data Lake', 'Data Warehouse', 'Big Data', 'S3', 'Lambda',
+  'Power BI', 'Tableau', 'Excel', 'Statistics', 'Data Visualization', 'Pandas', 'NumPy', 'Matplotlib', 'Seaborn', 'Plotly',
+  'React', 'Node.js', 'Django', 'Flask', 'FastAPI', 'REST API', 'GraphQL', 'MongoDB', 'PostgreSQL', 'MySQL', 'Next.js', 'Vue', 'Angular', 'Microservices',
+  'Git', 'CI/CD', 'Agile', 'Scrum', 'Linux', 'Jenkins', 'JIRA',
+];
+
+// JD phrasing that doesn't literally match how a skill is stored in skills.json
+const jdEquivalences: Record<string, string> = {
+  spark: 'apache spark',
+  kafka: 'apache kafka',
+  s3: 'aws s3',
+  lambda: 'aws lambda',
+  'rest api': 'rest apis',
+  llm: 'llms',
+  statistics: 'statistical analysis',
+  'scikit-learn': 'scikit-learn',
+};
+
+function keywordAppears(originalText: string, lowerText: string, keyword: string): boolean {
+  const hasSpecialChars = /[^a-z0-9\s]/i.test(keyword);
+  const lowerKw = keyword.toLowerCase();
+  if (hasSpecialChars) {
+    return lowerText.includes(lowerKw);
+  }
+  // Very short tokens (e.g. "R", "Go") are matched case-sensitively against
+  // the original text to avoid matching inside ordinary words like "your".
+  if (keyword.length <= 2) {
+    return new RegExp(`\\b${keyword}\\b`).test(originalText);
+  }
+  const escaped = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return new RegExp(`\\b${escaped}\\b`, 'i').test(lowerText);
+}
+
+export function matchJobDescription(jdText: string): AssistantResponse {
+  const trimmed = jdText.trim();
+
+  if (trimmed.length < 30) {
+    return {
+      text: `That's pretty short for a job description. Paste the full listing — or at least the requirements/qualifications section — and I'll break down how well Pradeep matches it.`,
+      followUps: ['Match a job description', 'Skills overview', 'Top projects'],
+    };
+  }
+
+  const lower = trimmed.toLowerCase();
+  const hasSkill = new Set(Object.values(skillsData).flat().map((s) => s.toLowerCase()));
+
+  const detected = jdVocabulary.filter((term) => keywordAppears(trimmed, lower, term));
+  const matched = detected.filter(
+    (term) => hasSkill.has(term.toLowerCase()) || hasSkill.has(jdEquivalences[term.toLowerCase()] ?? '')
+  );
+  const missing = detected.filter((term) => !matched.includes(term));
+
+  if (detected.length === 0) {
+    return {
+      text: `I couldn't pick out specific technical requirements from that text. Try pasting the "Requirements" or "Qualifications" section directly — or ask me about Pradeep's skills and I'll walk you through them.`,
+      followUps: ['Skills overview', 'Top projects', 'ML/AI expertise'],
+    };
+  }
+
+  const score = Math.round((matched.length / detected.length) * 100);
+
+  const scoredProjects = projectsData
+    .map((p) => {
+      const techLower = p.technologies.map((t) => t.toLowerCase());
+      const overlap = matched.filter((m) => techLower.includes(m.toLowerCase())).length;
+      return { project: p, overlap };
+    })
+    .filter((x) => x.overlap > 0)
+    .sort((a, b) => b.overlap - a.overlap)
+    .slice(0, 3);
+
+  const scoredExperience = experienceData
+    .map((exp) => {
+      const skillsLower = exp.skills.map((s) => s.toLowerCase());
+      const overlap = matched.filter((m) => skillsLower.includes(m.toLowerCase())).length;
+      return { exp, overlap };
+    })
+    .filter((x) => x.overlap > 0)
+    .sort((a, b) => b.overlap - a.overlap)
+    .slice(0, 2);
+
+  const verdict =
+    score >= 70 ? 'a strong match' : score >= 45 ? 'a solid partial match' : 'a partial match worth a closer look';
+
+  const lines: string[] = [
+    `I ran this against Pradeep's profile — he's ${verdict} for this role, matching ${matched.length} of ${detected.length} requirements I detected (${score}%).`,
+    '',
+    `Matched: ${matched.join(', ')}`,
+  ];
+
+  if (missing.length > 0) {
+    lines.push(`Not in his listed skills: ${missing.join(', ')} — though related experience may still transfer.`);
+  }
+
+  if (scoredExperience.length > 0) {
+    lines.push('', 'Most relevant experience:');
+    scoredExperience.forEach(({ exp }) => {
+      lines.push(`- ${exp.role} at ${exp.company}: ${exp.achievements[0]}`);
+    });
+  }
+
+  if (scoredProjects.length > 0) {
+    lines.push('', 'Most relevant projects:');
+    scoredProjects.forEach(({ project }) => {
+      lines.push(`- ${project.title}: ${project.description.slice(0, 110)}...`);
+    });
+  }
+
+  lines.push(
+    '',
+    score >= 60
+      ? "Worth reaching out — this looks like a genuinely good fit."
+      : "Might be a stretch on paper, but his range across data engineering, ML, and full-stack work often covers gaps that don't show up as exact keyword matches."
+  );
+
+  return {
+    text: lines.join('\n'),
+    followUps: ['Contact info', 'Resume', 'Top projects', 'Match another job description'],
+  };
+}

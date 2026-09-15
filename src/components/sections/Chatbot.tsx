@@ -1,9 +1,11 @@
 import { useState, useRef, useEffect, useCallback, memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { HiX, HiPaperAirplane, HiSparkles } from 'react-icons/hi';
+import { HiX, HiPaperAirplane, HiSparkles, HiOutlineClipboardCheck } from 'react-icons/hi';
 import { useAppStore } from '../../stores/appStore';
 import type { Message } from '../../types/chatbot.types';
-import { generateResponse, initialQuickQuestions } from '../../lib/assistantEngine';
+import { generateResponse, matchJobDescription, initialQuickQuestions } from '../../lib/assistantEngine';
+
+const JOB_MATCH_TRIGGERS = ['Match a job description', 'Match another job description'];
 
 const welcomeMessage: Message = {
   id: '1',
@@ -113,13 +115,14 @@ function confidenceFor(text: string): number {
 }
 
 export const Chatbot = () => {
-  const { chatbotOpen, toggleChatbot } = useAppStore();
+  const { chatbotOpen, toggleChatbot, jobMatchRequested, clearJobMatchRequest } = useAppStore();
   const [messages, setMessages] = useState<Message[]>(loadMessages);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [followUps, setFollowUps] = useState<string[]>([]);
   const [streamingId, setStreamingId] = useState<string | null>(null);
   const [confidenceById, setConfidenceById] = useState<Record<string, number>>({});
+  const [jobMatchMode, setJobMatchMode] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -137,9 +140,29 @@ export const Chatbot = () => {
     }
   }, [chatbotOpen]);
 
+  const enterJobMatchMode = useCallback(() => {
+    setJobMatchMode(true);
+    setFollowUps([]);
+    const promptMessage: Message = {
+      id: Date.now().toString(),
+      role: 'assistant',
+      content: `Paste a job description below (or just the requirements/qualifications section) and I'll compare it against Pradeep's actual skills, projects, and experience — matches, gaps, and all.`,
+      timestamp: new Date(),
+    };
+    setMessages((prev) => [...prev, promptMessage]);
+    setTimeout(() => inputRef.current?.focus(), 100);
+  }, []);
+
   const handleSend = useCallback((text?: string) => {
     const messageText = text || input.trim();
     if (!messageText || isTyping) return;
+
+    if (JOB_MATCH_TRIGGERS.includes(messageText)) {
+      enterJobMatchMode();
+      return;
+    }
+
+    const wasJobMatch = jobMatchMode;
 
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -152,8 +175,9 @@ export const Chatbot = () => {
     setInput('');
     setFollowUps([]);
     setIsTyping(true);
+    setJobMatchMode(false);
 
-    const response = generateResponse(messageText);
+    const response = wasJobMatch ? matchJobDescription(messageText) : generateResponse(messageText);
     const delay = Math.min(500 + response.text.length, 1200);
 
     setTimeout(() => {
@@ -170,7 +194,15 @@ export const Chatbot = () => {
       setConfidenceById((prev) => ({ ...prev, [botId]: confidenceFor(response.text) }));
       setFollowUps(response.followUps);
     }, delay);
-  }, [input, isTyping]);
+  }, [input, isTyping, jobMatchMode, enterJobMatchMode]);
+
+  // Triggered from the ⌘K command palette's "Match a job description" action
+  useEffect(() => {
+    if (jobMatchRequested) {
+      enterJobMatchMode();
+      clearJobMatchRequest();
+    }
+  }, [jobMatchRequested, enterJobMatchMode, clearJobMatchRequest]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -182,7 +214,7 @@ export const Chatbot = () => {
     }
   };
 
-  const showQuickQuestions = messages.length <= 2 && followUps.length === 0;
+  const showQuickQuestions = messages.length <= 2 && followUps.length === 0 && !jobMatchMode;
 
   return (
     <>
@@ -233,7 +265,7 @@ export const Chatbot = () => {
                   AI Portfolio Assistant
                 </h3>
                 <p className="text-xs opacity-80">
-                  Trained on Pradeep's work & skills
+                  {jobMatchMode ? 'Job match mode — paste a JD below' : "Trained on Pradeep's work & skills"}
                 </p>
               </div>
               <button
@@ -324,8 +356,34 @@ export const Chatbot = () => {
               </div>
             )}
 
+            {/* Job match trigger — always available, not just as a one-time quick question */}
+            {!jobMatchMode && !isTyping && (
+              <div className="px-4 pb-2">
+                <button
+                  onClick={enterJobMatchMode}
+                  className="w-full flex items-center justify-center gap-2 text-xs font-medium px-3 py-2 rounded-full border border-dashed border-secondary/40 text-secondary hover:bg-secondary/10 hover:border-secondary transition-colors"
+                >
+                  <HiOutlineClipboardCheck className="w-4 h-4" />
+                  Match a job description
+                </button>
+              </div>
+            )}
+
             {/* Input */}
             <div className="p-3 border-t border-gray-200 dark:border-white/10">
+              {jobMatchMode && (
+                <div className="flex items-center justify-between gap-2 mb-2 px-1">
+                  <span className="text-[11px] font-mono text-secondary">
+                    paste job description ↴
+                  </span>
+                  <button
+                    onClick={() => setJobMatchMode(false)}
+                    className="text-[11px] text-gray-400 hover:text-primary transition-colors"
+                  >
+                    cancel
+                  </button>
+                </div>
+              )}
               <div className="flex items-center gap-2">
                 <input
                   ref={inputRef}
@@ -333,8 +391,12 @@ export const Chatbot = () => {
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  placeholder="Ask about skills, projects, experience..."
-                  className="flex-1 px-3 py-2 rounded-full border border-gray-300 dark:border-white/10 bg-white dark:bg-white/5 text-gray-900 dark:text-white text-sm focus:outline-none focus:border-primary"
+                  placeholder={jobMatchMode ? 'Paste job description here...' : 'Ask about skills, projects, experience...'}
+                  className={`flex-1 px-3 py-2 rounded-full border bg-white dark:bg-white/5 text-gray-900 dark:text-white text-sm focus:outline-none ${
+                    jobMatchMode
+                      ? 'border-secondary/50 focus:border-secondary'
+                      : 'border-gray-300 dark:border-white/10 focus:border-primary'
+                  }`}
                 />
                 <motion.button
                   onClick={() => handleSend()}
