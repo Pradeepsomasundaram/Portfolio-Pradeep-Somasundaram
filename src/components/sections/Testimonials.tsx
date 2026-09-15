@@ -21,10 +21,10 @@ export const Testimonials = () => {
     setCurrent((c) => (c + 1) % testimonialsData.length);
 
   return (
-    <section className="py-20 px-4 bg-white/5">
+    <section id="testimonials" className="py-20 px-4 bg-white/5">
       <div className="max-w-4xl mx-auto">
         <AnimatedSection>
-          <h2 className="text-4xl md:text-5xl font-bold text-center mb-12 text-gray-900 dark:text-white">
+          <h2 className="text-4xl md:text-5xl font-display font-bold text-center mb-12 heading-shimmer">
             Testimonials
           </h2>
 

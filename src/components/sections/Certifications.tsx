@@ -10,7 +10,7 @@ export const Certifications = () => {
     >
       <div className="max-w-7xl mx-auto">
         <AnimatedSection>
-          <h2 className="text-4xl md:text-5xl font-bold text-center mb-12 text-gray-900 dark:text-white">
+          <h2 className="text-4xl md:text-5xl font-display font-bold text-center mb-12 heading-shimmer">
             Certifications
           </h2>
 

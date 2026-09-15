@@ -15,6 +15,10 @@ interface AppStore {
   chatbotOpen: boolean;
   toggleChatbot: () => void;
   setChatbotOpen: (open: boolean) => void;
+
+  commandPaletteOpen: boolean;
+  toggleCommandPalette: () => void;
+  setCommandPaletteOpen: (open: boolean) => void;
 }
 
 export const useAppStore = create<AppStore>()(
@@ -37,6 +41,11 @@ export const useAppStore = create<AppStore>()(
       toggleChatbot: () =>
         set((state) => ({ chatbotOpen: !state.chatbotOpen })),
       setChatbotOpen: (open) => set({ chatbotOpen: open }),
+
+      commandPaletteOpen: false,
+      toggleCommandPalette: () =>
+        set((state) => ({ commandPaletteOpen: !state.commandPaletteOpen })),
+      setCommandPaletteOpen: (open) => set({ commandPaletteOpen: open }),
     }),
     {
       name: 'portfolio-storage',

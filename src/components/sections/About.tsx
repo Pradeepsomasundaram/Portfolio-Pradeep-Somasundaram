@@ -17,7 +17,7 @@ export const About = () => {
     <section id="about" className="py-20 px-4 bg-white/5">
       <div className="max-w-7xl mx-auto">
         <AnimatedSection>
-          <h2 className="text-4xl md:text-5xl font-bold text-center mb-12 text-gray-900 dark:text-white">
+          <h2 className="text-4xl md:text-5xl font-display font-bold text-center mb-12 heading-shimmer">
             About Me
           </h2>
 
@@ -27,12 +27,12 @@ export const About = () => {
               className="flex justify-center"
               whileHover={{ scale: 1.05 }}
             >
-              <div className="w-72 h-72 md:w-96 md:h-96 rounded-full overflow-hidden border-4 border-primary shadow-2xl">
+              <div className="photo-grade-frame w-72 h-72 md:w-96 md:h-96 rounded-full overflow-hidden border-4 border-primary shadow-2xl">
                 <img
                   src="/assets/about.png"
                   alt={`About ${aboutData.name}`}
                   loading="lazy"
-                  className="w-full h-full object-cover scale-125"
+                  className="photo-grade w-full h-full object-cover scale-125"
                   onError={(e) => {
                     (e.target as HTMLImageElement).src = '/assets/about.svg';
                   }}

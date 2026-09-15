@@ -4,8 +4,8 @@
   "description": "Data Scientist & AI/ML Engineer Portfolio",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#111827",
-  "theme_color": "#6366f1",
+  "background_color": "#05050c",
+  "theme_color": "#C9A227",
   "orientation": "portrait-primary",
   "icons": [
     {

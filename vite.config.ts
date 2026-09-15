@@ -7,7 +7,7 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
+          'vendor-react': ['react', 'react-dom'],
           'vendor-motion': ['framer-motion'],
           'vendor-particles': ['@tsparticles/react', '@tsparticles/slim', '@tsparticles/engine'],
           'vendor-icons': ['react-icons'],

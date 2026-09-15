@@ -54,14 +54,14 @@ export const ResumeModal = ({ isOpen, onClose }: ResumeModalProps) => {
 
           {/* Modal */}
           <motion.div
-            className="relative w-full max-w-4xl h-[85vh] bg-white dark:bg-gray-800 rounded-2xl shadow-2xl overflow-hidden z-10"
+            className="relative w-full max-w-4xl h-[85vh] glass-panel rounded-2xl shadow-glow overflow-hidden z-10"
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
             transition={{ type: 'spring', damping: 25 }}
           >
             {/* Header */}
-            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-white/10">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                 Resume
               </h3>

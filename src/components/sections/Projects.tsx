@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { AnimatedSection, Card, Badge } from '../ui';
+import { AnimatedSection, Card, Badge, TiltCard, ProjectModal } from '../ui';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaGithub, FaStar } from 'react-icons/fa';
 import { HiArrowRight } from 'react-icons/hi';
@@ -17,7 +16,7 @@ const categories = [
 export const Projects = () => {
   const [activeCategory, setActiveCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
-  const navigate = useNavigate();
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
   const filteredProjects = projects.filter((project) => {
     const matchesCategory =
@@ -38,7 +37,7 @@ export const Projects = () => {
     >
       <div className="max-w-7xl mx-auto">
         <AnimatedSection>
-          <h2 className="text-4xl md:text-5xl font-bold text-center mb-12 text-gray-900 dark:text-white">
+          <h2 className="text-4xl md:text-5xl font-display font-bold text-center mb-12 heading-shimmer">
             Projects
           </h2>
 
@@ -107,7 +106,8 @@ export const Projects = () => {
                   exit={{ opacity: 0, scale: 0.9 }}
                   transition={{ duration: 0.3, delay: index * 0.05 }}
                 >
-                  <Card hover className="!p-0 overflow-hidden">
+                  <TiltCard maxTilt={6} scale={1.02} className="h-full rounded-lg">
+                  <Card hover className="!p-0 overflow-hidden h-full">
                     <div className="h-full flex flex-col">
                       {/* Project Thumbnail */}
                       <div className={`h-32 flex items-center justify-center text-white text-3xl font-bold opacity-80 ${
@@ -167,7 +167,7 @@ export const Projects = () => {
                           GitHub
                         </a>
                         <button
-                          onClick={() => navigate(`/projects/${project.id}`)}
+                          onClick={() => setSelectedProject(project)}
                           className="inline-flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400 hover:text-primary transition-colors"
                         >
                           Details
@@ -177,6 +177,7 @@ export const Projects = () => {
                       </div>
                     </div>
                   </Card>
+                  </TiltCard>
                 </motion.div>
               ))}
             </AnimatePresence>
@@ -190,6 +191,19 @@ export const Projects = () => {
           )}
         </AnimatedSection>
       </div>
+
+      <ProjectModal
+        project={selectedProject}
+        relatedProjects={
+          selectedProject
+            ? projects
+                .filter((p) => p.category === selectedProject.category && p.id !== selectedProject.id)
+                .slice(0, 4)
+            : []
+        }
+        onClose={() => setSelectedProject(null)}
+        onSelectRelated={(p) => setSelectedProject(p)}
+      />
     </section>
   );
 };
