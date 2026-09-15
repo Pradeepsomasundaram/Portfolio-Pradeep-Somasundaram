@@ -15,5 +15,6 @@ export { NeuralSkillsNetwork } from './NeuralSkillsNetwork';
 export { ProjectModal } from './ProjectModal';
 export { SectionDivider } from './SectionDivider';
 export { CinematicBackground } from './CinematicBackground';
+export { LightSweep } from './LightSweep';
 export { ShowMoreButton } from './ShowMoreButton';
 export { TechMarquee } from './TechMarquee';

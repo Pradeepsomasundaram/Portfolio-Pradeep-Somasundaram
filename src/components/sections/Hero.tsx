@@ -132,7 +132,11 @@ export const Hero = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
           >
-            <div className="relative group">
+            <motion.div
+              className="relative group"
+              animate={{ y: [0, -16, 0] }}
+              transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
+            >
               {/* Animated outer ring */}
               <div className="absolute -inset-3 rounded-full border-2 border-dashed border-secondary/40 animate-spin-slow" />
               <div className="absolute -inset-6 rounded-full border border-primary/10 group-hover:border-primary/25 transition-colors duration-500" />
@@ -141,23 +145,30 @@ export const Hero = () => {
                 animate={{ rotate: 360 }}
                 transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
               />
-              <TiltCard className="rounded-full" maxTilt={10} scale={1.04}>
-                <div className="photo-grade-frame w-64 h-64 md:w-80 md:h-80 rounded-full overflow-hidden border-4 border-white dark:border-void shadow-2xl">
-                  <picture>
-                    <source srcSet="/assets/profile.webp" type="image/webp" />
-                    <img
-                      src="/assets/profile.png"
-                      alt="Pradeep Somasundaram"
-                      loading="lazy"
-                      className="photo-grade w-full h-full object-cover"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src = '/assets/profile.svg';
-                      }}
-                    />
-                  </picture>
-                </div>
-              </TiltCard>
-            </div>
+              <div style={{ perspective: '1400px' }}>
+                <motion.div
+                  animate={{ rotateY: [0, 22, 0, -22, 0], rotateZ: [0, 2, 0, -2, 0] }}
+                  transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut' }}
+                >
+                  <TiltCard className="rounded-full" maxTilt={10} scale={1.04}>
+                    <div className="photo-grade-frame w-64 h-64 md:w-80 md:h-80 rounded-full overflow-hidden border-4 border-white dark:border-void shadow-2xl">
+                      <picture>
+                        <source srcSet="/assets/profile.webp" type="image/webp" />
+                        <img
+                          src="/assets/profile.png"
+                          alt="Pradeep Somasundaram"
+                          loading="lazy"
+                          className="photo-grade w-full h-full object-cover"
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).src = '/assets/profile.svg';
+                          }}
+                        />
+                      </picture>
+                    </div>
+                  </TiltCard>
+                </motion.div>
+              </div>
+            </motion.div>
           </motion.div>
         </div>
 
