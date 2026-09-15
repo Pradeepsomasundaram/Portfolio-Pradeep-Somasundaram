@@ -14,6 +14,7 @@ const primaryNav = [
 
 const moreNav = [
   { label: 'Education', id: 'education' },
+  { label: 'The Toolkit', id: 'universe' },
   { label: 'Certifications', id: 'certifications' },
   { label: 'Publications', id: 'publications' },
   { label: 'Awards', id: 'awards' },
