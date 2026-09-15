@@ -19,6 +19,10 @@ interface AppStore {
   commandPaletteOpen: boolean;
   toggleCommandPalette: () => void;
   setCommandPaletteOpen: (open: boolean) => void;
+
+  jobMatchRequested: boolean;
+  requestJobMatch: () => void;
+  clearJobMatchRequest: () => void;
 }
 
 export const useAppStore = create<AppStore>()(
@@ -46,6 +50,10 @@ export const useAppStore = create<AppStore>()(
       toggleCommandPalette: () =>
         set((state) => ({ commandPaletteOpen: !state.commandPaletteOpen })),
       setCommandPaletteOpen: (open) => set({ commandPaletteOpen: open }),
+
+      jobMatchRequested: false,
+      requestJobMatch: () => set({ chatbotOpen: true, jobMatchRequested: true }),
+      clearJobMatchRequest: () => set({ jobMatchRequested: false }),
     }),
     {
       name: 'portfolio-storage',
