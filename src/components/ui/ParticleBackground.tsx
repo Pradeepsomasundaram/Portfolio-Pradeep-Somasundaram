@@ -25,12 +25,12 @@ const particlesOptions: ISourceOptions = {
     },
   },
   particles: {
-    color: { value: '#818cf8' },
+    color: { value: ['#C9A227', '#0EA57A', '#E8C874'] },
     links: {
-      color: '#818cf8',
+      color: '#C9A227',
       distance: 150,
       enable: true,
-      opacity: 0.4,
+      opacity: 0.35,
       width: 1,
     },
     move: {

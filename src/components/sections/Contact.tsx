@@ -59,7 +59,7 @@ export const Contact = () => {
     <section id="contact" className="py-20 px-4 bg-gray-100/50 dark:bg-white/5">
       <div className="max-w-7xl mx-auto">
         <AnimatedSection>
-          <h2 className="text-4xl md:text-5xl font-bold text-center mb-12 text-gray-900 dark:text-white">
+          <h2 className="text-4xl md:text-5xl font-display font-bold text-center mb-12 heading-shimmer">
             Get In Touch
           </h2>
 

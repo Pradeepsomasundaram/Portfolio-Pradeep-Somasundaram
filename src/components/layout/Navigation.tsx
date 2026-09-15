@@ -1,65 +1,60 @@
-import { useState, useEffect, useCallback } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { HiMenu, HiX, HiMoon, HiSun, HiChevronDown } from 'react-icons/hi';
+import { HiMenu, HiX, HiMoon, HiSun, HiChevronDown, HiSparkles } from 'react-icons/hi';
 import { useAppStore } from '../../stores/appStore';
 
-// Preload map for lazy-loaded routes
-const routePreloaders: Record<string, () => void> = {
-  '/about': () => import('../sections/About'),
-  '/experience': () => import('../sections/Experience'),
-  '/projects': () => import('../sections/Projects'),
-  '/skills': () => import('../sections/Skills'),
-  '/contact': () => import('../sections/Contact'),
-  '/education': () => import('../sections/Education'),
-  '/certifications': () => import('../sections/Certifications'),
-  '/publications': () => import('../sections/Publications'),
-  '/awards': () => import('../sections/Awards'),
-  '/volunteering': () => import('../sections/Volunteering'),
-  '/organizations': () => import('../sections/Organizations'),
-  '/testimonials': () => import('../sections/Testimonials'),
-};
-
 const primaryNav = [
-  { label: 'Home', to: '/' },
-  { label: 'About', to: '/about' },
-  { label: 'Experience', to: '/experience' },
-  { label: 'Projects', to: '/projects' },
-  { label: 'Skills', to: '/skills' },
-  { label: 'Contact', to: '/contact' },
+  { label: 'Home', id: 'hero' },
+  { label: 'About', id: 'about' },
+  { label: 'Experience', id: 'experience' },
+  { label: 'Projects', id: 'projects' },
+  { label: 'Skills', id: 'skills' },
+  { label: 'Contact', id: 'contact' },
 ];
 
 const moreNav = [
-  { label: 'Education', to: '/education' },
-  { label: 'Certifications', to: '/certifications' },
-  { label: 'Publications', to: '/publications' },
-  { label: 'Awards', to: '/awards' },
-  { label: 'Volunteering', to: '/volunteering' },
-  { label: 'Organizations', to: '/organizations' },
-  { label: 'Testimonials', to: '/testimonials' },
+  { label: 'Education', id: 'education' },
+  { label: 'Certifications', id: 'certifications' },
+  { label: 'Publications', id: 'publications' },
+  { label: 'Awards', id: 'awards' },
+  { label: 'Volunteering', id: 'volunteering' },
+  { label: 'Organizations', id: 'organizations' },
+  { label: 'Testimonials', id: 'testimonials' },
 ];
+
+const allSectionIds = [...primaryNav, ...moreNav].map((item) => item.id);
 
 export const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
-  const { theme, toggleTheme } = useAppStore();
-  const location = useLocation();
-
-  const preloadRoute = useCallback((to: string) => {
-    const preloader = routePreloaders[to];
-    if (preloader) preloader();
-  }, []);
+  const [activeSection, setActiveSection] = useState('hero');
+  const { theme, toggleTheme, toggleCommandPalette } = useAppStore();
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
       const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
       setScrollProgress(totalHeight > 0 ? (window.scrollY / totalHeight) * 100 : 0);
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Scrollspy: highlight whichever section is crossing the middle band of the viewport
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) setActiveSection(entry.target.id);
+        });
+      },
+      { rootMargin: '-45% 0px -50% 0px', threshold: 0 }
+    );
+    allSectionIds.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+    return () => observer.disconnect();
   }, []);
 
   useEffect(() => {
@@ -72,67 +67,58 @@ export const Navigation = () => {
     }
   }, [theme]);
 
-  useEffect(() => {
+  const isActive = (id: string) => activeSection === id;
+  const isMoreActive = moreNav.some((item) => isActive(item.id));
+
+  const closeMenus = () => {
     setIsOpen(false);
     setMoreOpen(false);
-  }, [location.pathname]);
-
-  const isActive = (to: string) => {
-    if (to === '/') return location.pathname === '/';
-    return location.pathname.startsWith(to);
   };
-
-  const isMoreActive = moreNav.some((item) => isActive(item.to));
 
   return (
     <motion.nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled || location.pathname !== '/'
-          ? 'bg-white dark:bg-gray-900 shadow-lg'
-          : 'bg-transparent'
-      }`}
+      className="fixed top-0 left-0 right-0 z-50"
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.5 }}
     >
       {/* Scroll Progress Bar */}
       <div
-        className="absolute bottom-0 left-0 h-0.5 bg-primary no-theme-transition"
+        className="absolute top-0 left-0 h-[2px] bg-gradient-to-r from-primary via-secondary to-accent no-theme-transition z-10"
         style={{ width: `${scrollProgress}%` }}
       />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          <motion.div whileHover={{ scale: 1.05 }}>
-            <Link to="/" className="text-2xl font-bold text-primary">
+      <div className="max-w-6xl mx-auto px-3 sm:px-6 pt-3">
+        <div className="glass-panel rounded-2xl sm:rounded-full shadow-glow px-4 sm:px-5 h-14 flex items-center justify-between">
+          <motion.a href="#hero" whileHover={{ scale: 1.05 }}>
+            <span className="text-lg sm:text-xl font-display font-bold heading-shimmer whitespace-nowrap">
               Pradeep Somasundaram
-            </Link>
-          </motion.div>
+            </span>
+          </motion.a>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-1">
+          <div className="hidden md:flex items-center gap-0.5">
             {primaryNav.map((item) => (
-              <Link
+              <a
                 key={item.label}
-                to={item.to}
-                className="relative px-4 py-2 transition-colors duration-300"
-                onMouseEnter={() => preloadRoute(item.to)}
+                href={`#${item.id}`}
+                className="relative px-3.5 py-2 rounded-full transition-colors duration-300"
               >
-                <span className={`relative z-10 ${
-                  isActive(item.to)
-                    ? 'text-primary font-semibold'
-                    : 'text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary'
-                }`}>
-                  {item.label}
-                </span>
-                {isActive(item.to) && (
+                {isActive(item.id) && (
                   <motion.div
-                    className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary mx-4"
+                    className="absolute inset-0 rounded-full bg-gradient-to-r from-primary/25 via-secondary/20 to-accent/25 border border-primary/40"
                     layoutId="navIndicator"
                     transition={{ type: 'spring', stiffness: 350, damping: 30 }}
                   />
                 )}
-              </Link>
+                <span className={`relative z-10 text-sm ${
+                  isActive(item.id)
+                    ? 'text-white dark:text-white font-semibold'
+                    : 'text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-secondary'
+                }`}>
+                  {item.label}
+                </span>
+              </a>
             ))}
 
             {/* More Dropdown */}
@@ -142,23 +128,25 @@ export const Navigation = () => {
               onMouseLeave={() => setMoreOpen(false)}
             >
               <button
-                className={`relative flex items-center gap-1 px-4 py-2 transition-colors duration-300 ${
-                  isMoreActive
-                    ? 'text-primary font-semibold'
-                    : 'text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary'
-                }`}
+                className="relative flex items-center gap-1 px-3.5 py-2 rounded-full transition-colors duration-300"
               >
-                More
-                <HiChevronDown
-                  className={`w-4 h-4 transition-transform ${moreOpen ? 'rotate-180' : ''}`}
-                />
                 {isMoreActive && (
                   <motion.div
-                    className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary mx-4"
+                    className="absolute inset-0 rounded-full bg-gradient-to-r from-primary/25 via-secondary/20 to-accent/25 border border-primary/40"
                     layoutId="navIndicator"
                     transition={{ type: 'spring', stiffness: 350, damping: 30 }}
                   />
                 )}
+                <span className={`relative z-10 flex items-center gap-1 text-sm ${
+                  isMoreActive
+                    ? 'text-white font-semibold'
+                    : 'text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-secondary'
+                }`}>
+                  More
+                  <HiChevronDown
+                    className={`w-4 h-4 transition-transform ${moreOpen ? 'rotate-180' : ''}`}
+                  />
+                </span>
               </button>
 
               <AnimatePresence>
@@ -168,31 +156,43 @@ export const Navigation = () => {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
                     transition={{ duration: 0.15 }}
-                    className="absolute top-full right-0 mt-1 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 py-2 overflow-hidden"
+                    className="absolute top-full right-0 mt-2 w-52 glass-panel rounded-xl shadow-glow py-2 overflow-hidden"
                   >
                     {moreNav.map((item) => (
-                      <Link
+                      <a
                         key={item.label}
-                        to={item.to}
-                        onMouseEnter={() => preloadRoute(item.to)}
+                        href={`#${item.id}`}
                         className={`block px-4 py-2 text-sm transition-colors ${
-                          isActive(item.to)
-                            ? 'text-primary bg-primary/10 font-semibold'
-                            : 'text-gray-700 dark:text-gray-300 hover:text-primary hover:bg-gray-50 dark:hover:bg-gray-700'
+                          isActive(item.id)
+                            ? 'text-secondary bg-primary/10 font-semibold'
+                            : 'text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-secondary hover:bg-primary/5'
                         }`}
                       >
                         {item.label}
-                      </Link>
+                      </a>
                     ))}
                   </motion.div>
                 )}
               </AnimatePresence>
             </div>
 
+            {/* AI Command Palette trigger */}
+            <motion.button
+              onClick={toggleCommandPalette}
+              className="ml-3 flex items-center gap-2 px-3 py-1.5 rounded-full bg-gradient-to-r from-primary/20 via-secondary/10 to-accent/20 border border-primary/40 text-primary dark:text-secondary text-sm hover:shadow-glow transition-shadow"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              aria-label="Open AI search"
+            >
+              <HiSparkles className="w-4 h-4" />
+              Ask AI
+              <kbd className="text-[10px] opacity-70 border border-current/30 rounded px-1">⌘K</kbd>
+            </motion.button>
+
             {/* Theme Toggle */}
             <motion.button
               onClick={toggleTheme}
-              className="p-2 rounded-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors ml-4"
+              className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors ml-2"
               aria-label="Toggle theme"
               whileTap={{ scale: 0.9, rotate: 180 }}
               transition={{ duration: 0.3 }}
@@ -206,10 +206,18 @@ export const Navigation = () => {
           </div>
 
           {/* Mobile menu button */}
-          <div className="md:hidden flex items-center gap-4">
+          <div className="md:hidden flex items-center gap-2">
+            <motion.button
+              onClick={toggleCommandPalette}
+              className="p-2 rounded-full bg-white/10 text-primary dark:text-secondary"
+              aria-label="Open AI search"
+              whileTap={{ scale: 0.9 }}
+            >
+              <HiSparkles className="w-5 h-5" />
+            </motion.button>
             <motion.button
               onClick={toggleTheme}
-              className="p-2 rounded-full bg-gray-200 dark:bg-gray-700"
+              className="p-2 rounded-full bg-white/10"
               aria-label="Toggle theme"
               whileTap={{ scale: 0.9, rotate: 180 }}
             >
@@ -221,60 +229,62 @@ export const Navigation = () => {
             </motion.button>
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="text-gray-700 dark:text-gray-300"
+              className="text-gray-700 dark:text-gray-200 p-1"
               aria-label="Toggle menu"
             >
               {isOpen ? <HiX className="w-6 h-6" /> : <HiMenu className="w-6 h-6" />}
             </button>
           </div>
         </div>
-      </div>
 
-      {/* Mobile Menu */}
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            className="md:hidden bg-white dark:bg-gray-900 shadow-lg"
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-          >
-            <div className="px-4 pt-2 pb-4 space-y-1">
-              {primaryNav.map((item) => (
-                <Link
-                  key={item.label}
-                  to={item.to}
-                  className={`block px-3 py-2 rounded-md transition-colors ${
-                    isActive(item.to)
-                      ? 'text-primary bg-primary/10 font-semibold'
-                      : 'text-gray-700 dark:text-gray-300 hover:text-primary'
-                  }`}
-                >
-                  {item.label}
-                </Link>
-              ))}
-              <div className="border-t border-gray-200 dark:border-gray-700 mt-2 pt-2">
-                <p className="px-3 py-1 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                  More
-                </p>
-                {moreNav.map((item) => (
-                  <Link
+        {/* Mobile Menu */}
+        <AnimatePresence>
+          {isOpen && (
+            <motion.div
+              className="md:hidden glass-panel rounded-2xl shadow-glow mt-2 overflow-hidden"
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+            >
+              <div className="px-4 pt-3 pb-4 space-y-1 max-h-[70vh] overflow-y-auto">
+                {primaryNav.map((item) => (
+                  <a
                     key={item.label}
-                    to={item.to}
-                    className={`block px-3 py-2 rounded-md transition-colors ${
-                      isActive(item.to)
-                        ? 'text-primary bg-primary/10 font-semibold'
+                    href={`#${item.id}`}
+                    onClick={closeMenus}
+                    className={`block px-3 py-2 rounded-lg transition-colors ${
+                      isActive(item.id)
+                        ? 'text-white bg-gradient-to-r from-primary/40 to-accent/40 font-semibold'
                         : 'text-gray-700 dark:text-gray-300 hover:text-primary'
                     }`}
                   >
                     {item.label}
-                  </Link>
+                  </a>
                 ))}
+                <div className="border-t border-white/10 mt-2 pt-2">
+                  <p className="px-3 py-1 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                    More
+                  </p>
+                  {moreNav.map((item) => (
+                    <a
+                      key={item.label}
+                      href={`#${item.id}`}
+                      onClick={closeMenus}
+                      className={`block px-3 py-2 rounded-lg transition-colors ${
+                        isActive(item.id)
+                          ? 'text-white bg-gradient-to-r from-primary/40 to-accent/40 font-semibold'
+                          : 'text-gray-700 dark:text-gray-300 hover:text-primary'
+                      }`}
+                    >
+                      {item.label}
+                    </a>
+                  ))}
+                </div>
               </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
     </motion.nav>
   );
 };

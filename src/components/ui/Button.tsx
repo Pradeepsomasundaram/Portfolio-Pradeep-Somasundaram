@@ -29,11 +29,11 @@ export const Button = ({
 
   const variantClasses = {
     primary:
-      'bg-primary text-white hover:bg-opacity-90 shadow-md hover:shadow-lg',
+      'bg-gradient-to-r from-primary to-accent text-white shadow-md hover:shadow-glow',
     secondary:
-      'bg-secondary text-white hover:bg-opacity-90 shadow-md hover:shadow-lg',
+      'bg-gradient-to-r from-secondary to-primary text-white shadow-md hover:shadow-glow-cyan',
     outline:
-      'border-2 border-primary text-primary hover:bg-primary hover:text-white',
+      'border-2 border-primary/60 text-primary dark:text-secondary hover:bg-primary hover:text-white hover:border-primary',
   };
 
   const sizeClasses = {
