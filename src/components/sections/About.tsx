@@ -25,18 +25,26 @@ export const About = () => {
             {/* Profile Image */}
             <motion.div
               className="flex justify-center"
+              animate={{ y: [0, -14, 0], rotate: [0, 1.5, 0, -1.5, 0] }}
+              transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
               whileHover={{ scale: 1.05 }}
             >
-              <div className="photo-grade-frame w-72 h-72 md:w-96 md:h-96 rounded-full overflow-hidden border-4 border-primary shadow-2xl">
-                <img
-                  src="/assets/about.png"
-                  alt={`About ${aboutData.name}`}
-                  loading="lazy"
-                  className="photo-grade w-full h-full object-cover scale-125"
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).src = '/assets/about.svg';
-                  }}
-                />
+              <div style={{ perspective: '1400px' }}>
+                <motion.div
+                  className="photo-grade-frame w-72 h-72 md:w-96 md:h-96 rounded-full overflow-hidden border-4 border-primary shadow-2xl"
+                  animate={{ rotateY: [0, -18, 0, 18, 0] }}
+                  transition={{ duration: 13, repeat: Infinity, ease: 'easeInOut' }}
+                >
+                  <img
+                    src="/assets/about.png"
+                    alt={`About ${aboutData.name}`}
+                    loading="lazy"
+                    className="photo-grade w-full h-full object-cover scale-125"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = '/assets/about.svg';
+                    }}
+                  />
+                </motion.div>
               </div>
             </motion.div>
 

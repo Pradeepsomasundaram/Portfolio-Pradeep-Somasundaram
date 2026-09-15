@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { useRef, useState } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { TypeAnimation } from 'react-type-animation';
 import { HiDownload, HiEye, HiSparkles } from 'react-icons/hi';
 import { FaGithub, FaLinkedin } from 'react-icons/fa';
@@ -20,9 +20,22 @@ const roles = [
 export const Hero = () => {
   const [showResume, setShowResume] = useState(false);
   const { setChatbotOpen } = useAppStore();
+  const sectionRef = useRef<HTMLElement>(null);
+
+  // Classic cinematic opening move: as the next section scrolls in, the
+  // camera pulls back — Hero content scales down, drifts and fades rather
+  // than snapping away, like Apple's product-page transitions.
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start start', 'end start'],
+  });
+  const heroScale = useTransform(scrollYProgress, [0, 1], [1, 0.85]);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.85], [1, 0]);
+  const heroY = useTransform(scrollYProgress, [0, 1], [0, 120]);
 
   return (
     <section
+      ref={sectionRef}
       id="hero"
       className="relative min-h-screen flex items-center justify-center px-4 pt-24 overflow-hidden"
     >
@@ -37,7 +50,10 @@ export const Hero = () => {
         }}
       />
 
-      <div className="max-w-7xl mx-auto w-full">
+      <motion.div
+        className="max-w-7xl mx-auto w-full"
+        style={{ scale: heroScale, opacity: heroOpacity, y: heroY }}
+      >
         <div className="flex flex-col md:flex-row items-center justify-between gap-12">
           {/* Text Content */}
           <motion.div
@@ -132,7 +148,11 @@ export const Hero = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
           >
-            <div className="relative group">
+            <motion.div
+              className="relative group"
+              animate={{ y: [0, -16, 0] }}
+              transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
+            >
               {/* Animated outer ring */}
               <div className="absolute -inset-3 rounded-full border-2 border-dashed border-secondary/40 animate-spin-slow" />
               <div className="absolute -inset-6 rounded-full border border-primary/10 group-hover:border-primary/25 transition-colors duration-500" />
@@ -141,23 +161,30 @@ export const Hero = () => {
                 animate={{ rotate: 360 }}
                 transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
               />
-              <TiltCard className="rounded-full" maxTilt={10} scale={1.04}>
-                <div className="photo-grade-frame w-64 h-64 md:w-80 md:h-80 rounded-full overflow-hidden border-4 border-white dark:border-void shadow-2xl">
-                  <picture>
-                    <source srcSet="/assets/profile.webp" type="image/webp" />
-                    <img
-                      src="/assets/profile.png"
-                      alt="Pradeep Somasundaram"
-                      loading="lazy"
-                      className="photo-grade w-full h-full object-cover"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src = '/assets/profile.svg';
-                      }}
-                    />
-                  </picture>
-                </div>
-              </TiltCard>
-            </div>
+              <div style={{ perspective: '1400px' }}>
+                <motion.div
+                  animate={{ rotateY: [0, 22, 0, -22, 0], rotateZ: [0, 2, 0, -2, 0] }}
+                  transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut' }}
+                >
+                  <TiltCard className="rounded-full" maxTilt={10} scale={1.04}>
+                    <div className="photo-grade-frame w-64 h-64 md:w-80 md:h-80 rounded-full overflow-hidden border-4 border-white dark:border-void shadow-2xl">
+                      <picture>
+                        <source srcSet="/assets/profile.webp" type="image/webp" />
+                        <img
+                          src="/assets/profile.png"
+                          alt="Pradeep Somasundaram"
+                          loading="lazy"
+                          className="photo-grade w-full h-full object-cover"
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).src = '/assets/profile.svg';
+                          }}
+                        />
+                      </picture>
+                    </div>
+                  </TiltCard>
+                </motion.div>
+              </div>
+            </motion.div>
           </motion.div>
         </div>
 
@@ -173,7 +200,7 @@ export const Hero = () => {
           <CounterAnimation end={2} label="Publications" />
           <CounterAnimation end={6} label="Certifications" />
         </motion.div>
-      </div>
+      </motion.div>
 
       <ResumeModal isOpen={showResume} onClose={() => setShowResume(false)} />
     </section>

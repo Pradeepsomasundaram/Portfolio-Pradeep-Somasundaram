@@ -21,9 +21,9 @@ export const CinematicBackground = () => {
   const y2 = useTransform(scrollYProgress, [0, 1], ['0%', '25%']);
   const y3 = useTransform(scrollYProgress, [0, 1], ['0%', '-20%']);
 
-  const opacity1 = useTransform(scrollYProgress, [0, 0.35, 0.7, 1], [0.55, 0.2, 0.1, 0.35]);
-  const opacity2 = useTransform(scrollYProgress, [0, 0.3, 0.55, 0.85, 1], [0.1, 0.4, 0.55, 0.3, 0.15]);
-  const opacity3 = useTransform(scrollYProgress, [0, 0.5, 0.75, 1], [0.1, 0.2, 0.45, 0.55]);
+  const opacity1 = useTransform(scrollYProgress, [0, 0.35, 0.7, 1], [0.75, 0.3, 0.15, 0.5]);
+  const opacity2 = useTransform(scrollYProgress, [0, 0.3, 0.55, 0.85, 1], [0.15, 0.55, 0.75, 0.45, 0.2]);
+  const opacity3 = useTransform(scrollYProgress, [0, 0.5, 0.75, 1], [0.15, 0.3, 0.6, 0.75]);
 
   const rotate = useTransform(scrollYProgress, [0, 1], [0, 25]);
 
