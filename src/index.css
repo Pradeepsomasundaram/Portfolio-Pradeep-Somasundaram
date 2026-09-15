@@ -205,32 +205,6 @@
   color: inherit;
 }
 
-/* Cinematic light-beam sweep across the whole page.
-   The rotation is baked into every keyframe step (rather than left to a
-   Tailwind rotate-* utility class) because an @keyframes rule that only
-   animates translateX would otherwise overwrite the element's whole
-   `transform` property while running and silently drop the rotation. */
-@keyframes light-sweep {
-  0% {
-    transform: translateX(0) rotate(-12deg);
-  }
-  55% {
-    transform: translateX(160vw) rotate(-12deg);
-  }
-  100% {
-    transform: translateX(160vw) rotate(-12deg);
-  }
-}
-
-.animate-light-sweep {
-  animation: light-sweep 7s ease-in-out infinite;
-}
-
-.animate-light-sweep-delayed {
-  animation: light-sweep 7s ease-in-out infinite;
-  animation-delay: 2.5s;
-}
-
 /* Infinite horizontal scroll for the tech keyword marquee */
 @keyframes marquee {
   from {

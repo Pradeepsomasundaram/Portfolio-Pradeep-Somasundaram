@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { useRef, useState } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { TypeAnimation } from 'react-type-animation';
 import { HiDownload, HiEye, HiSparkles } from 'react-icons/hi';
 import { FaGithub, FaLinkedin } from 'react-icons/fa';
@@ -20,9 +20,22 @@ const roles = [
 export const Hero = () => {
   const [showResume, setShowResume] = useState(false);
   const { setChatbotOpen } = useAppStore();
+  const sectionRef = useRef<HTMLElement>(null);
+
+  // Classic cinematic opening move: as the next section scrolls in, the
+  // camera pulls back — Hero content scales down, drifts and fades rather
+  // than snapping away, like Apple's product-page transitions.
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start start', 'end start'],
+  });
+  const heroScale = useTransform(scrollYProgress, [0, 1], [1, 0.85]);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.85], [1, 0]);
+  const heroY = useTransform(scrollYProgress, [0, 1], [0, 120]);
 
   return (
     <section
+      ref={sectionRef}
       id="hero"
       className="relative min-h-screen flex items-center justify-center px-4 pt-24 overflow-hidden"
     >
@@ -37,7 +50,10 @@ export const Hero = () => {
         }}
       />
 
-      <div className="max-w-7xl mx-auto w-full">
+      <motion.div
+        className="max-w-7xl mx-auto w-full"
+        style={{ scale: heroScale, opacity: heroOpacity, y: heroY }}
+      >
         <div className="flex flex-col md:flex-row items-center justify-between gap-12">
           {/* Text Content */}
           <motion.div
@@ -184,7 +200,7 @@ export const Hero = () => {
           <CounterAnimation end={2} label="Publications" />
           <CounterAnimation end={6} label="Certifications" />
         </motion.div>
-      </div>
+      </motion.div>
 
       <ResumeModal isOpen={showResume} onClose={() => setShowResume(false)} />
     </section>
