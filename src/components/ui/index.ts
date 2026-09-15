@@ -13,3 +13,7 @@ export { CustomCursor } from './CustomCursor';
 export { BootIntro } from './BootIntro';
 export { NeuralSkillsNetwork } from './NeuralSkillsNetwork';
 export { ProjectModal } from './ProjectModal';
+export { SectionDivider } from './SectionDivider';
+export { CinematicBackground } from './CinematicBackground';
+export { ShowMoreButton } from './ShowMoreButton';
+export { TechMarquee } from './TechMarquee';

@@ -21,7 +21,7 @@ export const Testimonials = () => {
     setCurrent((c) => (c + 1) % testimonialsData.length);
 
   return (
-    <section id="testimonials" className="py-20 px-4 bg-white/5">
+    <section id="testimonials" className="py-20 px-4">
       <div className="max-w-4xl mx-auto">
         <AnimatedSection>
           <h2 className="text-4xl md:text-5xl font-display font-bold text-center mb-12 heading-shimmer">
@@ -36,7 +36,7 @@ export const Testimonials = () => {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -50 }}
                 transition={{ duration: 0.4 }}
-                className="bg-white dark:bg-gray-900 rounded-2xl p-8 md:p-12 shadow-lg"
+                className="glass-panel rounded-2xl p-8 md:p-12 shadow-glow"
               >
                 <FaQuoteLeft className="text-primary/20 text-4xl mb-6" />
                 <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-8 leading-relaxed italic">
@@ -64,7 +64,7 @@ export const Testimonials = () => {
             <div className="flex items-center justify-center gap-4 mt-8">
               <button
                 onClick={prev}
-                className="p-2 rounded-full bg-white dark:bg-gray-700 shadow-md hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
+                className="p-2 rounded-full bg-white dark:bg-white/10 shadow-md hover:bg-gray-50 dark:hover:bg-white/20 transition-colors"
               >
                 <HiChevronLeft className="w-5 h-5 text-gray-600 dark:text-gray-300" />
               </button>
@@ -83,7 +83,7 @@ export const Testimonials = () => {
               </div>
               <button
                 onClick={next}
-                className="p-2 rounded-full bg-white dark:bg-gray-700 shadow-md hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
+                className="p-2 rounded-full bg-white dark:bg-white/10 shadow-md hover:bg-gray-50 dark:hover:bg-white/20 transition-colors"
               >
                 <HiChevronRight className="w-5 h-5 text-gray-600 dark:text-gray-300" />
               </button>

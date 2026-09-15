@@ -20,7 +20,7 @@ export const Education = () => {
                 <AnimatedSection key={edu.id} delay={index * 0.15}>
                   <div className="relative md:pl-20">
                     {/* Timeline dot */}
-                    <div className="absolute left-6 top-8 w-5 h-5 rounded-full border-4 border-primary bg-white dark:bg-gray-900 z-10 hidden md:block" />
+                    <div className="absolute left-6 top-8 w-5 h-5 rounded-full border-4 border-primary bg-white dark:bg-void z-10 hidden md:block" />
 
                     <Card>
                       <div className="flex flex-col md:flex-row gap-6">

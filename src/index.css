@@ -205,6 +205,21 @@
   color: inherit;
 }
 
+/* Infinite horizontal scroll for the tech keyword marquee */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 28s linear infinite;
+  width: max-content;
+}
+
 /* Editorial color-grade treatment for real photos — unifies them with the
    gold/emerald brand palette instead of leaving raw camera color flat against it. */
 .photo-grade {

@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { AnimatedSection, Card, Badge, TiltCard, ProjectModal } from '../ui';
+import { useState, useEffect } from 'react';
+import { AnimatedSection, Card, Badge, TiltCard, ProjectModal, ShowMoreButton } from '../ui';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaGithub, FaStar } from 'react-icons/fa';
 import { HiArrowRight } from 'react-icons/hi';
@@ -13,10 +13,13 @@ const categories = [
   ...Array.from(new Set(projects.map((p) => p.category))),
 ];
 
+const INITIAL_COUNT = 6;
+
 export const Projects = () => {
   const [activeCategory, setActiveCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [expanded, setExpanded] = useState(false);
 
   const filteredProjects = projects.filter((project) => {
     const matchesCategory =
@@ -30,10 +33,16 @@ export const Projects = () => {
     return matchesCategory && matchesSearch;
   });
 
+  useEffect(() => {
+    setExpanded(false);
+  }, [activeCategory, searchQuery]);
+
+  const visibleProjects = expanded ? filteredProjects : filteredProjects.slice(0, INITIAL_COUNT);
+
   return (
     <section
       id="projects"
-      className="py-20 px-4 bg-gray-100/50 dark:bg-white/5"
+      className="py-20 px-4"
     >
       <div className="max-w-7xl mx-auto">
         <AnimatedSection>
@@ -49,7 +58,7 @@ export const Projects = () => {
               aria-label="Search projects"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full max-w-md mx-auto block px-6 py-3 rounded-full border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:border-primary focus:outline-none transition-colors"
+              className="w-full max-w-md mx-auto block px-6 py-3 rounded-full border-2 border-gray-300 dark:border-white/10 bg-white dark:bg-white/5 text-gray-900 dark:text-white focus:border-primary focus:outline-none transition-colors"
             />
           </div>
 
@@ -66,7 +75,7 @@ export const Projects = () => {
                   className={`px-6 py-2 rounded-full font-medium transition-all flex items-center gap-2 ${
                     activeCategory === category
                       ? 'bg-primary text-white shadow-lg'
-                      : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600'
+                      : 'bg-white dark:bg-white/10 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/20'
                   }`}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
@@ -97,7 +106,7 @@ export const Projects = () => {
           {/* Projects Grid */}
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             <AnimatePresence mode="popLayout">
-              {filteredProjects.map((project, index) => (
+              {visibleProjects.map((project, index) => (
                 <motion.div
                   key={project.id}
                   layout
@@ -182,6 +191,15 @@ export const Projects = () => {
               ))}
             </AnimatePresence>
           </div>
+
+          {filteredProjects.length > INITIAL_COUNT && (
+            <ShowMoreButton
+              expanded={expanded}
+              onClick={() => setExpanded((e) => !e)}
+              hiddenCount={filteredProjects.length - INITIAL_COUNT}
+              itemLabel="more projects"
+            />
+          )}
 
           {/* No Results */}
           {filteredProjects.length === 0 && (

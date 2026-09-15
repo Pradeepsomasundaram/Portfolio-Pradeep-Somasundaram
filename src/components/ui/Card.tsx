@@ -6,6 +6,7 @@ interface CardProps {
   className?: string;
   hover?: boolean;
   onClick?: () => void;
+  title?: string;
 }
 
 export const Card = ({
@@ -13,6 +14,7 @@ export const Card = ({
   className = '',
   hover = true,
   onClick,
+  title,
 }: CardProps) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const [glowPosition, setGlowPosition] = useState({ x: 0, y: 0 });
@@ -31,6 +33,7 @@ export const Card = ({
 
   return (
     <div
+      title={title}
       className={`relative rounded-lg p-[1px] transition-all duration-300 ${
         hover && isHovered
           ? 'bg-gradient-to-r from-primary via-secondary to-accent shadow-glow'

@@ -37,28 +37,6 @@ export const Hero = () => {
         }}
       />
 
-      {/* Aurora background blobs */}
-      <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-        <motion.div
-          className="absolute w-[32rem] h-[32rem] rounded-full blur-3xl opacity-30 bg-primary"
-          animate={{ x: [0, 80, -40, 0], y: [0, -60, 40, 0] }}
-          transition={{ duration: 22, repeat: Infinity, ease: 'easeInOut' }}
-          style={{ top: '-10%', left: '-10%' }}
-        />
-        <motion.div
-          className="absolute w-[28rem] h-[28rem] rounded-full blur-3xl opacity-25 bg-accent"
-          animate={{ x: [0, -60, 50, 0], y: [0, 50, -30, 0] }}
-          transition={{ duration: 26, repeat: Infinity, ease: 'easeInOut' }}
-          style={{ bottom: '-10%', right: '-5%' }}
-        />
-        <motion.div
-          className="absolute w-96 h-96 rounded-full blur-3xl opacity-25 bg-secondary"
-          animate={{ x: [0, 40, -60, 0], y: [0, -30, 20, 0] }}
-          transition={{ duration: 18, repeat: Infinity, ease: 'easeInOut' }}
-          style={{ top: '30%', left: '50%' }}
-        />
-      </div>
-
       <div className="max-w-7xl mx-auto w-full">
         <div className="flex flex-col md:flex-row items-center justify-between gap-12">
           {/* Text Content */}

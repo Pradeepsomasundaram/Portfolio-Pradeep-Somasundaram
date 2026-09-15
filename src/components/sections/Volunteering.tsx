@@ -1,12 +1,18 @@
-import { AnimatedSection, Card, Badge } from '../ui';
+import { useState } from 'react';
+import { AnimatedSection, Card, Badge, ShowMoreButton } from '../ui';
 import { HiHeart } from 'react-icons/hi';
 import volunteeringData from '../../data/volunteering.json';
 
+const INITIAL_COUNT = 3;
+
 export const Volunteering = () => {
+  const [expanded, setExpanded] = useState(false);
+  const visible = expanded ? volunteeringData : volunteeringData.slice(0, INITIAL_COUNT);
+
   return (
     <section
       id="volunteering"
-      className="py-20 px-4 bg-white/5"
+      className="py-20 px-4"
     >
       <div className="max-w-7xl mx-auto">
         <AnimatedSection>
@@ -15,13 +21,13 @@ export const Volunteering = () => {
           </h2>
 
           <div className="space-y-6 max-w-4xl mx-auto">
-            {volunteeringData.map((vol, index) => (
+            {visible.map((vol, index) => (
               <AnimatedSection key={vol.id} delay={index * 0.15}>
                 <Card>
                   <div className="flex flex-col md:flex-row gap-6">
                     <div className="flex-shrink-0 flex items-start justify-center">
-                      <div className="w-14 h-14 bg-primary bg-opacity-10 rounded-full flex items-center justify-center">
-                        <HiHeart className="w-7 h-7 text-primary" />
+                      <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-accent to-primary flex items-center justify-center shadow-lg">
+                        <HiHeart className="w-7 h-7 text-white" />
                       </div>
                     </div>
 
@@ -51,6 +57,14 @@ export const Volunteering = () => {
               </AnimatedSection>
             ))}
           </div>
+
+          {volunteeringData.length > INITIAL_COUNT && (
+            <ShowMoreButton
+              expanded={expanded}
+              onClick={() => setExpanded((e) => !e)}
+              hiddenCount={volunteeringData.length - INITIAL_COUNT}
+            />
+          )}
         </AnimatedSection>
       </div>
     </section>
