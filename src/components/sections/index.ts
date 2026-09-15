@@ -4,6 +4,7 @@ export { Experience } from './Experience';
 export { Education } from './Education';
 export { Projects } from './Projects';
 export { Skills } from './Skills';
+export { Universe } from './Universe';
 export { Certifications } from './Certifications';
 export { Publications } from './Publications';
 export { Volunteering } from './Volunteering';

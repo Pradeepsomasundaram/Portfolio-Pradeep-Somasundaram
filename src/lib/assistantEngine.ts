@@ -549,6 +549,7 @@ const navigablePages: CommandResult[] = [
   { id: 'about', label: 'About', sublabel: 'Background & bio', to: '#about' },
   { id: 'experience', label: 'Experience', sublabel: 'Work history', to: '#experience' },
   { id: 'education', label: 'Education', sublabel: 'Degrees & academics', to: '#education' },
+  { id: 'universe', label: 'The Toolkit', sublabel: '3D tool universe', to: '#universe' },
   { id: 'projects', label: 'Projects', sublabel: 'Featured work', to: '#projects' },
   { id: 'skills', label: 'Skills', sublabel: 'Tech stack', to: '#skills' },
   { id: 'certifications', label: 'Certifications', sublabel: 'Credentials', to: '#certifications' },

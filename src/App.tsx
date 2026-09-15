@@ -6,6 +6,7 @@ import {
   Experience,
   Education,
   Skills,
+  Universe,
   Projects,
   Certifications,
   Publications,
@@ -27,6 +28,7 @@ function App() {
       <Education />
       <SectionDivider />
       <Skills />
+      <Universe />
       <TechMarquee />
       <Projects />
       <SectionDivider />

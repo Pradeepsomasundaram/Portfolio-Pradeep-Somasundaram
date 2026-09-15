@@ -17,3 +17,5 @@ export { SectionDivider } from './SectionDivider';
 export { CinematicBackground } from './CinematicBackground';
 export { ShowMoreButton } from './ShowMoreButton';
 export { TechMarquee } from './TechMarquee';
+export { CareerPath } from './CareerPath';
+export { DoodleUnderline, DoodleCircle } from './Doodle';

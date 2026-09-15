@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { AnimatedSection, Card, Badge, ShowMoreButton } from '../ui';
+import { AnimatedSection, Card, Badge, ShowMoreButton, CareerPath } from '../ui';
 import experiencesData from '../../data/experience.json';
 
 const INITIAL_COUNT = 4;
@@ -12,9 +12,16 @@ export const Experience = () => {
     <section id="experience" className="py-20 px-4">
       <div className="max-w-7xl mx-auto">
         <AnimatedSection>
-          <h2 className="text-4xl md:text-5xl font-display font-bold text-center mb-12 heading-shimmer">
+          <h2 className="text-4xl md:text-5xl font-display font-bold text-center mb-2 heading-shimmer">
             Experience
           </h2>
+          <p className="text-center font-mono text-xs text-secondary/80 mb-8">
+            // a journey through time
+          </p>
+
+          <div className="glass-panel rounded-2xl p-4 sm:p-6 shadow-glow mb-12 overflow-x-auto">
+            <CareerPath items={experiencesData} />
+          </div>
 
           <div className="relative">
             {/* Timeline connector line */}

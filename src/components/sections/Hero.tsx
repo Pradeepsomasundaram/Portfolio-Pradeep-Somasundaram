@@ -3,7 +3,7 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import { TypeAnimation } from 'react-type-animation';
 import { HiDownload, HiEye, HiSparkles } from 'react-icons/hi';
 import { FaGithub, FaLinkedin } from 'react-icons/fa';
-import { Button, CounterAnimation, ResumeModal, TiltCard } from '../ui';
+import { Button, CounterAnimation, ResumeModal, TiltCard, DoodleUnderline, DoodleCircle } from '../ui';
 import { useAppStore } from '../../stores/appStore';
 
 const roles = [
@@ -77,6 +77,7 @@ export const Hero = () => {
                 repeat={Infinity}
               />
             </div>
+            <DoodleUnderline className="w-36 h-4 text-accent -mt-4 mb-4 hidden md:block" />
             <p className="text-lg text-gray-600 dark:text-gray-300 mb-8 max-w-2xl">
               MS in Data Science graduate from The George Washington University.
               Junior Data Scientist at UPS, specializing in Machine Learning,
@@ -105,15 +106,18 @@ export const Hero = () => {
               >
                 Contact Me
               </Button>
-              <motion.button
-                onClick={() => setChatbotOpen(true)}
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-medium text-white bg-gradient-to-r from-primary via-secondary to-accent shadow-md hover:shadow-glow transition-shadow bg-[length:200%_auto] hover:bg-right"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <HiSparkles className="w-4 h-4" />
-                Ask my AI Assistant
-              </motion.button>
+              <div className="relative inline-block">
+                <DoodleCircle className="absolute -inset-3 w-[calc(100%+24px)] h-[calc(100%+24px)] text-accent pointer-events-none hidden md:block" />
+                <motion.button
+                  onClick={() => setChatbotOpen(true)}
+                  className="relative inline-flex items-center gap-2 px-6 py-3 rounded-full font-medium text-white bg-gradient-to-r from-primary via-secondary to-accent shadow-md hover:shadow-glow transition-shadow bg-[length:200%_auto] hover:bg-right"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <HiSparkles className="w-4 h-4" />
+                  Ask my AI Assistant
+                </motion.button>
+              </div>
             </div>
 
             {/* Social Links */}
