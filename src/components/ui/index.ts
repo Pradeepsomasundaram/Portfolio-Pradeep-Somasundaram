@@ -19,3 +19,4 @@ export { ShowMoreButton } from './ShowMoreButton';
 export { TechMarquee } from './TechMarquee';
 export { CareerPath } from './CareerPath';
 export { DoodleUnderline, DoodleCircle } from './Doodle';
+export { ProjectCarousel } from './ProjectCarousel';

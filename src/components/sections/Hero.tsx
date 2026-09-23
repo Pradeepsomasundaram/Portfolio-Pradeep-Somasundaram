@@ -7,6 +7,8 @@ import { Button, CounterAnimation, ResumeModal, TiltCard, DoodleUnderline, Doodl
 import { useAppStore } from '../../stores/appStore';
 
 const roles = [
+  'Agentic AI & MLOps Lead',
+  2000,
   'Data Scientist',
   2000,
   'Data Engineer',
@@ -80,7 +82,7 @@ export const Hero = () => {
             <DoodleUnderline className="w-36 h-4 text-accent -mt-4 mb-4 hidden md:block" />
             <p className="text-lg text-gray-600 dark:text-gray-300 mb-8 max-w-2xl">
               MS in Data Science graduate from The George Washington University.
-              Junior Data Scientist at UPS, specializing in Machine Learning,
+              Agentic AI & MLOps Lead at Cognizant, specializing in Machine Learning,
               AI Engineering, and scalable data solutions.
             </p>
 

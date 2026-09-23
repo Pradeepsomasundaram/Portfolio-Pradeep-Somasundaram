@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { AnimatedSection, Card, Badge, TiltCard, ProjectModal, ShowMoreButton } from '../ui';
+import { AnimatedSection, Card, Badge, TiltCard, ProjectModal, ShowMoreButton, ProjectCarousel } from '../ui';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaGithub, FaStar } from 'react-icons/fa';
 import { HiArrowRight } from 'react-icons/hi';
@@ -15,11 +15,21 @@ const categories = [
 
 const INITIAL_COUNT = 6;
 
+const categoryGradient = (category: string) =>
+  category === 'Machine Learning' ? 'bg-gradient-to-br from-indigo-500 to-purple-600' :
+  category === 'AI/NLP' ? 'bg-gradient-to-br from-pink-500 to-rose-600' :
+  category === 'Data Engineering' ? 'bg-gradient-to-br from-emerald-500 to-teal-600' :
+  category === 'Deep Learning' ? 'bg-gradient-to-br from-blue-500 to-cyan-600' :
+  category === 'Full Stack' ? 'bg-gradient-to-br from-orange-500 to-amber-600' :
+  category === 'IoT' ? 'bg-gradient-to-br from-green-500 to-lime-600' :
+  'bg-gradient-to-br from-gray-500 to-gray-600';
+
 export const Projects = () => {
   const [activeCategory, setActiveCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [expanded, setExpanded] = useState(false);
+  const [view, setView] = useState<'carousel' | 'grid'>('carousel');
 
   const filteredProjects = projects.filter((project) => {
     const matchesCategory =
@@ -103,6 +113,35 @@ export const Projects = () => {
             Showing {filteredProjects.length} of {projects.length} projects
           </motion.p>
 
+          <div className="flex justify-center mb-8">
+            <div className="inline-flex rounded-full glass-panel p-1 text-sm">
+              {(['carousel', 'grid'] as const).map((v) => (
+                <button
+                  key={v}
+                  onClick={() => setView(v)}
+                  className={`px-4 py-1.5 rounded-full font-medium capitalize transition-colors ${
+                    view === v
+                      ? 'bg-primary text-white'
+                      : 'text-gray-600 dark:text-gray-300 hover:text-primary'
+                  }`}
+                  aria-pressed={view === v}
+                >
+                  {v}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {view === 'carousel' && filteredProjects.length > 0 && (
+            <ProjectCarousel
+              projects={filteredProjects}
+              gradientFor={categoryGradient}
+              onSelect={setSelectedProject}
+            />
+          )}
+
+          {view === 'grid' && (
+          <>
           {/* Projects Grid */}
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             <AnimatePresence mode="popLayout">
@@ -119,15 +158,7 @@ export const Projects = () => {
                   <Card hover className="!p-0 overflow-hidden h-full">
                     <div className="h-full flex flex-col">
                       {/* Project Thumbnail */}
-                      <div className={`h-32 flex items-center justify-center text-white text-3xl font-bold opacity-80 ${
-                        project.category === 'Machine Learning' ? 'bg-gradient-to-br from-indigo-500 to-purple-600' :
-                        project.category === 'AI/NLP' ? 'bg-gradient-to-br from-pink-500 to-rose-600' :
-                        project.category === 'Data Engineering' ? 'bg-gradient-to-br from-emerald-500 to-teal-600' :
-                        project.category === 'Deep Learning' ? 'bg-gradient-to-br from-blue-500 to-cyan-600' :
-                        project.category === 'Full Stack' ? 'bg-gradient-to-br from-orange-500 to-amber-600' :
-                        project.category === 'IoT' ? 'bg-gradient-to-br from-green-500 to-lime-600' :
-                        'bg-gradient-to-br from-gray-500 to-gray-600'
-                      }`}>
+                      <div className={`h-32 flex items-center justify-center text-white text-3xl font-bold opacity-80 ${categoryGradient(project.category)}`}>
                         {project.category}
                       </div>
                       <div className="p-6 flex-1 flex flex-col">
@@ -199,6 +230,8 @@ export const Projects = () => {
               hiddenCount={filteredProjects.length - INITIAL_COUNT}
               itemLabel="more projects"
             />
+          )}
+          </>
           )}
 
           {/* No Results */}

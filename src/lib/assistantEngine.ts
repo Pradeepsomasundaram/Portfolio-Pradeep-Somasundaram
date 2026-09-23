@@ -86,23 +86,23 @@ function buildIntents(): Intent[] {
           .join('\n\n');
 
         return {
-          text: `Pradeep has ${experienceData.length} professional roles spanning data science, data engineering, AI/ML, and IoT:\n\n${expSummary}\n\nHe has worked across industries including logistics (UPS), manufacturing (BMSC), education (CEAC), consulting (IBM), and automation (Shree Kay Vee).`,
-          followUps: ['UPS role details', 'BMSC role details', 'Skills overview', 'Projects'],
+          text: `Pradeep has ${experienceData.length} professional roles spanning data science, data engineering, AI/ML, and IoT:\n\n${expSummary}\n\nHe has worked across industries including technology services (Cognizant), manufacturing (BMSC), education (CEAC), consulting (IBM), and automation (Shree Kay Vee).`,
+          followUps: ['Cognizant role details', 'BMSC role details', 'Skills overview', 'Projects'],
         };
       },
     },
 
-    // --- UPS specific ---
+    // --- Cognizant specific ---
     {
-      name: 'ups',
+      name: 'cognizant',
       keywords: [
-        ['ups', 6], ['current job', 5], ['current company', 5], ['logistics', 3],
-        ['supply chain', 3], ['atlanta', 2],
+        ['cognizant', 6], ['current job', 5], ['current company', 5], ['agentic', 5],
+        ['mlops', 5], ['atlanta', 2],
       ],
       handler: () => {
-        const ups = experienceData.find((e) => e.company === 'UPS')!;
+        const cog = experienceData.find((e) => e.company === 'Cognizant')!;
         return {
-          text: `Pradeep currently works as a ${ups.role} at ${ups.company} (${ups.dateRange}).\n\nLocation: ${ups.location}\nType: ${ups.type}\n\n${ups.description}\n\nKey focus areas:\n${ups.achievements.map((a) => `- ${a}`).join('\n')}\n\nTechnologies: ${ups.technologies.join(', ')}`,
+          text: `Pradeep currently works as a ${cog.role} at ${cog.company} (${cog.dateRange}).\n\nLocation: ${cog.location}\nType: ${cog.type}\n\n${cog.description}\n\nKey focus areas:\n${cog.achievements.map((a) => `- ${a}`).join('\n')}\n\nTechnologies: ${cog.technologies.join(', ')}`,
           followUps: ['Previous roles', 'Skills', 'Projects', 'Education'],
         };
       },
@@ -119,7 +119,7 @@ function buildIntents(): Intent[] {
         const bmsc = experienceData.find((e) => e.company === 'Beauty Manufacturing Solutions Corp')!;
         return {
           text: `At ${bmsc.company}, Pradeep served as ${bmsc.role} (${bmsc.dateRange}).\n\nLocation: ${bmsc.location}\n\nKey achievements:\n${bmsc.achievements.map((a) => `- ${a}`).join('\n')}\n\nTechnologies used: ${bmsc.technologies.join(', ')}\n\nThis role combined data engineering, data science, and ERP system administration to deliver scalable, data-driven solutions.`,
-          followUps: ['Current role at UPS', 'Data engineering skills', 'AWS experience', 'All experience'],
+          followUps: ['Current role at Cognizant', 'Data engineering skills', 'AWS experience', 'All experience'],
         };
       },
     },
@@ -423,7 +423,7 @@ function buildIntents(): Intent[] {
         ['hiring', 3],
       ],
       handler: () => ({
-        text: `Pradeep is currently based in Atlanta, Georgia, United States.\n\nHe is currently working as a Junior Data Scientist at UPS (started Feb 2026).\n\nHe's always open to exploring new technologies, collaborations, and networking opportunities. Feel free to reach out via the Contact page!`,
+        text: `Pradeep is currently based in Atlanta, Georgia, United States.\n\nHe is currently working as a Agentic AI & MLOps Lead at Cognizant (since Feb 2026).\n\nHe's always open to exploring new technologies, collaborations, and networking opportunities. Feel free to reach out via the Contact page!`,
         followUps: ['Contact info', 'Current role', 'Resume', 'About'],
       }),
     },
@@ -450,7 +450,7 @@ function buildIntents(): Intent[] {
         ['best', 2], ['top', 2], ['strongest', 4],
       ],
       handler: () => ({
-        text: `What makes Pradeep stand out:\n\n1. Full-spectrum data expertise — from raw data pipelines (AWS, ETL) to ML models (TensorFlow, PyTorch) to dashboards (Power BI, React)\n\n2. Research-backed skills — ${publicationsData.length} peer-reviewed publications in IEEE and Springer\n\n3. Industry diversity — experience across logistics (UPS), manufacturing (BMSC), education (CEAC), tech (IBM), and automation\n\n4. Academic excellence — MS from GWU (Grade: A), BE from Anna University (CGPA: 9.21/10)\n\n5. Impact-driven — built AWS data lakes integrating 6+ systems, reduced processing time by 50%, improved reporting accuracy by 25%\n\n6. Community-minded — IMF volunteer, Youth Red Cross, active in IEEE and professional organizations`,
+        text: `What makes Pradeep stand out:\n\n1. Full-spectrum data expertise — from raw data pipelines (AWS, ETL) to ML models (TensorFlow, PyTorch) to dashboards (Power BI, React)\n\n2. Research-backed skills — ${publicationsData.length} peer-reviewed publications in IEEE and Springer\n\n3. Industry diversity — experience across technology services (Cognizant), manufacturing (BMSC), education (CEAC), tech (IBM), and automation\n\n4. Academic excellence — MS from GWU (Grade: A), BE from Anna University (CGPA: 9.21/10)\n\n5. Impact-driven — built AWS data lakes integrating 6+ systems, reduced processing time by 50%, improved reporting accuracy by 25%\n\n6. Community-minded — IMF volunteer, Youth Red Cross, active in IEEE and professional organizations`,
         followUps: ['Experience', 'Projects', 'Testimonials', 'Contact'],
       }),
     },
