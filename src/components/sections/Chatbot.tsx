@@ -4,8 +4,11 @@ import { HiX, HiPaperAirplane, HiSparkles, HiOutlineClipboardCheck } from 'react
 import { useAppStore } from '../../stores/appStore';
 import type { Message } from '../../types/chatbot.types';
 import { generateResponse, matchJobDescription, initialQuickQuestions } from '../../lib/assistantEngine';
+import { askAgent, AgentUnavailableError, toolLabels } from '../../lib/agentClient';
 
 const JOB_MATCH_TRIGGERS = ['Match a job description', 'Match another job description'];
+const LIVE_FOLLOW_UPS = ['What is he building lately?', 'Best projects for ML roles', 'Why hire Pradeep?'];
+const LIMIT_CODES = ['rate_limited', 'capacity', 'busy'];
 
 const welcomeMessage: Message = {
   id: '1',
@@ -70,9 +73,9 @@ TypewriterText.displayName = 'TypewriterText';
 
 const reasoningPhases = ['Analyzing query', 'Retrieving context', 'Generating response'];
 
-// Cycles through fake reasoning phases while the "model" is thinking —
-// reinforces that this is an AI system, not a canned FAQ widget.
-const ReasoningTrace = () => {
+// Shows the agent's real tool calls once it starts using tools; until then it
+// cycles through generic phases while the request is in flight.
+const ReasoningTrace = ({ tools = [] }: { tools?: string[] }) => {
   const [phase, setPhase] = useState(0);
 
   useEffect(() => {
@@ -82,16 +85,19 @@ const ReasoningTrace = () => {
     return () => clearInterval(interval);
   }, []);
 
+  const steps = tools.length > 0 ? tools.map((t) => toolLabels[t] ?? t) : reasoningPhases.slice(0, phase + 1);
+  const active = steps.length - 1;
+
   return (
     <div className="flex flex-col gap-1 font-mono text-xs text-gray-400">
-      {reasoningPhases.slice(0, phase + 1).map((label, i) => (
+      {steps.map((label, i) => (
         <motion.span
           key={label}
           initial={{ opacity: 0, x: -4 }}
-          animate={{ opacity: i === phase ? 1 : 0.4 }}
+          animate={{ opacity: i === active ? 1 : 0.4 }}
           className="flex items-center gap-1.5"
         >
-          {i === phase ? (
+          {i === active ? (
             <span className="flex gap-0.5">
               <span className="w-1 h-1 bg-secondary rounded-full typing-dot" />
               <span className="w-1 h-1 bg-secondary rounded-full typing-dot" />
@@ -106,6 +112,17 @@ const ReasoningTrace = () => {
     </div>
   );
 };
+
+// Chips showing which tools the live agent used for an answer
+const ToolChips = ({ tools }: { tools: string[] }) => (
+  <div className="flex flex-wrap gap-1 mt-1.5 pt-1.5 border-t border-black/5 dark:border-white/10">
+    {tools.map((t) => (
+      <span key={t} className="font-mono text-[10px] px-1.5 py-0.5 rounded bg-secondary/10 text-secondary">
+        ⚙ {toolLabels[t] ?? t}
+      </span>
+    ))}
+  </div>
+);
 
 // Deterministic pseudo-confidence score so the same query always scores the same
 function confidenceFor(text: string): number {
@@ -123,6 +140,10 @@ export const Chatbot = () => {
   const [streamingId, setStreamingId] = useState<string | null>(null);
   const [confidenceById, setConfidenceById] = useState<Record<string, number>>({});
   const [jobMatchMode, setJobMatchMode] = useState(false);
+  const [liveText, setLiveText] = useState('');
+  const [liveTools, setLiveTools] = useState<string[]>([]);
+  // null until the first answer tells us whether the live agent is reachable
+  const [liveMode, setLiveMode] = useState<boolean | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -132,7 +153,7 @@ export const Chatbot = () => {
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages, isTyping, streamingId]);
+  }, [messages, isTyping, streamingId, liveText]);
 
   useEffect(() => {
     if (chatbotOpen) {
@@ -176,25 +197,64 @@ export const Chatbot = () => {
     setFollowUps([]);
     setIsTyping(true);
     setJobMatchMode(false);
+    setLiveText('');
+    setLiveTools([]);
 
-    const response = wasJobMatch ? matchJobDescription(messageText) : generateResponse(messageText);
-    const delay = Math.min(500 + response.text.length, 1200);
+    const answerOffline = (note = '') => {
+      const response = wasJobMatch ? matchJobDescription(messageText) : generateResponse(messageText);
+      const delay = Math.min(500 + response.text.length, 1200);
+      setTimeout(() => {
+        const botId = (Date.now() + 1).toString();
+        const content = note + response.text;
+        setIsTyping(false);
+        setMessages((prev) => [...prev, { id: botId, role: 'assistant', content, timestamp: new Date() }]);
+        setStreamingId(botId);
+        setConfidenceById((prev) => ({ ...prev, [botId]: confidenceFor(response.text) }));
+        setFollowUps(response.followUps);
+      }, delay);
+    };
 
-    setTimeout(() => {
-      const botId = (Date.now() + 1).toString();
-      const botMessage: Message = {
-        id: botId,
-        role: 'assistant',
-        content: response.text,
-        timestamp: new Date(),
-      };
-      setIsTyping(false);
-      setMessages((prev) => [...prev, botMessage]);
-      setStreamingId(botId);
-      setConfidenceById((prev) => ({ ...prev, [botId]: confidenceFor(response.text) }));
-      setFollowUps(response.followUps);
-    }, delay);
-  }, [input, isTyping, jobMatchMode, enterJobMatchMode]);
+    const history = [...messages, userMessage].slice(-8).map((m) => ({
+      role: m.role,
+      content:
+        m === userMessage && wasJobMatch
+          ? `Here is a job description. Assess how well Pradeep fits it.\n\n${m.content}`
+          : m.content,
+    }));
+    // The API needs the conversation to open with a user turn
+    while (history.length > 0 && history[0].role !== 'user') history.shift();
+
+    let answer = '';
+    askAgent(history, {
+      onText: (chunk) => {
+        answer += chunk;
+        setLiveText(answer);
+      },
+      onTool: (name) => setLiveTools((prev) => (prev.includes(name) ? prev : [...prev, name])),
+    })
+      .then((tools) => {
+        if (!answer.trim()) throw new AgentUnavailableError('empty', 'Live AI returned nothing.');
+        setLiveMode(true);
+        setIsTyping(false);
+        setLiveText('');
+        setLiveTools([]);
+        setMessages((prev) => [
+          ...prev,
+          { id: (Date.now() + 1).toString(), role: 'assistant', content: answer.trim(), timestamp: new Date(), tools },
+        ]);
+        setFollowUps(LIVE_FOLLOW_UPS);
+      })
+      .catch((err: unknown) => {
+        setLiveMode(false);
+        setLiveText('');
+        setLiveTools([]);
+        const code = err instanceof AgentUnavailableError ? err.code : 'error';
+        const note = LIMIT_CODES.includes(code)
+          ? `${(err as AgentUnavailableError).message} Answering from my built-in knowledge instead.\n\n`
+          : '';
+        answerOffline(note);
+      });
+  }, [input, isTyping, jobMatchMode, messages, enterJobMatchMode]);
 
   // Triggered from the ⌘K command palette's "Match a job description" action
   useEffect(() => {
@@ -214,7 +274,7 @@ export const Chatbot = () => {
     }
   };
 
-  const showQuickQuestions = messages.length <= 2 && followUps.length === 0 && !jobMatchMode;
+  const showQuickQuestions = messages.length <= 2 && followUps.length === 0 && !jobMatchMode && !isTyping;
 
   return (
     <>
@@ -265,7 +325,13 @@ export const Chatbot = () => {
                   AI Portfolio Assistant
                 </h3>
                 <p className="text-xs opacity-80">
-                  {jobMatchMode ? 'Job match mode — paste a JD below' : "Trained on Pradeep's work & skills"}
+                  {jobMatchMode
+                    ? 'Job match mode — paste a JD below'
+                    : liveMode === true
+                      ? 'Live AI agent · Claude with tools'
+                      : liveMode === false
+                        ? 'Offline mode · built-in answers'
+                        : "Trained on Pradeep's work & skills"}
                 </p>
               </div>
               <button
@@ -303,6 +369,7 @@ export const Chatbot = () => {
                     ) : (
                       msg.content
                     )}
+                    {msg.role === 'assistant' && msg.tools && msg.tools.length > 0 && <ToolChips tools={msg.tools} />}
                     {msg.role === 'assistant' && msg.id !== streamingId && confidenceById[msg.id] && (
                       <p className="mt-1.5 pt-1.5 border-t border-black/5 dark:border-white/10 font-mono text-[10px] text-secondary/80">
                         confidence: {confidenceById[msg.id]}%
@@ -314,9 +381,16 @@ export const Chatbot = () => {
               {isTyping && (
                 <div className="flex items-end gap-2 justify-start">
                   <AiOrb size="w-6 h-6" pulse />
-                  <div className="bg-gray-100 dark:bg-white/10 px-4 py-3 rounded-2xl rounded-bl-sm">
-                    <ReasoningTrace />
-                  </div>
+                  {liveText ? (
+                    <div className="max-w-[80%] px-3 py-2 rounded-2xl rounded-bl-sm text-sm whitespace-pre-line bg-gray-100 dark:bg-white/10 text-gray-800 dark:text-gray-200">
+                      {liveText}
+                      {liveTools.length > 0 && <ToolChips tools={liveTools} />}
+                    </div>
+                  ) : (
+                    <div className="bg-gray-100 dark:bg-white/10 px-4 py-3 rounded-2xl rounded-bl-sm">
+                      <ReasoningTrace tools={liveTools} />
+                    </div>
+                  )}
                 </div>
               )}
               <div ref={messagesEndRef} />
