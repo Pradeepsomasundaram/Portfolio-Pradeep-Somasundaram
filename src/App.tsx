@@ -8,6 +8,7 @@ import {
   Skills,
   Universe,
   Projects,
+  GithubActivity,
   Certifications,
   Publications,
   Awards,
@@ -31,6 +32,8 @@ function App() {
       <Universe />
       <TechMarquee />
       <Projects />
+      <SectionDivider />
+      <GithubActivity />
       <SectionDivider />
       <Certifications />
       <SectionDivider />

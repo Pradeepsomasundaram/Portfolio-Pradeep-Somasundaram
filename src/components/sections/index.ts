@@ -3,6 +3,7 @@ export { About } from './About';
 export { Experience } from './Experience';
 export { Education } from './Education';
 export { Projects } from './Projects';
+export { GithubActivity } from './GithubActivity';
 export { Skills } from './Skills';
 export { Universe } from './Universe';
 export { Certifications } from './Certifications';
