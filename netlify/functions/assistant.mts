@@ -397,10 +397,11 @@ async function runAgent(apiKey: string, history: ChatTurn[], send: Send): Promis
 
   for (let turn = 0; turn < MAX_TURNS; turn++) {
     const lastTurn = turn === MAX_TURNS - 1;
+    const hadTextBefore = emittedText; // only separate at the start of a new turn
     let separated = false;
 
     const { parts, blocked } = await streamTurn(apiKey, contents, lastTurn, (text) => {
-      if (emittedText && !separated) {
+      if (hadTextBefore && !separated) {
         separated = true;
         send({ type: 'text', text: '\n\n' });
       }
