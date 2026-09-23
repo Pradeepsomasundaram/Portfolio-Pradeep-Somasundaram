@@ -1,18 +1,18 @@
 [
   {
-    "id": "ups-2026",
-    "company": "UPS",
-    "role": "Junior Data Scientist",
+    "id": "cognizant-2026",
+    "company": "Cognizant",
+    "role": "Agentic AI & MLOps Lead",
     "dateRange": "Feb 2026 - Present",
-    "duration": "Starting",
+    "duration": "Current",
     "location": "Atlanta, Georgia, United States",
     "type": "Full-time",
-    "skills": ["Python", "SQL", "Machine Learning", "Data Science", "Analytics"],
-    "technologies": ["Python", "SQL", "Machine Learning", "Data Analytics", "Cloud Computing"],
-    "description": "Junior Data Scientist at UPS, applying data science and machine learning expertise to drive logistics and operational insights across one of the world's largest supply chain organizations.",
+    "skills": ["Python", "SQL", "Machine Learning", "Agentic AI", "MLOps", "Data Science"],
+    "technologies": ["Python", "SQL", "Machine Learning", "Agentic AI", "MLOps", "Cloud Computing"],
+    "description": "Agentic AI and MLOps Lead at Cognizant, leading the design and delivery of agentic AI solutions and the MLOps practices that take machine learning models from prototype to reliable production.",
     "achievements": [
-      "Applying ML models to optimize logistics and supply chain operations",
-      "Leveraging data analytics for operational decision-making"
+      "Leading agentic AI solution design and delivery",
+      "Driving MLOps practices for deploying, monitoring, and operating ML models in production"
     ],
     "featured": true
   },

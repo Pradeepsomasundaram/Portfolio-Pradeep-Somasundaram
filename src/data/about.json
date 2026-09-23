@@ -2,12 +2,13 @@
   "name": "Pradeep Somasundaram",
   "tagline": "Data Scientist | AI/ML Engineer | Full-Stack Developer",
   "roles": [
+    "Agentic AI & MLOps Lead",
     "Data Scientist",
     "Data Engineer",
     "AI/ML Engineer",
     "Full-Stack Developer"
   ],
-  "bio": "Master of Science in Data Science graduate from The George Washington University, specializing in Machine Learning, AI Engineering, and scalable data solutions. Starting as a Junior Data Scientist at UPS in February 2026. My expertise spans the full data lifecycle—from building AWS data lakes and ETL pipelines to developing ML models for forecasting and anomaly detection. I'm passionate about leveraging data and AI to drive business decisions and solve complex problems.",
+  "bio": "Master of Science in Data Science graduate from The George Washington University, specializing in Machine Learning, AI Engineering, and scalable data solutions. Currently the Agentic AI and MLOps Lead at Cognizant. My expertise spans the full data lifecycle—from building AWS data lakes and ETL pipelines to developing ML models for forecasting and anomaly detection. I'm passionate about leveraging data and AI to drive business decisions and solve complex problems.",
   "stats": {
     "yearsExperience": "6+",
     "projectsCompleted": "15+",
