@@ -1,4 +1,3 @@
-import Anthropic from '@anthropic-ai/sdk';
 import type { Context } from '@netlify/functions';
 import { getStore } from '@netlify/blobs';
 import { createHash } from 'node:crypto';
@@ -16,12 +15,13 @@ import organizationsData from '../../src/data/organizations.json';
 import testimonialsData from '../../src/data/testimonials.json';
 
 /**
- * Agentic portfolio assistant: a Claude tool-use loop behind a Netlify Function.
- * The API key lives only in the ANTHROPIC_API_KEY environment variable and is
- * never sent to the browser. Responses stream back as server-sent events.
+ * Agentic portfolio assistant: a Gemini function-calling loop behind a Netlify
+ * Function. The API key lives only in the GEMINI_API_KEY environment variable
+ * and is never sent to the browser. Responses stream back as server-sent events.
  */
 
-const MODEL = process.env.ANTHROPIC_MODEL || 'claude-opus-5';
+const MODEL = process.env.GEMINI_MODEL || 'gemini-3.5-flash-lite';
+const API_BASE = 'https://generativelanguage.googleapis.com/v1beta';
 const MAX_TURNS = 4; // tool rounds + one forced final answer
 const MAX_OUTPUT_TOKENS = 1024;
 
@@ -81,12 +81,12 @@ const PROFILE_SECTIONS = {
 type SectionName = keyof typeof PROFILE_SECTIONS;
 const SECTION_NAMES = Object.keys(PROFILE_SECTIONS) as SectionName[];
 
-const TOOLS: Anthropic.Tool[] = [
+const TOOL_DECLARATIONS = [
   {
     name: 'search_projects',
     description:
       "Search Pradeep's portfolio projects by keyword (matches title, description and technologies) and/or category. Returns up to 5 best matches with description, technologies and GitHub link. Call with no arguments to list all projects by recency.",
-    input_schema: {
+    parameters: {
       type: 'object',
       properties: {
         query: { type: 'string', description: 'Keywords such as "NLP", "Power BI", "forecasting", "React".' },
@@ -98,7 +98,7 @@ const TOOLS: Anthropic.Tool[] = [
     name: 'get_profile_section',
     description:
       "Read one section of Pradeep's profile: about (bio and social links), experience, skills, education, certifications, publications, awards, volunteering, organizations or testimonials.",
-    input_schema: {
+    parameters: {
       type: 'object',
       properties: { section: { type: 'string', enum: SECTION_NAMES } },
       required: ['section'],
@@ -108,17 +108,17 @@ const TOOLS: Anthropic.Tool[] = [
     name: 'match_job_description',
     description:
       "Compare a pasted job description against Pradeep's real skills, experience and projects. Returns the match percentage, matched and missing requirements, and the most relevant experience and projects.",
-    input_schema: {
+    parameters: {
       type: 'object',
       properties: { job_description: { type: 'string', description: 'The full job description text.' } },
       required: ['job_description'],
     },
   },
   {
+    // No parameters: the schema is omitted because Gemini rejects empty object schemas.
     name: 'get_github_activity',
     description:
       "Fetch live public GitHub data for Pradeep: repo count, followers, top languages, recently updated repositories and latest public activity.",
-    input_schema: { type: 'object', properties: {} },
   },
 ];
 
@@ -297,26 +297,109 @@ function sameOrigin(req: Request): boolean {
 
 type Send = (event: Record<string, unknown>) => void;
 
-async function runAgent(client: Anthropic, history: ChatTurn[], send: Send): Promise<void> {
-  const messages: Anthropic.MessageParam[] = history.map((t) => ({ role: t.role, content: t.content }));
+interface Part {
+  text?: string;
+  thought?: boolean;
+  thoughtSignature?: string;
+  functionCall?: { name: string; args?: Record<string, unknown> };
+  functionResponse?: { name: string; response: Record<string, unknown> };
+}
+interface Content {
+  role: 'user' | 'model';
+  parts: Part[];
+}
+
+class GeminiError extends Error {
+  constructor(public status: number) {
+    super(`Gemini API returned ${status}`);
+  }
+}
+
+/** Streams one model turn, forwarding text as it arrives. Returns every part
+ * the model produced (function calls carry thought signatures that must be
+ * echoed back verbatim on the next turn). */
+async function streamTurn(
+  apiKey: string,
+  contents: Content[],
+  lastTurn: boolean,
+  onText: (t: string) => void
+): Promise<{ parts: Part[]; blocked: boolean }> {
+  const res = await fetch(`${API_BASE}/models/${MODEL}:streamGenerateContent?alt=sse`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
+    body: JSON.stringify({
+      systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
+      contents,
+      tools: [{ functionDeclarations: TOOL_DECLARATIONS }],
+      // On the final turn tools are disabled so the model must answer with what it has.
+      toolConfig: { functionCallingConfig: { mode: lastTurn ? 'NONE' : 'AUTO' } },
+      generationConfig: { maxOutputTokens: MAX_OUTPUT_TOKENS },
+    }),
+  });
+  if (!res.ok || !res.body) {
+    console.error('gemini error', res.status, (await res.text().catch(() => '')).slice(0, 300));
+    throw new GeminiError(res.status);
+  }
+
+  const parts: Part[] = [];
+  let blocked = false;
+  let usage: unknown;
+  const reader = res.body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = '';
+
+  const handle = (raw: string) => {
+    let chunk: {
+      candidates?: { content?: { parts?: Part[] }; finishReason?: string }[];
+      promptFeedback?: { blockReason?: string };
+      usageMetadata?: unknown;
+    };
+    try {
+      chunk = JSON.parse(raw);
+    } catch {
+      return;
+    }
+    if (chunk.promptFeedback?.blockReason) blocked = true;
+    if (chunk.usageMetadata) usage = chunk.usageMetadata;
+    const candidate = chunk.candidates?.[0];
+    if (candidate?.finishReason && /SAFETY|PROHIBITED|BLOCKLIST|SPII/.test(candidate.finishReason)) blocked = true;
+    for (const part of candidate?.content?.parts ?? []) {
+      if (part.thought) continue;
+      if (part.text) onText(part.text);
+      if (part.text || part.functionCall) parts.push(part);
+    }
+  };
+
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    buffer += decoder.decode(value, { stream: true });
+    let boundary: number;
+    while ((boundary = buffer.search(/\r?\n\r?\n/)) !== -1) {
+      const block = buffer.slice(0, boundary);
+      buffer = buffer.slice(boundary).replace(/^\r?\n\r?\n/, '');
+      const data = block.split(/\r?\n/).filter((l) => l.startsWith('data:')).map((l) => l.slice(5).trim()).join('');
+      if (data) handle(data);
+    }
+  }
+  if (buffer.trim().startsWith('data:')) handle(buffer.trim().slice(5).trim());
+
+  console.log('assistant usage', JSON.stringify(usage ?? {}));
+  return { parts, blocked };
+}
+
+async function runAgent(apiKey: string, history: ChatTurn[], send: Send): Promise<void> {
+  const contents: Content[] = history.map((t) => ({
+    role: t.role === 'assistant' ? 'model' : 'user',
+    parts: [{ text: t.content }],
+  }));
   let emittedText = false;
 
   for (let turn = 0; turn < MAX_TURNS; turn++) {
     const lastTurn = turn === MAX_TURNS - 1;
     let separated = false;
-    const stream = client.messages.stream({
-      model: MODEL,
-      max_tokens: MAX_OUTPUT_TOKENS,
-      system: [{ type: 'text', text: SYSTEM_PROMPT, cache_control: { type: 'ephemeral' } }],
-      tools: TOOLS,
-      // On the final turn tools are disabled so the model must answer with what it has.
-      ...(lastTurn ? { tool_choice: { type: 'none' as const } } : {}),
-      // Chat replies don't need deep reasoning; effort isn't supported on Haiku.
-      ...(/haiku/.test(MODEL) ? {} : { output_config: { effort: 'low' as const } }),
-      messages,
-    });
 
-    stream.on('text', (text) => {
+    const { parts, blocked } = await streamTurn(apiKey, contents, lastTurn, (text) => {
       if (emittedText && !separated) {
         separated = true;
         send({ type: 'text', text: '\n\n' });
@@ -325,32 +408,25 @@ async function runAgent(client: Anthropic, history: ChatTurn[], send: Send): Pro
       send({ type: 'text', text });
     });
 
-    const message = await stream.finalMessage();
-    console.log('assistant usage', JSON.stringify({ turn, stop: message.stop_reason, ...message.usage }));
-
-    if (message.stop_reason === 'refusal') {
-      send({ type: 'error', code: 'refused' });
-      return;
-    }
-    if (message.stop_reason !== 'tool_use') {
-      send({ type: 'done' });
+    const calls = parts.filter((p) => p.functionCall);
+    if (calls.length === 0) {
+      if (blocked && !emittedText) send({ type: 'error', code: 'refused' });
+      else send({ type: 'done' });
       return;
     }
 
-    messages.push({ role: 'assistant', content: message.content });
-    const results: Anthropic.ToolResultBlockParam[] = [];
-    for (const block of message.content) {
-      if (block.type !== 'tool_use') continue;
-      send({ type: 'tool', name: block.name });
-      const out = await runTool(block.name, (block.input ?? {}) as Record<string, unknown>);
-      results.push({
-        type: 'tool_result',
-        tool_use_id: block.id,
-        content: out.text.slice(0, MAX_TOOL_RESULT_CHARS),
-        ...(out.isError ? { is_error: true } : {}),
+    contents.push({ role: 'model', parts });
+    const responses: Part[] = [];
+    for (const { functionCall } of calls) {
+      if (!functionCall) continue;
+      send({ type: 'tool', name: functionCall.name });
+      const out = await runTool(functionCall.name, functionCall.args ?? {});
+      const text = out.text.slice(0, MAX_TOOL_RESULT_CHARS);
+      responses.push({
+        functionResponse: { name: functionCall.name, response: out.isError ? { error: text } : { result: text } },
       });
     }
-    messages.push({ role: 'user', content: results });
+    contents.push({ role: 'user', parts: responses });
   }
   send({ type: 'done' });
 }
@@ -359,7 +435,7 @@ export default async (req: Request, context: Context): Promise<Response> => {
   if (req.method !== 'POST') return json(405, { error: 'method_not_allowed' });
   if (!sameOrigin(req)) return json(403, { error: 'forbidden' });
 
-  const apiKey = process.env.ANTHROPIC_API_KEY;
+  const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) return json(503, { error: 'not_configured' });
 
   let history: ChatTurn[] | null;
@@ -381,18 +457,17 @@ export default async (req: Request, context: Context): Promise<Response> => {
     });
   }
 
-  const client = new Anthropic({ apiKey, maxRetries: 1 });
   const encoder = new TextEncoder();
 
   const body = new ReadableStream({
     async start(controller) {
       const send: Send = (event) => controller.enqueue(encoder.encode(`data: ${JSON.stringify(event)}\n\n`));
       try {
-        await runAgent(client, history!, send);
+        await runAgent(apiKey, history!, send);
       } catch (err) {
         console.error('assistant failed', err);
-        const code =
-          err instanceof Anthropic.RateLimitError ? 'busy' : err instanceof Anthropic.AuthenticationError ? 'not_configured' : 'error';
+        const status = err instanceof GeminiError ? err.status : 0;
+        const code = status === 429 ? 'busy' : status === 401 || status === 403 ? 'not_configured' : 'error';
         send({ type: 'error', code });
       } finally {
         controller.close();

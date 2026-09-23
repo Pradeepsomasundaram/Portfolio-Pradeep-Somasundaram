@@ -328,7 +328,7 @@ export const Chatbot = () => {
                   {jobMatchMode
                     ? 'Job match mode — paste a JD below'
                     : liveMode === true
-                      ? 'Live AI agent · Claude with tools'
+                      ? 'Live AI agent · Gemini with tools'
                       : liveMode === false
                         ? 'Offline mode · built-in answers'
                         : "Trained on Pradeep's work & skills"}
