@@ -3,6 +3,8 @@ export interface Message {
   role: 'user' | 'assistant';
   content: string;
   timestamp: Date;
+  /** Tools the live agent called to produce this message (absent for offline answers). */
+  tools?: string[];
 }
 
 export interface ChatbotContext {
