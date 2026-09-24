@@ -1,11 +1,11 @@
 import type { Context } from '@netlify/functions';
 import { checkRateLimits } from '../lib/limits.mts';
+import { callGemini } from '../lib/gemini.mts';
 import aboutData from '../../src/data/about.json';
 
 /** Rewrites a visitor's rough note into a clear, professional message to Pradeep.
  * The visitor reviews and sends it themselves; nothing is sent from here. */
 
-const MODEL = process.env.GEMINI_MODEL || 'gemini-3.5-flash-lite';
 const json = (status: number, body: Record<string, unknown>) =>
   new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json' } });
 
@@ -42,14 +42,10 @@ export default async (req: Request, context: Context): Promise<Response> => {
     return json(429, { error: 'rate_limited', message: 'Polish limit reached for now — send your message as written.' });
   }
 
-  const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
-    body: JSON.stringify({
-      systemInstruction: { parts: [{ text: SYSTEM }] },
-      contents: [{ role: 'user', parts: [{ text: `Visitor name: ${name || '(not given)'}\nRough note:\n${message}` }] }],
-      generationConfig: { maxOutputTokens: 500, responseMimeType: 'application/json' },
-    }),
+  const res = await callGemini(apiKey, 'generateContent', {
+    systemInstruction: { parts: [{ text: SYSTEM }] },
+    contents: [{ role: 'user', parts: [{ text: `Visitor name: ${name || '(not given)'}\nRough note:\n${message}` }] }],
+    generationConfig: { maxOutputTokens: 500, responseMimeType: 'application/json' },
   });
   if (!res.ok) {
     console.error('polish failed', res.status);
