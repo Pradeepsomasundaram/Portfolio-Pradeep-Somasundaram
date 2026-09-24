@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { AnimatedSection, Card } from '../ui';
-import { HiMail, HiLocationMarker } from 'react-icons/hi';
+import { HiMail, HiLocationMarker, HiSparkles } from 'react-icons/hi';
 import { FaGithub, FaLinkedin } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 
@@ -34,6 +34,29 @@ const socialLinks = [
 export const Contact = () => {
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
   const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
+  const [polish, setPolish] = useState<{ state: 'idle' | 'working' | 'done' | 'error'; note?: string }>({ state: 'idle' });
+
+  // Optional: rewrites the visitor's rough note into a clear message. They review
+  // and edit it in the box before sending; nothing is sent automatically.
+  const polishMessage = async () => {
+    setPolish({ state: 'working' });
+    try {
+      const res = await fetch('/.netlify/functions/polish', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: formData.name, message: formData.message }),
+      });
+      const data = (await res.json().catch(() => ({}))) as { message?: string };
+      if (!res.ok || !data.message) {
+        setPolish({ state: 'error', note: res.status === 429 ? 'Polish limit reached — you can send your message as written.' : 'AI polish is unavailable right now — you can send your message as written.' });
+        return;
+      }
+      setFormData((f) => ({ ...f, message: data.message as string }));
+      setPolish({ state: 'done', note: 'AI-polished — please review and edit before sending.' });
+    } catch {
+      setPolish({ state: 'error', note: 'AI polish is unavailable right now — you can send your message as written.' });
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -116,6 +139,20 @@ export const Contact = () => {
                       className="w-full px-4 py-3 bg-gray-100 dark:bg-white/5 border border-gray-300 dark:border-white/10 rounded-lg text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-colors resize-none"
                       placeholder="Your message..."
                     />
+                  </div>
+                  <div className="flex flex-wrap items-center gap-3 -mt-2">
+                    <button
+                      type="button"
+                      onClick={polishMessage}
+                      disabled={formData.message.trim().length < 10 || polish.state === 'working'}
+                      className="inline-flex items-center gap-1.5 text-sm px-4 py-1.5 rounded-full border border-secondary/50 text-secondary hover:bg-secondary/10 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                    >
+                      <HiSparkles className="w-4 h-4" />
+                      {polish.state === 'working' ? 'Polishing…' : 'Polish with AI'}
+                    </button>
+                    {polish.note && (
+                      <span className={`text-xs ${polish.state === 'error' ? 'text-red-400' : 'text-secondary'}`}>{polish.note}</span>
+                    )}
                   </div>
                   <div className="flex items-center justify-between">
                     <button

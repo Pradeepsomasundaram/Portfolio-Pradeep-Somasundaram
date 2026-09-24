@@ -5,6 +5,7 @@ import { HiDownload, HiEye, HiSparkles } from 'react-icons/hi';
 import { FaGithub, FaLinkedin } from 'react-icons/fa';
 import { Button, CounterAnimation, ResumeModal, TiltCard, DoodleUnderline, DoodleCircle } from '../ui';
 import { useAppStore } from '../../stores/appStore';
+import { visitContext } from '../../lib/visitContext';
 
 const roles = [
   'Agentic AI & MLOps Lead',
@@ -64,6 +65,13 @@ export const Hero = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
           >
+            {(visitContext.company || visitContext.persona) && (
+              <p className="inline-flex items-center gap-2 mb-4 px-3 py-1 rounded-full border border-primary/40 bg-primary/10 text-xs text-primary font-medium">
+                <HiSparkles className="w-3.5 h-3.5" />
+                {visitContext.company ? `Hi ${visitContext.company} team` : 'Welcome'}
+                {visitContext.persona ? ` — curated for ${visitContext.persona} roles` : ''}
+              </p>
+            )}
             <p className="font-mono text-sm text-secondary mb-3 tracking-wide">
               <span className="opacity-70">const greeting =</span> "Hello, I'm"
             </p>
@@ -179,7 +187,9 @@ export const Hero = () => {
                         <img
                           src="/assets/profile.png"
                           alt="Pradeep Somasundaram"
-                          loading="lazy"
+                          width={640}
+                          height={640}
+                          fetchPriority="high"
                           className="photo-grade w-full h-full object-cover"
                           onError={(e) => {
                             (e.target as HTMLImageElement).src = '/assets/profile.svg';

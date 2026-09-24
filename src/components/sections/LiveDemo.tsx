@@ -2,9 +2,8 @@ import { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { HiOutlineChip, HiOutlineLightningBolt } from 'react-icons/hi';
 import { AnimatedSection } from '../ui';
+import { loadTransformers, progressTracker } from '../../lib/transformers';
 
-// Loaded on demand from a CDN so the ~MBs of runtime never touch the main bundle.
-const TRANSFORMERS_URL = 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@3';
 const MODEL_ID = 'Xenova/distilbert-base-uncased-finetuned-sst-2-english';
 
 type Classifier = (text: string) => Promise<{ label: string; score: number }[]>;
@@ -31,18 +30,11 @@ export const LiveDemo = () => {
   const loadModel = useCallback(async () => {
     setStatus({ state: 'loading', progress: 0 });
     try {
-      const { pipeline } = await import(/* @vite-ignore */ TRANSFORMERS_URL);
-      const files: Record<string, number> = {};
+      const { pipeline } = await loadTransformers();
       const pipe = await pipeline('sentiment-analysis', MODEL_ID, {
-        progress_callback: (p: { status: string; file?: string; progress?: number }) => {
-          if (p.status === 'progress' && p.file && typeof p.progress === 'number') {
-            files[p.file] = p.progress;
-            const values = Object.values(files);
-            setStatus({ state: 'loading', progress: values.reduce((a, b) => a + b, 0) / values.length });
-          }
-        },
+        progress_callback: progressTracker((progress) => setStatus({ state: 'loading', progress })),
       });
-      setClassifier(() => pipe as Classifier);
+      setClassifier(() => pipe as unknown as Classifier);
       setStatus({ state: 'ready' });
     } catch (err) {
       console.error(err);

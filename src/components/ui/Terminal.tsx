@@ -7,6 +7,8 @@ import experienceData from '../../data/experience.json';
 import skillsData from '../../data/skills.json';
 import educationData from '../../data/education.json';
 import certificationsData from '../../data/certifications.json';
+import { buildPersonalLink } from '../../lib/visitContext';
+import { personas } from '../../lib/persona';
 
 interface Line {
   kind: 'in' | 'out';
@@ -23,6 +25,7 @@ const HELP = `Commands:
   open <n|project-id>  open a project (number from "ls projects")
   goto <section>       scroll the page (${SECTIONS.slice(0, 6).join(', ')}, ...)
   github               live GitHub stats
+  link <company> [role] make a personalised link (roles: ml, de, agentic, fullstack)
   contact              how to reach him
   clear | exit         clear the screen | close the terminal`;
 
@@ -132,6 +135,21 @@ export const Terminal = () => {
           }
         case 'contact':
           return print(`email     ${aboutData.social.email}\nlinkedin  ${aboutData.social.linkedin}\ngithub    ${aboutData.social.github}`);
+        case 'link': {
+          // Last word is the role if it matches one; everything before it is the company
+          const last = args[args.length - 1]?.toLowerCase();
+          const role = personas.find((p) => p.id === last);
+          const company = (role ? args.slice(0, -1) : args).join(' ');
+          if (!company) return print('usage: link <company> [ml|de|agentic|fullstack]   e.g. link acme ml');
+          const url = buildPersonalLink(company, role?.id);
+          print(url);
+          // Copy without blocking the output; some browsers gate clipboard access
+          navigator.clipboard
+            ?.writeText(url)
+            .then(() => print('(copied to clipboard)'))
+            .catch(() => undefined);
+          return;
+        }
         case 'sudo':
           return print(arg.includes('hire') ? 'Permission granted. Excellent decision.\n→ ' + aboutData.social.email : 'pradeep is not in the sudoers file. This incident will be reported.');
         case 'clear':

@@ -30,6 +30,10 @@ export const toolLabels: Record<string, string> = {
   open_project: 'Opening project',
 };
 
+export type TraceEntry =
+  | { kind: 'model'; turn: number; ms: number; tokens?: number }
+  | { kind: 'tool'; name: string; args: string; result: string; isError: boolean; ms: number };
+
 export interface AgentAction {
   action: 'scroll' | 'open_project';
   target: string;
@@ -39,10 +43,20 @@ interface Handlers {
   onText: (chunk: string) => void;
   onTool: (name: string) => void;
   onAction?: (action: AgentAction) => void;
+  onTrace?: (entry: TraceEntry) => void;
+}
+
+interface Options {
+  visitor?: { company?: string; role?: string };
+  trace?: boolean;
 }
 
 /** Streams an answer from the serverless agent. Resolves with the tools it used. */
-export async function askAgent(history: AgentTurn[], { onText, onTool, onAction }: Handlers): Promise<string[]> {
+export async function askAgent(
+  history: AgentTurn[],
+  { onText, onTool, onAction, onTrace }: Handlers,
+  options: Options = {}
+): Promise<string[]> {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
   const tools: string[] = [];
@@ -53,7 +67,7 @@ export async function askAgent(history: AgentTurn[], { onText, onTool, onAction 
       res = await fetch(ENDPOINT, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: history }),
+        body: JSON.stringify({ messages: history, visitor: options.visitor, trace: options.trace }),
         signal: controller.signal,
       });
     } catch {
@@ -87,7 +101,7 @@ export async function askAgent(history: AgentTurn[], { onText, onTool, onAction 
       while ((boundary = buffer.indexOf('\n\n')) !== -1) {
         const line = buffer.slice(0, boundary).replace(/^data: /, '');
         buffer = buffer.slice(boundary + 2);
-        let event: { type: string; text?: string; name?: string; code?: string; action?: AgentAction['action']; target?: string };
+        let event: { type: string; kind?: string; text?: string; name?: string; code?: string; action?: AgentAction['action']; target?: string } & Record<string, unknown>;
         try {
           event = JSON.parse(line);
         } catch {
@@ -99,6 +113,8 @@ export async function askAgent(history: AgentTurn[], { onText, onTool, onAction 
         } else if (event.type === 'tool' && event.name) {
           if (!tools.includes(event.name)) tools.push(event.name);
           onTool(event.name);
+        } else if (event.type === 'trace') {
+          onTrace?.(event as unknown as TraceEntry);
         } else if (event.type === 'action' && event.action && event.target) {
           onAction?.({ action: event.action, target: event.target });
         } else if (event.type === 'error') {

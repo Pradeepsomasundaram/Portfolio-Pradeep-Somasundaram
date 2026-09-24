@@ -49,9 +49,9 @@ export const Testimonials = () => {
                     </span>
                   </div>
                   <div>
-                    <h4 className="font-semibold text-gray-900 dark:text-white">
+                    <h3 className="font-semibold text-gray-900 dark:text-white">
                       {testimonialsData[current].name}
-                    </h4>
+                    </h3>
                     <p className="text-sm text-gray-500 dark:text-gray-400">
                       {testimonialsData[current].role}
                     </p>
@@ -64,6 +64,7 @@ export const Testimonials = () => {
             <div className="flex items-center justify-center gap-4 mt-8">
               <button
                 onClick={prev}
+                aria-label="Previous testimonial"
                 className="p-2 rounded-full bg-white dark:bg-white/10 shadow-md hover:bg-gray-50 dark:hover:bg-white/20 transition-colors"
               >
                 <HiChevronLeft className="w-5 h-5 text-gray-600 dark:text-gray-300" />
@@ -73,6 +74,8 @@ export const Testimonials = () => {
                   <button
                     key={index}
                     onClick={() => setCurrent(index)}
+                    aria-label={`Show testimonial ${index + 1}`}
+                    aria-current={index === current}
                     className={`w-2.5 h-2.5 rounded-full transition-all ${
                       index === current
                         ? 'bg-primary w-8'
@@ -83,6 +86,7 @@ export const Testimonials = () => {
               </div>
               <button
                 onClick={next}
+                aria-label="Next testimonial"
                 className="p-2 rounded-full bg-white dark:bg-white/10 shadow-md hover:bg-gray-50 dark:hover:bg-white/20 transition-colors"
               >
                 <HiChevronRight className="w-5 h-5 text-gray-600 dark:text-gray-300" />

@@ -127,9 +127,9 @@ export const ProjectModal = ({ project, relatedProjects, onClose, onSelectRelate
                         onClick={() => onSelectRelated(rp)}
                         className="text-left p-3 bg-black/5 dark:bg-white/5 rounded-xl hover:bg-primary/10 transition-colors"
                       >
-                        <h4 className="font-semibold text-gray-900 dark:text-white mb-1 line-clamp-1 text-sm">
+                        <h3 className="font-semibold text-gray-900 dark:text-white mb-1 line-clamp-1 text-sm">
                           {rp.title}
-                        </h4>
+                        </h3>
                         <p className="text-xs text-gray-500 dark:text-gray-400 line-clamp-2">
                           {rp.description}
                         </p>

@@ -1,12 +1,13 @@
 import { useState, useRef, useEffect, useCallback, memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { HiX, HiPaperAirplane, HiSparkles, HiOutlineClipboardCheck, HiOutlineDownload, HiMicrophone, HiVolumeUp, HiVolumeOff } from 'react-icons/hi';
+import { HiX, HiPaperAirplane, HiSparkles, HiOutlineClipboardCheck, HiOutlineDownload, HiMicrophone, HiVolumeUp, HiVolumeOff, HiCode } from 'react-icons/hi';
 import { useAppStore } from '../../stores/appStore';
 import type { Message } from '../../types/chatbot.types';
 import { generateResponse, matchJobDescription, initialQuickQuestions } from '../../lib/assistantEngine';
 import { useVoice } from '../../hooks/useVoice';
 import { printTailoredResume } from '../../lib/resumeBuilder';
-import { askAgent, AgentUnavailableError, toolLabels, type AgentAction } from '../../lib/agentClient';
+import { askAgent, AgentUnavailableError, toolLabels, type AgentAction, type TraceEntry } from '../../lib/agentClient';
+import { visitContext } from '../../lib/visitContext';
 
 const JOB_MATCH_TRIGGERS = ['Match a job description', 'Match another job description'];
 const LIVE_FOLLOW_UPS = ['What is he building lately?', 'Best projects for ML roles', 'Why hire Pradeep?'];
@@ -15,7 +16,7 @@ const LIMIT_CODES = ['rate_limited', 'capacity', 'busy'];
 const welcomeMessage: Message = {
   id: '1',
   role: 'assistant',
-  content: `Hi! I'm Pradeep's portfolio assistant. I can tell you about his experience, projects, skills, education, and more.\n\nTry asking me a question or pick a topic below!`,
+  content: `${visitContext.company ? `Hi ${visitContext.company} team! ` : 'Hi! '}I'm Pradeep's portfolio assistant. I can tell you about his experience, projects, skills, education, and more.\n\nTry asking me a question or pick a topic below!`,
   timestamp: new Date(),
 };
 
@@ -115,6 +116,26 @@ const ReasoningTrace = ({ tools = [] }: { tools?: string[] }) => {
   );
 };
 
+// "Under the hood": the agent's real model turns and tool calls with timings
+const TracePanel = ({ trace }: { trace: TraceEntry[] }) => (
+  <div className="mt-2 rounded-lg bg-black/30 p-2 font-mono text-[10px] leading-relaxed text-gray-300 space-y-1.5 max-h-40 overflow-y-auto">
+    {trace.map((t, i) =>
+      t.kind === 'model' ? (
+        <p key={i} className="text-secondary">
+          ◆ model turn {t.turn + 1} · {t.ms} ms{t.tokens ? ` · ${t.tokens} tokens` : ''}
+        </p>
+      ) : (
+        <div key={i}>
+          <p className={t.isError ? 'text-red-400' : 'text-primary'}>
+            ⚙ {t.name}({t.args}) · {t.ms} ms
+          </p>
+          <p className="text-gray-400 break-all">→ {t.result}{t.result.length >= 500 ? '…' : ''}</p>
+        </div>
+      )
+    )}
+  </div>
+);
+
 // Chips showing which tools the live agent used for an answer
 const ToolChips = ({ tools }: { tools: string[] }) => (
   <div className="flex flex-wrap gap-1 mt-1.5 pt-1.5 border-t border-black/5 dark:border-white/10">
@@ -147,6 +168,8 @@ export const Chatbot = () => {
   // null until the first answer tells us whether the live agent is reachable
   const [liveMode, setLiveMode] = useState<boolean | null>(null);
   const [speakReplies, setSpeakReplies] = useState(false);
+  const [showTrace, setShowTrace] = useState(false);
+  const [liveTrace, setLiveTrace] = useState<TraceEntry[]>([]);
   const sendRef = useRef<(text?: string) => void>();
   const voice = useVoice((transcript) => sendRef.current?.(transcript));
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -216,6 +239,8 @@ export const Chatbot = () => {
     setJobMatchMode(false);
     setLiveText('');
     setLiveTools([]);
+    setLiveTrace([]);
+    const trace: TraceEntry[] = [];
 
     const answerOffline = (note = '') => {
       const response = wasJobMatch ? matchJobDescription(messageText) : generateResponse(messageText);
@@ -253,6 +278,13 @@ export const Chatbot = () => {
       },
       onTool: (name) => setLiveTools((prev) => (prev.includes(name) ? prev : [...prev, name])),
       onAction: performAction,
+      onTrace: (entry) => {
+        trace.push(entry);
+        setLiveTrace([...trace]);
+      },
+    }, {
+      visitor: { company: visitContext.company, role: visitContext.persona ?? undefined },
+      trace: true,
     })
       .then((tools) => {
         if (!answer.trim()) throw new AgentUnavailableError('empty', 'Live AI returned nothing.');
@@ -268,6 +300,7 @@ export const Chatbot = () => {
             content: answer.trim(),
             timestamp: new Date(),
             tools,
+            trace,
             resumeJd: wasJobMatch ? messageText : undefined,
           },
         ]);
@@ -366,13 +399,22 @@ export const Chatbot = () => {
                         : "Trained on Pradeep's work & skills"}
                 </p>
               </div>
+              <button
+                onClick={() => setShowTrace((v) => !v)}
+                className="relative ml-auto p-1 hover:bg-white hover:bg-opacity-20 rounded-full transition-colors"
+                aria-label={showTrace ? 'Hide agent internals' : 'Show agent internals'}
+                aria-pressed={showTrace}
+                title="Under the hood"
+              >
+                <HiCode className={`w-5 h-5 ${showTrace ? '' : 'opacity-70'}`} />
+              </button>
               {voice.canSpeak && (
                 <button
                   onClick={() => {
                     if (speakReplies) voice.stopSpeaking();
                     setSpeakReplies((v) => !v);
                   }}
-                  className="relative ml-auto p-1 hover:bg-white hover:bg-opacity-20 rounded-full transition-colors"
+                  className="relative p-1 hover:bg-white hover:bg-opacity-20 rounded-full transition-colors"
                   aria-label={speakReplies ? 'Turn off spoken replies' : 'Read replies aloud'}
                   aria-pressed={speakReplies}
                   title={speakReplies ? 'Spoken replies on' : 'Read replies aloud'}
@@ -382,7 +424,7 @@ export const Chatbot = () => {
               )}
               <button
                 onClick={toggleChatbot}
-                className={`relative ${voice.canSpeak ? '' : 'ml-auto '}p-1 hover:bg-white hover:bg-opacity-20 rounded-full transition-colors`}
+                className={`relative p-1 hover:bg-white hover:bg-opacity-20 rounded-full transition-colors`}
                 aria-label="Close chat"
               >
                 <HiX className="w-5 h-5" />
@@ -424,6 +466,7 @@ export const Chatbot = () => {
                         Download tailored resume (PDF)
                       </button>
                     )}
+                    {showTrace && msg.trace && msg.trace.length > 0 && <TracePanel trace={msg.trace} />}
                     {msg.role === 'assistant' && msg.tools && msg.tools.length > 0 && <ToolChips tools={msg.tools} />}
                     {msg.role === 'assistant' && msg.id !== streamingId && confidenceById[msg.id] && (
                       <p className="mt-1.5 pt-1.5 border-t border-black/5 dark:border-white/10 font-mono text-[10px] text-secondary/80">
@@ -440,10 +483,12 @@ export const Chatbot = () => {
                     <div className="max-w-[80%] px-3 py-2 rounded-2xl rounded-bl-sm text-sm whitespace-pre-line bg-gray-100 dark:bg-white/10 text-gray-800 dark:text-gray-200">
                       {liveText}
                       {liveTools.length > 0 && <ToolChips tools={liveTools} />}
+                      {showTrace && liveTrace.length > 0 && <TracePanel trace={liveTrace} />}
                     </div>
                   ) : (
                     <div className="bg-gray-100 dark:bg-white/10 px-4 py-3 rounded-2xl rounded-bl-sm">
                       <ReasoningTrace tools={liveTools} />
+                      {showTrace && liveTrace.length > 0 && <TracePanel trace={liveTrace} />}
                     </div>
                   )}
                 </div>

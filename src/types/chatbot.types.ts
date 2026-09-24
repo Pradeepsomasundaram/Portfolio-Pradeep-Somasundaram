@@ -1,3 +1,5 @@
+import type { TraceEntry } from '../lib/agentClient';
+
 export interface Message {
   id: string;
   role: 'user' | 'assistant';
@@ -7,6 +9,8 @@ export interface Message {
   tools?: string[];
   /** Job description this answer was about, enabling a tailored-resume download. */
   resumeJd?: string;
+  /** Agent internals for the "under the hood" panel. */
+  trace?: TraceEntry[];
 }
 
 export interface ChatbotContext {
