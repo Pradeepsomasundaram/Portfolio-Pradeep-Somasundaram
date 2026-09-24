@@ -507,8 +507,10 @@ export default async (req: Request, context: Context): Promise<Response> => {
       } catch (err) {
         console.error('assistant failed', err);
         const status = err instanceof GeminiError ? err.status : 0;
-        const code = status === 429 ? 'busy' : status === 401 || status === 403 ? 'not_configured' : 'error';
-        send({ type: 'error', code });
+        const code =
+          status === 429 || status === 503 ? 'busy' : status === 401 || status === 403 ? 'not_configured' : status === 404 ? 'model_unavailable' : 'error';
+        // status and error type carry no secrets; they make failures diagnosable from the browser
+        send({ type: 'error', code, status, kind: err instanceof Error ? err.name : 'unknown' });
       } finally {
         controller.close();
       }
