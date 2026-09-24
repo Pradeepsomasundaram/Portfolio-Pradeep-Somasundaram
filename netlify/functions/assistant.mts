@@ -1,5 +1,6 @@
 import type { Context } from '@netlify/functions';
 import { checkRateLimits, logQuestion } from '../lib/limits.mts';
+import { callGemini } from '../lib/gemini.mts';
 import { matchJobDescription } from '../../src/lib/assistantEngine';
 import aboutData from '../../src/data/about.json';
 import projectsData from '../../src/data/projects.json';
@@ -19,8 +20,6 @@ import testimonialsData from '../../src/data/testimonials.json';
  * and is never sent to the browser. Responses stream back as server-sent events.
  */
 
-const MODEL = process.env.GEMINI_MODEL || 'gemini-3.5-flash-lite';
-const API_BASE = 'https://generativelanguage.googleapis.com/v1beta';
 const MAX_TURNS = 4; // tool rounds + one forced final answer
 const MAX_OUTPUT_TOKENS = 1024;
 
@@ -344,17 +343,13 @@ async function streamTurn(
   lastTurn: boolean,
   onText: (t: string) => void
 ): Promise<{ parts: Part[]; blocked: boolean; tokens?: number }> {
-  const res = await fetch(`${API_BASE}/models/${MODEL}:streamGenerateContent?alt=sse`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
-    body: JSON.stringify({
-      systemInstruction: { parts: [{ text: systemPrompt }] },
-      contents,
-      tools: [{ functionDeclarations: TOOL_DECLARATIONS }],
-      // On the final turn tools are disabled so the model must answer with what it has.
-      toolConfig: { functionCallingConfig: { mode: lastTurn ? 'NONE' : 'AUTO' } },
-      generationConfig: { maxOutputTokens: MAX_OUTPUT_TOKENS },
-    }),
+  const res = await callGemini(apiKey, 'streamGenerateContent?alt=sse', {
+    systemInstruction: { parts: [{ text: systemPrompt }] },
+    contents,
+    tools: [{ functionDeclarations: TOOL_DECLARATIONS }],
+    // On the final turn tools are disabled so the model must answer with what it has.
+    toolConfig: { functionCallingConfig: { mode: lastTurn ? 'NONE' : 'AUTO' } },
+    generationConfig: { maxOutputTokens: MAX_OUTPUT_TOKENS },
   });
   if (!res.ok || !res.body) {
     console.error('gemini error', res.status, (await res.text().catch(() => '')).slice(0, 300));
