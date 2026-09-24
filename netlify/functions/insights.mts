@@ -36,6 +36,23 @@ export default async (req: Request): Promise<Response> => {
     /* Blobs unavailable */
   }
 
+  let visits: { company: string; role: string; at: string }[] = [];
+  try {
+    const vstore = getStore('link-visits');
+    const { blobs } = await vstore.list();
+    const keys = blobs.map((b) => b.key).sort().slice(-200);
+    const rows = await Promise.all(keys.map((k) => vstore.get(k, { type: 'json' }) as Promise<{ company: string; role: string; at: string } | null>));
+    visits = rows.filter((r): r is { company: string; role: string; at: string } => !!r && typeof r.company === 'string');
+  } catch {
+    /* Blobs unavailable */
+  }
+  const byCompany = new Map<string, { n: number; last: string; role: string }>();
+  for (const v of visits) {
+    const prev = byCompany.get(v.company);
+    byCompany.set(v.company, { n: (prev?.n ?? 0) + 1, last: v.at > (prev?.last ?? '') ? v.at : prev!.last, role: v.role || prev?.role || '' });
+  }
+  const companies = [...byCompany.entries()].sort((a, b) => b[1].last.localeCompare(a[1].last));
+
   const words = new Map<string, number>();
   const perDay = new Map<string, number>();
   for (const { q, at } of items) {
@@ -54,6 +71,11 @@ h1{color:#C9A227}h2{color:#0EA57A;font-size:14px;text-transform:uppercase;letter
 .bar{display:flex;align-items:center;gap:8px;font-size:12px;color:#aaa}.bar i{display:block;height:10px;background:#C9A227;border-radius:3px}
 li{margin:6px 0;color:#ccc}small{color:#777}</style></head><body>
 <h1>What visitors ask</h1><p>${items.length} recent questions (anonymised, latest 300).</p>
+<h2>Personalised link opens</h2>${
+    companies.length
+      ? `<ul>${companies.map(([c, v]) => `<li><b>${esc(c)}</b>${v.role ? ` <small>(${esc(v.role)})</small>` : ''} — ${v.n} open${v.n === 1 ? '' : 's'}, last ${esc(v.last.slice(0, 16).replace('T', ' '))} UTC</li>`).join('')}</ul>`
+      : '<small>No opens yet. Your own test visits count too.</small>'
+  }
 <h2>Top topics</h2><div>${topWords.map(([w, n]) => `<span class="chip">${esc(w)} · ${n}</span>`).join('') || '<small>No data yet.</small>'}</div>
 <h2>Questions per day</h2>${days.map(([d, n]) => `<div class="bar"><span style="width:82px">${d}</span><i style="width:${(n / maxDay) * 240}px"></i>${n}</div>`).join('') || '<small>No data yet.</small>'}
 <h2>Latest questions</h2><ul>${items.slice(-40).reverse().map((i) => `<li>${esc(i.q)} <small>${esc(i.at.slice(0, 16).replace('T', ' '))}</small></li>`).join('')}</ul>
