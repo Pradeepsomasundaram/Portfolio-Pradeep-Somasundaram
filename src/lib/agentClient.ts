@@ -19,6 +19,7 @@ const friendlyErrors: Record<string, string> = {
   capacity: "Live AI answers have hit today's capacity.",
   busy: 'The AI is busy right now.',
   refused: "The AI couldn't answer that one.",
+  model_unavailable: 'The AI model is unavailable right now.',
 };
 
 export const toolLabels: Record<string, string> = {
