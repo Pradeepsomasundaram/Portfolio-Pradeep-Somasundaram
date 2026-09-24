@@ -26,15 +26,23 @@ export const toolLabels: Record<string, string> = {
   get_profile_section: 'Reading profile',
   match_job_description: 'Matching job description',
   get_github_activity: 'Checking live GitHub',
+  show_section: 'Navigating the page',
+  open_project: 'Opening project',
 };
+
+export interface AgentAction {
+  action: 'scroll' | 'open_project';
+  target: string;
+}
 
 interface Handlers {
   onText: (chunk: string) => void;
   onTool: (name: string) => void;
+  onAction?: (action: AgentAction) => void;
 }
 
 /** Streams an answer from the serverless agent. Resolves with the tools it used. */
-export async function askAgent(history: AgentTurn[], { onText, onTool }: Handlers): Promise<string[]> {
+export async function askAgent(history: AgentTurn[], { onText, onTool, onAction }: Handlers): Promise<string[]> {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
   const tools: string[] = [];
@@ -79,7 +87,7 @@ export async function askAgent(history: AgentTurn[], { onText, onTool }: Handler
       while ((boundary = buffer.indexOf('\n\n')) !== -1) {
         const line = buffer.slice(0, boundary).replace(/^data: /, '');
         buffer = buffer.slice(boundary + 2);
-        let event: { type: string; text?: string; name?: string; code?: string };
+        let event: { type: string; text?: string; name?: string; code?: string; action?: AgentAction['action']; target?: string };
         try {
           event = JSON.parse(line);
         } catch {
@@ -91,6 +99,8 @@ export async function askAgent(history: AgentTurn[], { onText, onTool }: Handler
         } else if (event.type === 'tool' && event.name) {
           if (!tools.includes(event.name)) tools.push(event.name);
           onTool(event.name);
+        } else if (event.type === 'action' && event.action && event.target) {
+          onAction?.({ action: event.action, target: event.target });
         } else if (event.type === 'error') {
           const code = event.code ?? 'error';
           // Once text has streamed there's nothing to fall back to; keep what we have.

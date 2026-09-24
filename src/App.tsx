@@ -9,6 +9,7 @@ import {
   Universe,
   Projects,
   GithubActivity,
+  LiveDemo,
   Certifications,
   Publications,
   Awards,
@@ -32,6 +33,8 @@ function App() {
       <Universe />
       <TechMarquee />
       <Projects />
+      <SectionDivider />
+      <LiveDemo />
       <SectionDivider />
       <GithubActivity />
       <SectionDivider />

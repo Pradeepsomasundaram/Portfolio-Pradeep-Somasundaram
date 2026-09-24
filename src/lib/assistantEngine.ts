@@ -553,6 +553,7 @@ const navigablePages: CommandResult[] = [
   { id: 'projects', label: 'Projects', sublabel: 'Featured work', to: '#projects' },
   { id: 'skills', label: 'Skills', sublabel: 'Tech stack', to: '#skills' },
   { id: 'github', label: 'GitHub', sublabel: 'Live activity', to: '#github' },
+  { id: 'demo', label: 'Try It Live', sublabel: 'In-browser NLP model', to: '#demo' },
   { id: 'certifications', label: 'Certifications', sublabel: 'Credentials', to: '#certifications' },
   { id: 'publications', label: 'Publications', sublabel: 'Research papers', to: '#publications' },
   { id: 'awards', label: 'Awards', sublabel: 'Honors & recognition', to: '#awards' },
@@ -615,6 +616,19 @@ function keywordAppears(originalText: string, lowerText: string, keyword: string
   return new RegExp(`\\b${escaped}\\b`, 'i').test(lowerText);
 }
 
+/** Pulls the technical requirements out of a job description and splits them
+ * into what Pradeep's listed skills cover and what they don't. */
+export function analyzeJobDescription(jdText: string): { detected: string[]; matched: string[]; missing: string[] } {
+  const trimmed = jdText.trim();
+  const lower = trimmed.toLowerCase();
+  const hasSkill = new Set(Object.values(skillsData).flat().map((s) => s.toLowerCase()));
+  const detected = jdVocabulary.filter((term) => keywordAppears(trimmed, lower, term));
+  const matched = detected.filter(
+    (term) => hasSkill.has(term.toLowerCase()) || hasSkill.has(jdEquivalences[term.toLowerCase()] ?? '')
+  );
+  return { detected, matched, missing: detected.filter((term) => !matched.includes(term)) };
+}
+
 export function matchJobDescription(jdText: string): AssistantResponse {
   const trimmed = jdText.trim();
 
@@ -625,14 +639,7 @@ export function matchJobDescription(jdText: string): AssistantResponse {
     };
   }
 
-  const lower = trimmed.toLowerCase();
-  const hasSkill = new Set(Object.values(skillsData).flat().map((s) => s.toLowerCase()));
-
-  const detected = jdVocabulary.filter((term) => keywordAppears(trimmed, lower, term));
-  const matched = detected.filter(
-    (term) => hasSkill.has(term.toLowerCase()) || hasSkill.has(jdEquivalences[term.toLowerCase()] ?? '')
-  );
-  const missing = detected.filter((term) => !matched.includes(term));
+  const { detected, matched, missing } = analyzeJobDescription(trimmed);
 
   if (detected.length === 0) {
     return {

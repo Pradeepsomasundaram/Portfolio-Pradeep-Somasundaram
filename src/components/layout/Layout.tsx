@@ -10,6 +10,8 @@ import {
   CustomCursor,
   BootIntro,
   CinematicBackground,
+  PersonaPicker,
+  Terminal,
 } from '../ui';
 import { useAppStore } from '../../stores/appStore';
 
@@ -50,6 +52,8 @@ export const Layout = ({ children }: LayoutProps) => {
         <main id="main-content">{children}</main>
         <Footer />
         <Chatbot />
+        <PersonaPicker />
+        <Terminal />
         <BackToTop />
         <CommandPalette open={commandPaletteOpen} onClose={() => setCommandPaletteOpen(false)} />
       </div>

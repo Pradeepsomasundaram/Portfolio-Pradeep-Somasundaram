@@ -1,10 +1,12 @@
 import { useState, useRef, useEffect, useCallback, memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { HiX, HiPaperAirplane, HiSparkles, HiOutlineClipboardCheck } from 'react-icons/hi';
+import { HiX, HiPaperAirplane, HiSparkles, HiOutlineClipboardCheck, HiOutlineDownload, HiMicrophone, HiVolumeUp, HiVolumeOff } from 'react-icons/hi';
 import { useAppStore } from '../../stores/appStore';
 import type { Message } from '../../types/chatbot.types';
 import { generateResponse, matchJobDescription, initialQuickQuestions } from '../../lib/assistantEngine';
-import { askAgent, AgentUnavailableError, toolLabels } from '../../lib/agentClient';
+import { useVoice } from '../../hooks/useVoice';
+import { printTailoredResume } from '../../lib/resumeBuilder';
+import { askAgent, AgentUnavailableError, toolLabels, type AgentAction } from '../../lib/agentClient';
 
 const JOB_MATCH_TRIGGERS = ['Match a job description', 'Match another job description'];
 const LIVE_FOLLOW_UPS = ['What is he building lately?', 'Best projects for ML roles', 'Why hire Pradeep?'];
@@ -132,7 +134,7 @@ function confidenceFor(text: string): number {
 }
 
 export const Chatbot = () => {
-  const { chatbotOpen, toggleChatbot, jobMatchRequested, clearJobMatchRequest } = useAppStore();
+  const { chatbotOpen, toggleChatbot, setChatbotOpen, jobMatchRequested, clearJobMatchRequest, openProject } = useAppStore();
   const [messages, setMessages] = useState<Message[]>(loadMessages);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -144,6 +146,9 @@ export const Chatbot = () => {
   const [liveTools, setLiveTools] = useState<string[]>([]);
   // null until the first answer tells us whether the live agent is reachable
   const [liveMode, setLiveMode] = useState<boolean | null>(null);
+  const [speakReplies, setSpeakReplies] = useState(false);
+  const sendRef = useRef<(text?: string) => void>();
+  const voice = useVoice((transcript) => sendRef.current?.(transcript));
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -160,6 +165,18 @@ export const Chatbot = () => {
       setTimeout(() => inputRef.current?.focus(), 300);
     }
   }, [chatbotOpen]);
+
+  // The live agent can drive the page: scroll to a section or open a project
+  const performAction = useCallback(
+    ({ action, target }: AgentAction) => {
+      // On phones the chat covers the page, so tuck it away to reveal what was asked for
+      if (window.innerWidth < 640) setChatbotOpen(false);
+      const id = action === 'open_project' ? 'projects' : target;
+      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if (action === 'open_project') setTimeout(() => openProject(target), 500);
+    },
+    [setChatbotOpen, openProject]
+  );
 
   const enterJobMatchMode = useCallback(() => {
     setJobMatchMode(true);
@@ -207,8 +224,12 @@ export const Chatbot = () => {
         const botId = (Date.now() + 1).toString();
         const content = note + response.text;
         setIsTyping(false);
-        setMessages((prev) => [...prev, { id: botId, role: 'assistant', content, timestamp: new Date() }]);
+        setMessages((prev) => [
+          ...prev,
+          { id: botId, role: 'assistant', content, timestamp: new Date(), resumeJd: wasJobMatch ? messageText : undefined },
+        ]);
         setStreamingId(botId);
+        if (speakReplies) voice.speak(content);
         setConfidenceById((prev) => ({ ...prev, [botId]: confidenceFor(response.text) }));
         setFollowUps(response.followUps);
       }, delay);
@@ -231,6 +252,7 @@ export const Chatbot = () => {
         setLiveText(answer);
       },
       onTool: (name) => setLiveTools((prev) => (prev.includes(name) ? prev : [...prev, name])),
+      onAction: performAction,
     })
       .then((tools) => {
         if (!answer.trim()) throw new AgentUnavailableError('empty', 'Live AI returned nothing.');
@@ -240,9 +262,17 @@ export const Chatbot = () => {
         setLiveTools([]);
         setMessages((prev) => [
           ...prev,
-          { id: (Date.now() + 1).toString(), role: 'assistant', content: answer.trim(), timestamp: new Date(), tools },
+          {
+            id: (Date.now() + 1).toString(),
+            role: 'assistant',
+            content: answer.trim(),
+            timestamp: new Date(),
+            tools,
+            resumeJd: wasJobMatch ? messageText : undefined,
+          },
         ]);
         setFollowUps(LIVE_FOLLOW_UPS);
+        if (speakReplies) voice.speak(answer);
       })
       .catch((err: unknown) => {
         setLiveMode(false);
@@ -254,7 +284,9 @@ export const Chatbot = () => {
           : '';
         answerOffline(note);
       });
-  }, [input, isTyping, jobMatchMode, messages, enterJobMatchMode]);
+  }, [input, isTyping, jobMatchMode, messages, enterJobMatchMode, performAction, speakReplies, voice]);
+
+  sendRef.current = handleSend;
 
   // Triggered from the ⌘K command palette's "Match a job description" action
   useEffect(() => {
@@ -334,9 +366,23 @@ export const Chatbot = () => {
                         : "Trained on Pradeep's work & skills"}
                 </p>
               </div>
+              {voice.canSpeak && (
+                <button
+                  onClick={() => {
+                    if (speakReplies) voice.stopSpeaking();
+                    setSpeakReplies((v) => !v);
+                  }}
+                  className="relative ml-auto p-1 hover:bg-white hover:bg-opacity-20 rounded-full transition-colors"
+                  aria-label={speakReplies ? 'Turn off spoken replies' : 'Read replies aloud'}
+                  aria-pressed={speakReplies}
+                  title={speakReplies ? 'Spoken replies on' : 'Read replies aloud'}
+                >
+                  {speakReplies ? <HiVolumeUp className="w-5 h-5" /> : <HiVolumeOff className="w-5 h-5 opacity-70" />}
+                </button>
+              )}
               <button
                 onClick={toggleChatbot}
-                className="relative ml-auto p-1 hover:bg-white hover:bg-opacity-20 rounded-full transition-colors"
+                className={`relative ${voice.canSpeak ? '' : 'ml-auto '}p-1 hover:bg-white hover:bg-opacity-20 rounded-full transition-colors`}
                 aria-label="Close chat"
               >
                 <HiX className="w-5 h-5" />
@@ -368,6 +414,15 @@ export const Chatbot = () => {
                       />
                     ) : (
                       msg.content
+                    )}
+                    {msg.resumeJd && msg.id !== streamingId && (
+                      <button
+                        onClick={() => printTailoredResume(msg.resumeJd!)}
+                        className="mt-2 w-full inline-flex items-center justify-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full bg-gradient-to-r from-primary to-accent text-void hover:shadow-glow transition-shadow"
+                      >
+                        <HiOutlineDownload className="w-4 h-4" />
+                        Download tailored resume (PDF)
+                      </button>
                     )}
                     {msg.role === 'assistant' && msg.tools && msg.tools.length > 0 && <ToolChips tools={msg.tools} />}
                     {msg.role === 'assistant' && msg.id !== streamingId && confidenceById[msg.id] && (
@@ -462,16 +517,30 @@ export const Chatbot = () => {
                 <input
                   ref={inputRef}
                   type="text"
-                  value={input}
+                  value={voice.listening && voice.interim ? voice.interim : input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  placeholder={jobMatchMode ? 'Paste job description here...' : 'Ask about skills, projects, experience...'}
+                  placeholder={voice.listening ? 'Listening…' : jobMatchMode ? 'Paste job description here...' : 'Ask about skills, projects, experience...'}
                   className={`flex-1 px-3 py-2 rounded-full border bg-white dark:bg-white/5 text-gray-900 dark:text-white text-sm focus:outline-none ${
                     jobMatchMode
                       ? 'border-secondary/50 focus:border-secondary'
                       : 'border-gray-300 dark:border-white/10 focus:border-primary'
                   }`}
                 />
+                {voice.canListen && (
+                  <motion.button
+                    onClick={voice.listening ? voice.stopListening : voice.startListening}
+                    disabled={isTyping}
+                    className={`p-2 rounded-full transition-colors disabled:opacity-50 ${
+                      voice.listening ? 'bg-red-500 text-white animate-pulse' : 'bg-gray-100 dark:bg-white/10 text-primary'
+                    }`}
+                    aria-label={voice.listening ? 'Stop listening' : 'Speak your question'}
+                    aria-pressed={voice.listening}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <HiMicrophone className="w-4 h-4" />
+                  </motion.button>
+                )}
                 <motion.button
                   onClick={() => handleSend()}
                   disabled={!input.trim() || isTyping}

@@ -23,6 +23,18 @@ interface AppStore {
   jobMatchRequested: boolean;
   requestJobMatch: () => void;
   clearJobMatchRequest: () => void;
+
+  /** Set by the assistant (or anything else) to open a project's detail modal. */
+  focusProjectId: string | null;
+  openProject: (id: string) => void;
+  clearFocusProject: () => void;
+
+  terminalOpen: boolean;
+  setTerminalOpen: (open: boolean) => void;
+
+  /** Role the visitor is hiring for; tunes which projects/skills are highlighted. */
+  persona: string | null;
+  setPersona: (persona: string | null) => void;
 }
 
 export const useAppStore = create<AppStore>()(
@@ -54,10 +66,20 @@ export const useAppStore = create<AppStore>()(
       jobMatchRequested: false,
       requestJobMatch: () => set({ chatbotOpen: true, jobMatchRequested: true }),
       clearJobMatchRequest: () => set({ jobMatchRequested: false }),
+
+      focusProjectId: null,
+      openProject: (id) => set({ focusProjectId: id }),
+      clearFocusProject: () => set({ focusProjectId: null }),
+
+      terminalOpen: false,
+      setTerminalOpen: (open) => set({ terminalOpen: open }),
+
+      persona: null,
+      setPersona: (persona) => set({ persona }),
     }),
     {
       name: 'portfolio-storage',
-      partialize: (state) => ({ theme: state.theme }),
+      partialize: (state) => ({ theme: state.theme, persona: state.persona }),
     }
   )
 );
