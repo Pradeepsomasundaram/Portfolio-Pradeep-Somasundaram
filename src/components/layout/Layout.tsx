@@ -43,6 +43,18 @@ export const Layout = ({ children }: LayoutProps) => {
   // A personalised link (?for=acme&role=ml) pre-tunes the site for that visitor
   useEffect(() => {
     if (visitContext.persona) useAppStore.getState().setPersona(visitContext.persona);
+    if (!visitContext.company) return;
+    // Let the owner know the link was opened (company/role labels only), once per tab session
+    try {
+      if (sessionStorage.getItem('link-visit-sent')) return;
+      sessionStorage.setItem('link-visit-sent', '1');
+    } catch { /* storage blocked: send anyway */ }
+    fetch('/.netlify/functions/visit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ company: visitContext.company, role: visitContext.persona ?? '' }),
+      keepalive: true,
+    }).catch(() => undefined);
   }, []);
 
   useEffect(() => {

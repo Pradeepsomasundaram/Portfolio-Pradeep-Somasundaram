@@ -94,7 +94,7 @@ export const Navigation = () => {
       <div className="max-w-6xl mx-auto px-3 sm:px-6 pt-3">
         <div className="glass-panel rounded-2xl sm:rounded-full shadow-glow px-4 sm:px-5 h-14 flex items-center justify-between">
           <motion.a href="#hero" whileHover={{ scale: 1.05 }}>
-            <span className="text-lg sm:text-xl font-display font-bold heading-shimmer whitespace-nowrap">
+            <span className="text-[15px] min-[400px]:text-lg sm:text-xl font-display font-bold heading-shimmer whitespace-nowrap">
               Pradeep Somasundaram
             </span>
           </motion.a>

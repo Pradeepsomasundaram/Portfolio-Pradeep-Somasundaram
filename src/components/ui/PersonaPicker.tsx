@@ -36,7 +36,7 @@ export const PersonaPicker = () => {
   };
 
   return (
-    <div className="fixed bottom-6 left-4 sm:left-6 z-40 max-w-[calc(100vw-6rem)]">
+    <div className="fixed bottom-24 left-4 sm:bottom-6 sm:left-24 z-40 max-w-[calc(100vw-2rem)] sm:max-w-[calc(100vw-12rem)]">
       <AnimatePresence mode="wait">
         {showPrompt && !persona && (
           <motion.div
@@ -44,7 +44,7 @@ export const PersonaPicker = () => {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 16 }}
-            className="glass-panel rounded-2xl shadow-glow p-4 w-72"
+            className="glass-panel rounded-2xl shadow-glow p-3 sm:p-4 w-full sm:w-72"
             role="dialog"
             aria-label="Tailor this portfolio"
           >
@@ -54,7 +54,7 @@ export const PersonaPicker = () => {
                 <HiX className="w-4 h-4" />
               </button>
             </div>
-            <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">I'll surface the most relevant projects first.</p>
+            <p className="hidden sm:block text-xs text-gray-500 dark:text-gray-400 mb-3">I'll surface the most relevant projects first.</p>
             <div className="flex flex-wrap gap-1.5">
               {personas.map((p) => (
                 <button

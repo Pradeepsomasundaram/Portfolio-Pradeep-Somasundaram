@@ -3,6 +3,13 @@
 @tailwind utilities;
 
 @layer base {
+  /* Decorative layers (blurred blobs, marquee, scroll-reveal offsets) can poke past the
+     viewport; clip them so phones never get a sideways scroll or a zoomed-out page. */
+  html,
+  body {
+    overflow-x: clip;
+  }
+
   :root {
     --color-primary: #C9A227;
     --color-secondary: #0EA57A;
