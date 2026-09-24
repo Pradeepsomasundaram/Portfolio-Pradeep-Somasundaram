@@ -14,6 +14,7 @@ import {
   Terminal,
 } from '../ui';
 import { useAppStore } from '../../stores/appStore';
+import { visitContext } from '../../lib/visitContext';
 
 interface LayoutProps {
   children: ReactNode;
@@ -21,6 +22,11 @@ interface LayoutProps {
 
 export const Layout = ({ children }: LayoutProps) => {
   const { theme, commandPaletteOpen, toggleCommandPalette, setCommandPaletteOpen } = useAppStore();
+
+  // A personalised link (?for=acme&role=ml) pre-tunes the site for that visitor
+  useEffect(() => {
+    if (visitContext.persona) useAppStore.getState().setPersona(visitContext.persona);
+  }, []);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {

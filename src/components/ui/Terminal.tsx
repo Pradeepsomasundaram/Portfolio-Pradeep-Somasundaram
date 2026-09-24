@@ -7,6 +7,8 @@ import experienceData from '../../data/experience.json';
 import skillsData from '../../data/skills.json';
 import educationData from '../../data/education.json';
 import certificationsData from '../../data/certifications.json';
+import { buildPersonalLink } from '../../lib/visitContext';
+import { personas } from '../../lib/persona';
 
 interface Line {
   kind: 'in' | 'out';
@@ -23,6 +25,7 @@ const HELP = `Commands:
   open <n|project-id>  open a project (number from "ls projects")
   goto <section>       scroll the page (${SECTIONS.slice(0, 6).join(', ')}, ...)
   github               live GitHub stats
+  link <company> [role] make a personalised link (roles: ml, de, agentic, fullstack)
   contact              how to reach him
   clear | exit         clear the screen | close the terminal`;
 
@@ -132,6 +135,19 @@ export const Terminal = () => {
           }
         case 'contact':
           return print(`email     ${aboutData.social.email}\nlinkedin  ${aboutData.social.linkedin}\ngithub    ${aboutData.social.github}`);
+        case 'link': {
+          const [company, roleArg] = [args[0] ?? '', args[1]?.toLowerCase()];
+          if (!company) return print('usage: link <company> [ml|de|agentic|fullstack]   e.g. link acme ml');
+          const role = personas.find((p) => p.id === roleArg);
+          if (roleArg && !role) return print(`Unknown role. Choose: ${personas.map((p) => p.id).join(', ')}`);
+          const url = buildPersonalLink(company, role?.id);
+          try {
+            await navigator.clipboard.writeText(url);
+            return print(`${url}\n(copied to clipboard)`);
+          } catch {
+            return print(url);
+          }
+        }
         case 'sudo':
           return print(arg.includes('hire') ? 'Permission granted. Excellent decision.\n→ ' + aboutData.social.email : 'pradeep is not in the sudoers file. This incident will be reported.');
         case 'clear':
