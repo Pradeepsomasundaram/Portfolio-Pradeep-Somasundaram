@@ -1,10 +1,11 @@
 import { useState, useRef, useEffect, useCallback, memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { HiX, HiPaperAirplane, HiSparkles, HiOutlineClipboardCheck } from 'react-icons/hi';
+import { HiX, HiPaperAirplane, HiSparkles, HiOutlineClipboardCheck, HiOutlineDownload } from 'react-icons/hi';
 import { useAppStore } from '../../stores/appStore';
 import type { Message } from '../../types/chatbot.types';
 import { generateResponse, matchJobDescription, initialQuickQuestions } from '../../lib/assistantEngine';
-import { askAgent, AgentUnavailableError, toolLabels } from '../../lib/agentClient';
+import { printTailoredResume } from '../../lib/resumeBuilder';
+import { askAgent, AgentUnavailableError, toolLabels, type AgentAction } from '../../lib/agentClient';
 
 const JOB_MATCH_TRIGGERS = ['Match a job description', 'Match another job description'];
 const LIVE_FOLLOW_UPS = ['What is he building lately?', 'Best projects for ML roles', 'Why hire Pradeep?'];
@@ -132,7 +133,7 @@ function confidenceFor(text: string): number {
 }
 
 export const Chatbot = () => {
-  const { chatbotOpen, toggleChatbot, jobMatchRequested, clearJobMatchRequest } = useAppStore();
+  const { chatbotOpen, toggleChatbot, setChatbotOpen, jobMatchRequested, clearJobMatchRequest, openProject } = useAppStore();
   const [messages, setMessages] = useState<Message[]>(loadMessages);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -160,6 +161,18 @@ export const Chatbot = () => {
       setTimeout(() => inputRef.current?.focus(), 300);
     }
   }, [chatbotOpen]);
+
+  // The live agent can drive the page: scroll to a section or open a project
+  const performAction = useCallback(
+    ({ action, target }: AgentAction) => {
+      // On phones the chat covers the page, so tuck it away to reveal what was asked for
+      if (window.innerWidth < 640) setChatbotOpen(false);
+      const id = action === 'open_project' ? 'projects' : target;
+      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if (action === 'open_project') setTimeout(() => openProject(target), 500);
+    },
+    [setChatbotOpen, openProject]
+  );
 
   const enterJobMatchMode = useCallback(() => {
     setJobMatchMode(true);
@@ -207,7 +220,10 @@ export const Chatbot = () => {
         const botId = (Date.now() + 1).toString();
         const content = note + response.text;
         setIsTyping(false);
-        setMessages((prev) => [...prev, { id: botId, role: 'assistant', content, timestamp: new Date() }]);
+        setMessages((prev) => [
+          ...prev,
+          { id: botId, role: 'assistant', content, timestamp: new Date(), resumeJd: wasJobMatch ? messageText : undefined },
+        ]);
         setStreamingId(botId);
         setConfidenceById((prev) => ({ ...prev, [botId]: confidenceFor(response.text) }));
         setFollowUps(response.followUps);
@@ -231,6 +247,7 @@ export const Chatbot = () => {
         setLiveText(answer);
       },
       onTool: (name) => setLiveTools((prev) => (prev.includes(name) ? prev : [...prev, name])),
+      onAction: performAction,
     })
       .then((tools) => {
         if (!answer.trim()) throw new AgentUnavailableError('empty', 'Live AI returned nothing.');
@@ -240,7 +257,14 @@ export const Chatbot = () => {
         setLiveTools([]);
         setMessages((prev) => [
           ...prev,
-          { id: (Date.now() + 1).toString(), role: 'assistant', content: answer.trim(), timestamp: new Date(), tools },
+          {
+            id: (Date.now() + 1).toString(),
+            role: 'assistant',
+            content: answer.trim(),
+            timestamp: new Date(),
+            tools,
+            resumeJd: wasJobMatch ? messageText : undefined,
+          },
         ]);
         setFollowUps(LIVE_FOLLOW_UPS);
       })
@@ -254,7 +278,7 @@ export const Chatbot = () => {
           : '';
         answerOffline(note);
       });
-  }, [input, isTyping, jobMatchMode, messages, enterJobMatchMode]);
+  }, [input, isTyping, jobMatchMode, messages, enterJobMatchMode, performAction]);
 
   // Triggered from the ⌘K command palette's "Match a job description" action
   useEffect(() => {
@@ -368,6 +392,15 @@ export const Chatbot = () => {
                       />
                     ) : (
                       msg.content
+                    )}
+                    {msg.resumeJd && msg.id !== streamingId && (
+                      <button
+                        onClick={() => printTailoredResume(msg.resumeJd!)}
+                        className="mt-2 w-full inline-flex items-center justify-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full bg-gradient-to-r from-primary to-accent text-void hover:shadow-glow transition-shadow"
+                      >
+                        <HiOutlineDownload className="w-4 h-4" />
+                        Download tailored resume (PDF)
+                      </button>
                     )}
                     {msg.role === 'assistant' && msg.tools && msg.tools.length > 0 && <ToolChips tools={msg.tools} />}
                     {msg.role === 'assistant' && msg.id !== streamingId && confidenceById[msg.id] && (

@@ -5,6 +5,8 @@ export interface Message {
   timestamp: Date;
   /** Tools the live agent called to produce this message (absent for offline answers). */
   tools?: string[];
+  /** Job description this answer was about, enabling a tailored-resume download. */
+  resumeJd?: string;
 }
 
 export interface ChatbotContext {

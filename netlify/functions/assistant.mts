@@ -45,6 +45,7 @@ ${aboutData.bio}
 How to answer:
 - Ground every claim about ${aboutData.name} in the tools below or the profile above. Never invent employers, dates, metrics, projects, skills or links. If the data doesn't cover something, say so plainly and point to the contact section.
 - Use tools whenever a question touches projects, experience, skills, credentials, GitHub activity or fit for a job. Prefer one or two well-chosen tool calls over many.
+- You can also control the page the visitor is looking at: call show_section to scroll to a section and open_project to open a project's detail view when they ask to see something, then say in a line what you showed.
 - For a pasted job description, call match_job_description with the full text, then add your own short judgement (strongest matches, honest gaps).
 - Be concise and warm: usually 2-6 sentences or a short bullet list. Plain text only, no markdown headings or tables.
 - Stay on topic: this profile and closely related career questions. Politely decline unrelated requests (general coding help, writing essays, etc.) and steer back.
@@ -81,6 +82,11 @@ const PROFILE_SECTIONS = {
 type SectionName = keyof typeof PROFILE_SECTIONS;
 const SECTION_NAMES = Object.keys(PROFILE_SECTIONS) as SectionName[];
 
+const PAGE_SECTIONS = [
+  'hero', 'about', 'experience', 'education', 'skills', 'universe', 'projects', 'github',
+  'demo', 'certifications', 'publications', 'awards', 'volunteering', 'organizations', 'testimonials', 'contact',
+];
+
 const TOOL_DECLARATIONS = [
   {
     name: 'search_projects',
@@ -112,6 +118,25 @@ const TOOL_DECLARATIONS = [
       type: 'object',
       properties: { job_description: { type: 'string', description: 'The full job description text.' } },
       required: ['job_description'],
+    },
+  },
+  {
+    name: 'show_section',
+    description: 'Scroll the visitor\'s page to a section of the portfolio so they can see it.',
+    parameters: {
+      type: 'object',
+      properties: { section: { type: 'string', enum: PAGE_SECTIONS } },
+      required: ['section'],
+    },
+  },
+  {
+    name: 'open_project',
+    description:
+      "Open a project's detail view on the visitor's screen and scroll to the projects section. Pass the project id or part of its title (ids come from search_projects).",
+    parameters: {
+      type: 'object',
+      properties: { project: { type: 'string', description: 'Project id or title fragment.' } },
+      required: ['project'],
     },
   },
   {
@@ -189,6 +214,7 @@ function searchProjects(input: { query?: unknown; category?: unknown }): string 
     .sort((a, b) => b.score - a.score || b.p.date.localeCompare(a.p.date))
     .slice(0, 5)
     .map(({ p }) => ({
+      id: p.id,
       title: p.title,
       category: p.category,
       dateRange: p.dateRange,
@@ -200,7 +226,11 @@ function searchProjects(input: { query?: unknown; category?: unknown }): string 
   return JSON.stringify(ranked.length ? ranked : { message: 'No projects matched that search.' });
 }
 
-async function runTool(name: string, input: Record<string, unknown>): Promise<{ text: string; isError?: boolean }> {
+async function runTool(
+  name: string,
+  input: Record<string, unknown>,
+  send: Send
+): Promise<{ text: string; isError?: boolean }> {
   try {
     switch (name) {
       case 'search_projects':
@@ -216,6 +246,19 @@ async function runTool(name: string, input: Record<string, unknown>): Promise<{ 
       }
       case 'get_github_activity':
         return { text: await githubActivity() };
+      case 'show_section': {
+        const section = String(input.section ?? '');
+        if (!PAGE_SECTIONS.includes(section)) return { text: `Unknown section. Choose one of: ${PAGE_SECTIONS.join(', ')}`, isError: true };
+        send({ type: 'action', action: 'scroll', target: section });
+        return { text: `Scrolled the visitor's page to the ${section} section.` };
+      }
+      case 'open_project': {
+        const q = String(input.project ?? '').toLowerCase().trim();
+        const project = projectsData.find((p) => p.id.toLowerCase() === q) ?? projectsData.find((p) => q && p.title.toLowerCase().includes(q));
+        if (!project) return { text: 'No project matched. Use search_projects to find its id.', isError: true };
+        send({ type: 'action', action: 'open_project', target: project.id });
+        return { text: `Opened "${project.title}" on the visitor's screen.` };
+      }
       default:
         return { text: `Unknown tool: ${name}`, isError: true };
     }
@@ -421,7 +464,7 @@ async function runAgent(apiKey: string, history: ChatTurn[], send: Send): Promis
     for (const { functionCall } of calls) {
       if (!functionCall) continue;
       send({ type: 'tool', name: functionCall.name });
-      const out = await runTool(functionCall.name, functionCall.args ?? {});
+      const out = await runTool(functionCall.name, functionCall.args ?? {}, send);
       const text = out.text.slice(0, MAX_TOOL_RESULT_CHARS);
       responses.push({
         functionResponse: { name: functionCall.name, response: out.isError ? { error: text } : { result: text } },

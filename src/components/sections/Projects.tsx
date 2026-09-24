@@ -5,6 +5,7 @@ import { FaGithub, FaStar } from 'react-icons/fa';
 import { HiArrowRight } from 'react-icons/hi';
 import type { Project } from '../../types/project.types';
 import projectsData from '../../data/projects.json';
+import { useAppStore } from '../../stores/appStore';
 
 const projects: Project[] = projectsData;
 
@@ -46,6 +47,20 @@ export const Projects = () => {
   useEffect(() => {
     setExpanded(false);
   }, [activeCategory, searchQuery]);
+
+  // The AI assistant (or terminal) can ask for a specific project to be opened
+  const focusProjectId = useAppStore((s) => s.focusProjectId);
+  const clearFocusProject = useAppStore((s) => s.clearFocusProject);
+  useEffect(() => {
+    if (!focusProjectId) return;
+    const target = projects.find((p) => p.id === focusProjectId);
+    if (target) {
+      setActiveCategory('All');
+      setSearchQuery('');
+      setSelectedProject(target);
+    }
+    clearFocusProject();
+  }, [focusProjectId, clearFocusProject]);
 
   const visibleProjects = expanded ? filteredProjects : filteredProjects.slice(0, INITIAL_COUNT);
 
