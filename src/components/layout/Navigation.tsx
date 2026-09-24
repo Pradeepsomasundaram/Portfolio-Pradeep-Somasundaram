@@ -16,6 +16,7 @@ const moreNav = [
   { label: 'Education', id: 'education' },
   { label: 'The Toolkit', id: 'universe' },
   { label: 'GitHub', id: 'github' },
+  { label: 'Try It Live', id: 'demo' },
   { label: 'Certifications', id: 'certifications' },
   { label: 'Publications', id: 'publications' },
   { label: 'Awards', id: 'awards' },

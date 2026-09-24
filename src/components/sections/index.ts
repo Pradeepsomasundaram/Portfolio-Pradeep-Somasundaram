@@ -4,6 +4,7 @@ export { Experience } from './Experience';
 export { Education } from './Education';
 export { Projects } from './Projects';
 export { GithubActivity } from './GithubActivity';
+export { LiveDemo } from './LiveDemo';
 export { Skills } from './Skills';
 export { Universe } from './Universe';
 export { Certifications } from './Certifications';

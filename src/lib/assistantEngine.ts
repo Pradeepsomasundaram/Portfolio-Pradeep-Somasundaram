@@ -553,6 +553,7 @@ const navigablePages: CommandResult[] = [
   { id: 'projects', label: 'Projects', sublabel: 'Featured work', to: '#projects' },
   { id: 'skills', label: 'Skills', sublabel: 'Tech stack', to: '#skills' },
   { id: 'github', label: 'GitHub', sublabel: 'Live activity', to: '#github' },
+  { id: 'demo', label: 'Try It Live', sublabel: 'In-browser NLP model', to: '#demo' },
   { id: 'certifications', label: 'Certifications', sublabel: 'Credentials', to: '#certifications' },
   { id: 'publications', label: 'Publications', sublabel: 'Research papers', to: '#publications' },
   { id: 'awards', label: 'Awards', sublabel: 'Honors & recognition', to: '#awards' },
