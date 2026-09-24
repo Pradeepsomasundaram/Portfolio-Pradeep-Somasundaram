@@ -6,6 +6,7 @@ import { HiArrowRight } from 'react-icons/hi';
 import type { Project } from '../../types/project.types';
 import projectsData from '../../data/projects.json';
 import { useAppStore } from '../../stores/appStore';
+import { getPersona, projectRelevance } from '../../lib/persona';
 
 const projects: Project[] = projectsData;
 
@@ -32,7 +33,10 @@ export const Projects = () => {
   const [expanded, setExpanded] = useState(false);
   const [view, setView] = useState<'carousel' | 'grid'>('carousel');
 
-  const filteredProjects = projects.filter((project) => {
+  const persona = getPersona(useAppStore((s) => s.persona));
+  const setPersona = useAppStore((s) => s.setPersona);
+
+  const matchingProjects = projects.filter((project) => {
     const matchesCategory =
       activeCategory === 'All' || project.category === activeCategory;
     const matchesSearch =
@@ -43,6 +47,11 @@ export const Projects = () => {
       );
     return matchesCategory && matchesSearch;
   });
+
+  // When the visitor said what they're hiring for, lead with the best-fitting projects
+  const filteredProjects = persona
+    ? [...matchingProjects].sort((a, b) => projectRelevance(b, persona) - projectRelevance(a, persona))
+    : matchingProjects;
 
   useEffect(() => {
     setExpanded(false);
@@ -117,6 +126,17 @@ export const Projects = () => {
               );
             })}
           </div>
+
+          {persona && (
+            <div className="flex justify-center mb-4">
+              <button
+                onClick={() => setPersona(null)}
+                className="text-xs px-3 py-1 rounded-full border border-primary/40 text-primary hover:bg-primary/10 transition-colors"
+              >
+                Sorted for {persona.label} roles ✕
+              </button>
+            </div>
+          )}
 
           {/* Result count */}
           <motion.p

@@ -16,6 +16,7 @@ export const CommandPalette = ({ open, onClose }: CommandPaletteProps) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const requestJobMatch = useAppStore((s) => s.requestJobMatch);
+  const setTerminalOpen = useAppStore((s) => s.setTerminalOpen);
 
   const pages = searchPages(query);
 
@@ -197,6 +198,16 @@ export const CommandPalette = ({ open, onClose }: CommandPaletteProps) => {
                   >
                     <HiOutlineClipboardCheck className="w-4 h-4 shrink-0" />
                     Match a job description
+                  </button>
+                  <button
+                    onClick={() => {
+                      onClose();
+                      setTerminalOpen(true);
+                    }}
+                    className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-left text-gray-600 dark:text-gray-300 hover:bg-primary/10 transition-colors"
+                  >
+                    <span className="w-4 text-center font-mono text-xs shrink-0">&gt;_</span>
+                    Open terminal <kbd className="ml-auto text-[10px] opacity-60 border border-current/30 rounded px-1">`</kbd>
                   </button>
                   <p className="px-3 pt-3 pb-1 text-xs text-gray-400">
                     Or ask a question like{' '}

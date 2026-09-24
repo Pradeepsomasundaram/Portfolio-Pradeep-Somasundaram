@@ -23,7 +23,13 @@ export function buildTailoredResumeHtml(jdText: string): string {
   const skillGroups = Object.entries(skillsData)
     .map(([group, items]) => {
       const list = items as string[];
-      const hits = list.filter((s) => matched.some((m) => m.toLowerCase() === s.toLowerCase()));
+      const hits = list.filter((s) =>
+        matched.some((m) => {
+          const a = s.toLowerCase();
+          const b = m.toLowerCase();
+          return a === b || (b.length > 2 && a.includes(b)) || (a.length > 2 && b.includes(a));
+        })
+      );
       const rest = list.filter((s) => !hits.includes(s));
       return { group, hits, items: [...hits, ...rest].slice(0, 12), score: hits.length };
     })
