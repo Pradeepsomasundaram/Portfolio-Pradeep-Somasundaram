@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { HiSparkles, HiArrowRight, HiSearch, HiOutlineClipboardCheck } from 'react-icons/hi';
 import { generateResponse, searchPages, type CommandResult } from '../../lib/assistantEngine';
 import { useAppStore } from '../../stores/appStore';
+import { enableSemanticSearch, semanticReady, semanticSearch, SEMANTIC_FLAG, type SemanticDoc } from '../../lib/semanticSearch';
 
 interface CommandPaletteProps {
   open: boolean;
@@ -17,6 +18,59 @@ export const CommandPalette = ({ open, onClose }: CommandPaletteProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const requestJobMatch = useAppStore((s) => s.requestJobMatch);
   const setTerminalOpen = useAppStore((s) => s.setTerminalOpen);
+  const openProject = useAppStore((s) => s.openProject);
+
+  // Optional on-device semantic search: finds things by meaning, not just keywords
+  const [semStatus, setSemStatus] = useState<{ state: 'off' | 'loading' | 'ready' | 'error'; progress: number }>({
+    state: semanticReady() ? 'ready' : 'off',
+    progress: 0,
+  });
+  const [semResults, setSemResults] = useState<SemanticDoc[]>([]);
+
+  const turnOnSemantic = useCallback(() => {
+    setSemStatus({ state: 'loading', progress: 0 });
+    enableSemanticSearch((progress) => setSemStatus({ state: 'loading', progress }))
+      .then(() => {
+        setSemStatus({ state: 'ready', progress: 100 });
+        try { localStorage.setItem(SEMANTIC_FLAG, '1'); } catch { /* storage blocked */ }
+      })
+      .catch(() => setSemStatus({ state: 'error', progress: 0 }));
+  }, []);
+
+  // Returning visitors who opted in before get it automatically (model is browser-cached)
+  useEffect(() => {
+    if (!open || semStatus.state !== 'off') return;
+    try {
+      if (localStorage.getItem(SEMANTIC_FLAG) === '1') turnOnSemantic();
+    } catch { /* storage blocked */ }
+  }, [open, semStatus.state, turnOnSemantic]);
+
+  useEffect(() => {
+    if (semStatus.state !== 'ready' || !query.trim()) {
+      setSemResults([]);
+      return;
+    }
+    let cancelled = false;
+    const t = setTimeout(() => {
+      semanticSearch(query.trim()).then((r) => !cancelled && setSemResults(r));
+    }, 200);
+    return () => {
+      cancelled = true;
+      clearTimeout(t);
+    };
+  }, [query, semStatus.state]);
+
+  const openSemantic = useCallback((doc: SemanticDoc) => {
+    onClose();
+    setTimeout(() => {
+      if (doc.kind === 'project') {
+        document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' });
+        setTimeout(() => openProject(doc.target), 400);
+      } else {
+        document.getElementById(doc.target)?.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 50);
+  }, [onClose, openProject]);
 
   const pages = searchPages(query);
 
@@ -142,6 +196,27 @@ export const CommandPalette = ({ open, onClose }: CommandPaletteProps) => {
                 </div>
               )}
 
+              {semResults.length > 0 && (
+                <div className="p-2 border-t border-gray-100 dark:border-gray-700/60">
+                  <p className="px-2 py-1 text-[11px] font-semibold uppercase tracking-wider text-secondary">
+                    Smart matches · on-device
+                  </p>
+                  {semResults.map((r) => (
+                    <button
+                      key={`${r.kind}-${r.title}`}
+                      onClick={() => openSemantic(r)}
+                      className="w-full flex items-center justify-between gap-2 px-3 py-2 rounded-lg text-left text-gray-700 dark:text-gray-300 hover:bg-primary/10 hover:text-primary transition-colors"
+                    >
+                      <span className="min-w-0">
+                        <span className="block font-medium truncate">{r.title}</span>
+                        <span className="block text-xs text-gray-400 truncate">{r.subtitle}</span>
+                      </span>
+                      <HiArrowRight className="w-4 h-4 opacity-50 shrink-0" />
+                    </button>
+                  ))}
+                </div>
+              )}
+
               {query.trim() && (
                 <div className="p-2 border-t border-gray-100 dark:border-gray-700/60">
                   <button
@@ -209,6 +284,20 @@ export const CommandPalette = ({ open, onClose }: CommandPaletteProps) => {
                     <span className="w-4 text-center font-mono text-xs shrink-0">&gt;_</span>
                     Open terminal <kbd className="ml-auto text-[10px] opacity-60 border border-current/30 rounded px-1">`</kbd>
                   </button>
+                  {semStatus.state !== 'ready' && (
+                    <button
+                      onClick={turnOnSemantic}
+                      disabled={semStatus.state === 'loading'}
+                      className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-left text-secondary hover:bg-secondary/10 transition-colors disabled:opacity-70"
+                    >
+                      <HiSparkles className="w-4 h-4 shrink-0" />
+                      {semStatus.state === 'loading'
+                        ? `Loading smart search… ${Math.round(semStatus.progress)}%`
+                        : semStatus.state === 'error'
+                          ? "Couldn't load — tap to retry smart search"
+                          : 'Enable smart search (~23 MB, runs on your device)'}
+                    </button>
+                  )}
                   <p className="px-3 pt-3 pb-1 text-xs text-gray-400">
                     Or ask a question like{' '}
                     <span className="italic">&ldquo;what has he built with AI?&rdquo;</span>

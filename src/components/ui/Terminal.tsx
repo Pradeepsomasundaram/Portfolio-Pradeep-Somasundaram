@@ -136,17 +136,19 @@ export const Terminal = () => {
         case 'contact':
           return print(`email     ${aboutData.social.email}\nlinkedin  ${aboutData.social.linkedin}\ngithub    ${aboutData.social.github}`);
         case 'link': {
-          const [company, roleArg] = [args[0] ?? '', args[1]?.toLowerCase()];
+          // Last word is the role if it matches one; everything before it is the company
+          const last = args[args.length - 1]?.toLowerCase();
+          const role = personas.find((p) => p.id === last);
+          const company = (role ? args.slice(0, -1) : args).join(' ');
           if (!company) return print('usage: link <company> [ml|de|agentic|fullstack]   e.g. link acme ml');
-          const role = personas.find((p) => p.id === roleArg);
-          if (roleArg && !role) return print(`Unknown role. Choose: ${personas.map((p) => p.id).join(', ')}`);
           const url = buildPersonalLink(company, role?.id);
-          try {
-            await navigator.clipboard.writeText(url);
-            return print(`${url}\n(copied to clipboard)`);
-          } catch {
-            return print(url);
-          }
+          print(url);
+          // Copy without blocking the output; some browsers gate clipboard access
+          navigator.clipboard
+            ?.writeText(url)
+            .then(() => print('(copied to clipboard)'))
+            .catch(() => undefined);
+          return;
         }
         case 'sudo':
           return print(arg.includes('hire') ? 'Permission granted. Excellent decision.\n→ ' + aboutData.social.email : 'pradeep is not in the sudoers file. This incident will be reported.');
