@@ -63,7 +63,7 @@ function buildIntents(): Intent[] {
         const currentRole = experienceData[0];
         const totalSkills = Object.values(skillsData).flat().length;
         return {
-          text: `Pradeep Somasundaram is a ${aboutData.roles.join(', ')} based in Atlanta, Georgia.\n\n${aboutData.bio}\n\nQuick stats:\n- ${aboutData.stats.yearsExperience} years of experience\n- ${aboutData.stats.projectsCompleted} projects completed\n- ${totalSkills}+ technologies mastered\n- ${certificationsData.length} professional certifications\n- ${publicationsData.length} peer-reviewed publications\n\nCurrently working as ${currentRole.role} at ${currentRole.company}.`,
+          text: `Pradeep Somasundaram is a ${aboutData.roles.join(', ')} based in Dallas, Texas.\n\n${aboutData.bio}\n\nQuick stats:\n- ${aboutData.stats.yearsExperience} years of experience\n- ${aboutData.stats.projectsCompleted} projects completed\n- ${totalSkills}+ technologies mastered\n- ${certificationsData.length} professional certifications\n- ${publicationsData.length} peer-reviewed publications\n\nCurrently working as ${currentRole.role} at ${currentRole.company}.`,
           followUps: ['Work experience', 'Education', 'Top projects', 'Contact info'],
         };
       },
@@ -97,7 +97,7 @@ function buildIntents(): Intent[] {
       name: 'cognizant',
       keywords: [
         ['cognizant', 6], ['current job', 5], ['current company', 5], ['agentic', 5],
-        ['mlops', 5], ['atlanta', 2],
+        ['mlops', 5], ['dallas', 2],
       ],
       handler: () => {
         const cog = experienceData.find((e) => e.company === 'Cognizant')!;
@@ -331,7 +331,7 @@ function buildIntents(): Intent[] {
         ['get in touch', 5], ['reach out', 4],
       ],
       handler: () => ({
-        text: `You can connect with Pradeep through:\n\n- Email: ${aboutData.social.email}\n- LinkedIn: linkedin.com/in/pradeep-somasundaram-835230192\n- GitHub: github.com/PradeepSomasundaram1512\n- Location: Atlanta, Georgia\n\nHe's currently open to exploring new technologies and collaborations. You can also use the Contact page to send a message directly!`,
+        text: `You can connect with Pradeep through:\n\n- Email: ${aboutData.social.email}\n- LinkedIn: linkedin.com/in/pradeep-somasundaram-835230192\n- GitHub: github.com/PradeepSomasundaram1512\n- Location: Dallas, Texas\n\nHe's currently open to exploring new technologies and collaborations. You can also use the Contact page to send a message directly!`,
         followUps: ['Current role', 'Resume', 'About Pradeep', 'Projects'],
       }),
     },
@@ -423,7 +423,7 @@ function buildIntents(): Intent[] {
         ['hiring', 3],
       ],
       handler: () => ({
-        text: `Pradeep is currently based in Atlanta, Georgia, United States.\n\nHe is currently working as a Agentic AI & MLOps Lead at Cognizant (since Feb 2026).\n\nHe's always open to exploring new technologies, collaborations, and networking opportunities. Feel free to reach out via the Contact page!`,
+        text: `Pradeep is currently based in Dallas, Texas, United States.\n\nHe is currently working as a Agentic AI & MLOps Lead at Cognizant (since Feb 2026).\n\nHe's always open to exploring new technologies, collaborations, and networking opportunities. Feel free to reach out via the Contact page!`,
         followUps: ['Contact info', 'Current role', 'Resume', 'About'],
       }),
     },

@@ -8,13 +8,13 @@ const contactInfo = [
   {
     icon: HiMail,
     label: 'Email',
-    value: 'aadhi1501@gmail.com',
-    href: 'mailto:aadhi1501@gmail.com',
+    value: 'Pradeep.Somasundaram1501@gmail.com',
+    href: 'mailto:Pradeep.Somasundaram1501@gmail.com',
   },
   {
     icon: HiLocationMarker,
     label: 'Location',
-    value: 'Atlanta, Georgia',
+    value: 'Dallas, Texas',
   },
 ];
 
