@@ -35,15 +35,20 @@ export const About = () => {
                   animate={{ rotateY: [0, -18, 0, 18, 0] }}
                   transition={{ duration: 13, repeat: Infinity, ease: 'easeInOut' }}
                 >
-                  <img
-                    src="/assets/about.png"
-                    alt={`About ${aboutData.name}`}
-                    loading="lazy"
-                    className="photo-grade w-full h-full object-cover scale-125"
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src = '/assets/about.svg';
-                    }}
-                  />
+                  <picture>
+                    <source srcSet="/assets/about.webp" type="image/webp" />
+                    <img
+                      src="/assets/about.png"
+                      alt={`About ${aboutData.name}`}
+                      loading="lazy"
+                      width={640}
+                      height={640}
+                      className="photo-grade w-full h-full object-cover scale-125"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = '/assets/about.svg';
+                      }}
+                    />
+                  </picture>
                 </motion.div>
               </div>
             </motion.div>

@@ -50,7 +50,7 @@ function IconBadge({ tool }: { tool: ToolNode }) {
             boxShadow: `0 0 20px ${tool.color}80`,
           }}
         >
-          <Icon className="w-5 h-5 text-white" />
+          <Icon className="w-5 h-5 text-white" aria-hidden="true" />
         </div>
         <span
           className="text-[10px] font-mono px-1.5 py-0.5 rounded whitespace-nowrap"

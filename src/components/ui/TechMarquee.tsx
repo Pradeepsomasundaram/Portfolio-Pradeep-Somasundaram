@@ -21,7 +21,7 @@ export const TechMarquee = () => {
             className={`mx-6 text-5xl md:text-7xl font-display font-bold tracking-tight ${
               i % 3 === 0
                 ? 'heading-shimmer'
-                : 'text-transparent [-webkit-text-stroke:1.5px_currentColor] text-gray-300 dark:text-gray-700'
+                : 'text-transparent [-webkit-text-stroke:1.5px_currentColor] text-gray-300 dark:text-gray-500'
             }`}
           >
             {word}
