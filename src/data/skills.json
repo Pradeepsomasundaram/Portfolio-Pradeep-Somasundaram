@@ -8,7 +8,8 @@
     "R",
     "HTML",
     "CSS",
-    "Dart"
+    "Dart",
+    "Bash"
   ],
   "Data Science & Machine Learning": [
     "TensorFlow",
@@ -41,7 +42,13 @@
     "Anomaly Detection",
     "Recommendation Systems",
     "MLOps",
-    "Agentic AI"
+    "Agentic AI",
+    "RAG",
+    "Embeddings",
+    "Vector Search",
+    "Pinecone",
+    "LangChain",
+    "LangGraph"
   ],
   "Databases & Cloud": [
     "PostgreSQL",
@@ -56,7 +63,8 @@
     "AWS Lambda",
     "AWS Athena",
     "GCP",
-    "Azure"
+    "Azure",
+    "IAM"
   ],
   "Web Development": [
     "React",
@@ -72,7 +80,9 @@
     "Bootstrap",
     "jQuery",
     "WebSockets",
-    "Next.js"
+    "Next.js",
+    "gRPC",
+    "Microservices"
   ],
   "Data Visualization & BI": [
     "Power BI",
@@ -86,7 +96,10 @@
     "Kubernetes",
     "Git",
     "CI/CD",
-    "Linux"
+    "Linux",
+    "GitHub Actions",
+    "Azure DevOps",
+    "Observability"
   ],
   "Optimization & Solvers": [
     "CPLEX",
@@ -107,7 +120,12 @@
   "Big Data": [
     "Apache Spark",
     "Apache Kafka",
-    "Hadoop"
+    "Hadoop",
+    "PySpark",
+    "Databricks",
+    "GCP BigQuery",
+    "GCP Dataflow",
+    "ETL"
   ],
   "Financial APIs": [
     "Yahoo Finance",

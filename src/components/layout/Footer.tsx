@@ -62,7 +62,7 @@ export const Footer = () => {
                 <FaLinkedin className="w-5 h-5" />
               </a>
               <a
-                href="mailto:aadhi1501@gmail.com"
+                href="mailto:Pradeep.Somasundaram1501@gmail.com"
                 className="p-2 bg-gray-200 dark:bg-white/10 rounded-lg hover:bg-primary transition-colors"
                 aria-label="Email"
               >
