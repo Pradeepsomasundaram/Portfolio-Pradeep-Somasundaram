@@ -1,11 +1,11 @@
 import { useInView } from 'react-intersection-observer';
 import { FaGithub, FaStar, FaCodeBranch } from 'react-icons/fa';
 import { HiExternalLink } from 'react-icons/hi';
-import { AnimatedSection } from '../ui';
+import { AnimatedSection, ContributionHeatmap } from '../ui';
 import { useGithubActivity, timeAgo } from '../../hooks/useGithubActivity';
 import aboutData from '../../data/about.json';
 
-const login = aboutData.social.github.split('/').filter(Boolean).pop() ?? '';
+const logins: string[] = aboutData.githubAccounts ?? [aboutData.social.github.split('/').filter(Boolean).pop() ?? ''];
 
 const languageColors: Record<string, string> = {
   'Jupyter Notebook': '#DA5B0B',
@@ -24,7 +24,7 @@ export const GithubActivity = () => {
   // Only hit the API once a visitor actually scrolls here (unauthenticated
   // requests are limited to 60/hour per IP).
   const [ref, inView] = useInView({ triggerOnce: true, rootMargin: '200px' });
-  const state = useGithubActivity(login, inView);
+  const state = useGithubActivity(logins, inView);
 
   return (
     <section id="github" className="py-20 px-4" ref={ref}>
@@ -34,7 +34,7 @@ export const GithubActivity = () => {
             GitHub Activity
           </h2>
           <p className="text-center font-mono text-xs text-secondary/80 mb-10">
-            // live from the GitHub API
+            // live from the GitHub API{logins.length > 1 ? ` — ${logins.length} accounts merged` : ''}
           </p>
 
           {(state.status === 'idle' || state.status === 'loading') && (
@@ -50,14 +50,19 @@ export const GithubActivity = () => {
               <p className="text-gray-600 dark:text-gray-300 mb-4">
                 {state.message} — live stats are unavailable right now.
               </p>
-              <a
-                href={`https://github.com/${login}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-primary hover:underline font-medium"
-              >
-                <FaGithub /> View {login} on GitHub <HiExternalLink />
-              </a>
+              <div className="flex flex-wrap items-center justify-center gap-4">
+                {logins.map((l) => (
+                  <a
+                    key={l}
+                    href={`https://github.com/${l}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 text-primary hover:underline font-medium"
+                  >
+                    <FaGithub /> View {l} on GitHub <HiExternalLink />
+                  </a>
+                ))}
+              </div>
             </div>
           )}
 
@@ -65,8 +70,8 @@ export const GithubActivity = () => {
             <div className="space-y-6">
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {[
-                  { label: 'Public repos', value: state.data.publicRepos },
-                  { label: 'Followers', value: state.data.followers },
+                  { label: logins.length > 1 ? 'Public repos (both)' : 'Public repos', value: state.data.publicRepos },
+                  { label: logins.length > 1 ? 'Followers (both)' : 'Followers', value: state.data.followers },
                   state.data.totalStars > 0
                     ? { label: 'Stars earned', value: state.data.totalStars }
                     : { label: 'Languages', value: state.data.languages.length },
@@ -144,6 +149,7 @@ export const GithubActivity = () => {
                                 <FaStar className="w-3 h-3" /> {r.stars}
                               </span>
                             )}
+                            {logins.length > 1 && <span className="font-mono">{r.account}</span>}
                           </div>
                         </a>
                       </li>
@@ -164,6 +170,7 @@ export const GithubActivity = () => {
                           <span className="absolute -left-[1.3rem] top-1.5 w-2 h-2 rounded-full bg-primary" />
                           <p className="text-gray-800 dark:text-gray-200">
                             {e.detail} <span className="text-secondary">in {e.repo}</span>
+                            {logins.length > 1 && <span className="text-[10px] font-mono text-gray-400"> · {e.account}</span>}
                           </p>
                           <p className="text-xs text-gray-400 font-mono">{timeAgo(e.createdAt)}</p>
                         </li>
@@ -173,15 +180,20 @@ export const GithubActivity = () => {
                 </div>
               </div>
 
-              <div className="text-center">
-                <a
-                  href={state.data.profileUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 text-primary hover:underline font-medium text-sm"
-                >
-                  <FaGithub /> View full profile on GitHub <HiExternalLink />
-                </a>
+              <ContributionHeatmap />
+
+              <div className="flex flex-wrap items-center justify-center gap-5">
+                {state.data.accounts.map((a) => (
+                  <a
+                    key={a.login}
+                    href={a.profileUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 text-primary hover:underline font-medium text-sm"
+                  >
+                    <FaGithub /> {a.login} <HiExternalLink />
+                  </a>
+                ))}
               </div>
             </div>
           )}

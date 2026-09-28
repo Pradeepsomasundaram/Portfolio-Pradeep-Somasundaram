@@ -16,7 +16,7 @@ interface Line {
 }
 
 const SECTIONS = ['hero', 'about', 'experience', 'education', 'skills', 'universe', 'projects', 'github', 'demo', 'certifications', 'publications', 'awards', 'volunteering', 'organizations', 'testimonials', 'contact'];
-const githubLogin = aboutData.social.github.split('/').filter(Boolean).pop() ?? '';
+const githubLogins: string[] = aboutData.githubAccounts ?? [aboutData.social.github.split('/').filter(Boolean).pop() ?? ''];
 
 const HELP = `Commands:
   whoami               who is Pradeep
@@ -31,14 +31,33 @@ const HELP = `Commands:
 
 const BANNER = `pradeep-os v1.0 — type "help" to get started.`;
 
+interface StatsRepo { name: string; fork: boolean; language: string | null; pushed_at: string }
+
 async function githubStats(): Promise<string> {
-  const [user, repos] = await Promise.all([
-    fetch(`https://api.github.com/users/${githubLogin}`).then((r) => (r.ok ? r.json() : Promise.reject())),
-    fetch(`https://api.github.com/users/${githubLogin}/repos?per_page=100&sort=pushed`).then((r) => (r.ok ? r.json() : Promise.reject())),
-  ]);
-  const own = (repos as { name: string; fork: boolean; language: string | null }[]).filter((r) => !r.fork);
-  const recent = own.slice(0, 3).map((r) => `  - ${r.name}${r.language ? ` (${r.language})` : ''}`).join('\n');
-  return `${user.login}: ${user.public_repos} public repos, ${user.followers} followers\nRecently updated:\n${recent}`;
+  const accounts = await Promise.all(
+    githubLogins.map(async (login) => {
+      const [user, repos] = await Promise.all([
+        fetch(`https://api.github.com/users/${login}`).then((r) => (r.ok ? r.json() : Promise.reject())),
+        fetch(`https://api.github.com/users/${login}/repos?per_page=100&sort=pushed`).then((r) => (r.ok ? r.json() : Promise.reject())),
+      ]);
+      return { user, own: (repos as StatsRepo[]).filter((r) => !r.fork) };
+    })
+  );
+
+  const totalRepos = accounts.reduce((n, a) => n + a.user.public_repos, 0);
+  const totalFollowers = accounts.reduce((n, a) => n + a.user.followers, 0);
+  const allOwn = accounts.flatMap((a) => a.own.map((r) => ({ ...r, login: a.user.login })));
+  const recent = allOwn
+    .sort((a, b) => b.pushed_at.localeCompare(a.pushed_at))
+    .slice(0, 3)
+    .map((r) => `  - ${r.name}${r.language ? ` (${r.language})` : ''} [${r.login}]`)
+    .join('\n');
+
+  const header =
+    accounts.length > 1
+      ? `${accounts.map((a) => a.user.login).join(' + ')}: ${totalRepos} public repos, ${totalFollowers} followers (combined)`
+      : `${accounts[0].user.login}: ${totalRepos} public repos, ${totalFollowers} followers`;
+  return `${header}\nRecently updated:\n${recent}`;
 }
 
 /** A tiny fake shell over the real portfolio data — a fun way to explore. */

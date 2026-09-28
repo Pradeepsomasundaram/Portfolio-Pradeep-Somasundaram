@@ -22,3 +22,4 @@ export { DoodleUnderline, DoodleCircle } from './Doodle';
 export { ProjectCarousel } from './ProjectCarousel';
 export { PersonaPicker } from './PersonaPicker';
 export { Terminal } from './Terminal';
+export { ContributionHeatmap } from './ContributionHeatmap';
