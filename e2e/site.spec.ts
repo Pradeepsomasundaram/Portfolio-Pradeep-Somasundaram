@@ -77,6 +77,24 @@ test('the live assistant streams an answer and can open a project on the page', 
   await expect(page.getByRole('heading', { name: 'AI-Powered Chatbot for Healthcare Assistance' })).toBeVisible();
 });
 
+test('markdown in live answers renders as formatting, not raw asterisks', async ({ page }) => {
+  const events = [
+    { type: 'text', text: 'He is the **Agentic AI & MLOps Lead** at Cognizant.\n* built `PySpark` pipelines' },
+    { type: 'done' },
+  ];
+  await page.route(FUNCTION, (route) =>
+    route.fulfill({ status: 200, headers: { 'content-type': 'text/event-stream' }, body: events.map((e) => `data: ${JSON.stringify(e)}\n\n`).join('') })
+  );
+  await page.goto('/');
+  await openChat(page);
+  await ask(page, 'role?');
+  const dialog = page.getByRole('dialog', { name: 'Portfolio AI assistant' });
+  await expect(dialog.locator('strong', { hasText: 'Agentic AI & MLOps Lead' })).toBeVisible();
+  await expect(dialog.locator('code', { hasText: 'PySpark' })).toBeVisible();
+  await expect(dialog).not.toContainText('**');
+  await expect(dialog).toContainText('- built');
+});
+
 test('the terminal opens with the backtick key and runs commands', async ({ page }) => {
   await page.goto('/');
   await page.locator('body').press('`');

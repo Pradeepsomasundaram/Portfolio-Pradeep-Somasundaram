@@ -5,6 +5,7 @@ import { useAppStore } from '../../stores/appStore';
 import type { Message } from '../../types/chatbot.types';
 import { generateResponse, matchJobDescription, initialQuickQuestions } from '../../lib/assistantEngine';
 import { useVoice } from '../../hooks/useVoice';
+import { renderLiteMarkdown } from '../../lib/liteMarkdown';
 import { printTailoredResume } from '../../lib/resumeBuilder';
 import { askAgent, AgentUnavailableError, toolLabels, type AgentAction, type TraceEntry } from '../../lib/agentClient';
 import { visitContext } from '../../lib/visitContext';
@@ -454,6 +455,8 @@ export const Chatbot = () => {
                         text={msg.content}
                         onDone={() => setStreamingId(null)}
                       />
+                    ) : msg.role === 'assistant' ? (
+                      renderLiteMarkdown(msg.content)
                     ) : (
                       msg.content
                     )}
@@ -481,7 +484,7 @@ export const Chatbot = () => {
                   <AiOrb size="w-6 h-6" pulse />
                   {liveText ? (
                     <div className="max-w-[80%] px-3 py-2 rounded-2xl rounded-bl-sm text-sm whitespace-pre-line bg-gray-100 dark:bg-white/10 text-gray-800 dark:text-gray-200">
-                      {liveText}
+                      {renderLiteMarkdown(liveText)}
                       {liveTools.length > 0 && <ToolChips tools={liveTools} />}
                       {showTrace && liveTrace.length > 0 && <TracePanel trace={liveTrace} />}
                     </div>
