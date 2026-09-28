@@ -7,6 +7,8 @@ export interface GithubRepo {
   language: string | null;
   stars: number;
   pushedAt: string;
+  /** Which of the merged accounts this repo belongs to. */
+  account: string;
 }
 
 export interface GithubEvent {
@@ -15,11 +17,19 @@ export interface GithubEvent {
   repo: string;
   createdAt: string;
   detail: string;
+  account: string;
+}
+
+export interface GithubAccountStats {
+  login: string;
+  profileUrl: string;
+  publicRepos: number;
+  followers: number;
 }
 
 export interface GithubActivity {
-  login: string;
-  profileUrl: string;
+  /** One entry per account that loaded successfully, for "View profile" links and per-account counts. */
+  accounts: GithubAccountStats[];
   publicRepos: number;
   followers: number;
   totalStars: number;
@@ -81,58 +91,45 @@ async function getJson<T>(url: string): Promise<T> {
   return res.json() as Promise<T>;
 }
 
-async function load(login: string): Promise<GithubActivity> {
+interface LoadedAccount {
+  login: string;
+  profileUrl: string;
+  publicRepos: number;
+  followers: number;
+  ownRepos: ApiRepo[];
+  events: ApiEvent[];
+}
+
+async function loadAccount(login: string): Promise<LoadedAccount> {
   const base = `https://api.github.com/users/${login}`;
   const [user, repos, events] = await Promise.all([
     getJson<{ login: string; html_url: string; public_repos: number; followers: number }>(base),
     getJson<ApiRepo[]>(`${base}/repos?per_page=100&sort=pushed`),
     getJson<ApiEvent[]>(`${base}/events/public?per_page=30`),
   ]);
-
-  const own = repos.filter((r) => !r.fork);
-  const langCounts = new Map<string, number>();
-  own.forEach((r) => {
-    if (r.language) langCounts.set(r.language, (langCounts.get(r.language) ?? 0) + 1);
-  });
-
   return {
     login: user.login,
     profileUrl: user.html_url,
     publicRepos: user.public_repos,
     followers: user.followers,
-    totalStars: own.reduce((sum, r) => sum + r.stargazers_count, 0),
-    languages: [...langCounts.entries()]
-      .map(([name, count]) => ({ name, count }))
-      .sort((a, b) => b.count - a.count)
-      .slice(0, 5),
-    recentRepos: own.slice(0, 5).map((r) => ({
-      name: r.name,
-      url: r.html_url,
-      description: r.description,
-      language: r.language,
-      stars: r.stargazers_count,
-      pushedAt: r.pushed_at,
-    })),
-    events: events.slice(0, 5).map((e) => ({
-      id: e.id,
-      type: e.type,
-      repo: e.repo.name.split('/').pop() ?? e.repo.name,
-      createdAt: e.created_at,
-      detail: describeEvent(e),
-    })),
+    ownRepos: repos.filter((r) => !r.fork),
+    events,
   };
 }
 
-/** Fetches public GitHub data once `enabled` flips true, cached for 15 min
- * per session so repeat visits don't burn the unauthenticated rate limit. */
-export function useGithubActivity(login: string, enabled: boolean): State {
+/** Fetches and merges public GitHub data for one or more accounts once `enabled`
+ * flips true, cached for 15 min per session so repeat visits don't burn the
+ * unauthenticated rate limit. A account that fails to load is silently dropped
+ * rather than failing the whole widget, as long as at least one succeeds. */
+export function useGithubActivity(logins: string[], enabled: boolean): State {
   const [state, setState] = useState<State>({ status: 'idle' });
+  const key = logins.join(',');
 
   useEffect(() => {
-    if (!enabled) return;
-    const key = `gh-activity:${login}`;
+    if (!enabled || logins.length === 0) return;
+    const cacheKey = `gh-activity:${key}`;
     try {
-      const cached = sessionStorage.getItem(key);
+      const cached = sessionStorage.getItem(cacheKey);
       if (cached) {
         const { at, data } = JSON.parse(cached) as { at: number; data: GithubActivity };
         if (Date.now() - at < CACHE_TTL_MS) {
@@ -144,25 +141,66 @@ export function useGithubActivity(login: string, enabled: boolean): State {
 
     let cancelled = false;
     setState({ status: 'loading' });
-    load(login)
-      .then((data) => {
-        if (cancelled) return;
-        try {
-          sessionStorage.setItem(key, JSON.stringify({ at: Date.now(), data }));
-        } catch { /* storage full/blocked */ }
-        setState({ status: 'ready', data });
-      })
-      .catch((err: Error) => {
-        if (cancelled) return;
-        setState({
-          status: 'error',
-          message: err.message === 'rate-limited' ? 'GitHub rate limit reached' : 'Could not reach GitHub',
-        });
-      });
+
+    Promise.allSettled(logins.map(loadAccount)).then((results) => {
+      if (cancelled) return;
+      const loaded = results.flatMap((r) => (r.status === 'fulfilled' ? [r.value] : []));
+      if (loaded.length === 0) {
+        const rateLimited = results.some((r) => r.status === 'rejected' && r.reason?.message === 'rate-limited');
+        setState({ status: 'error', message: rateLimited ? 'GitHub rate limit reached' : 'Could not reach GitHub' });
+        return;
+      }
+
+      const langCounts = new Map<string, number>();
+      const allRepos: GithubRepo[] = [];
+      const allEvents: GithubEvent[] = [];
+      let totalStars = 0;
+      for (const acc of loaded) {
+        for (const r of acc.ownRepos) {
+          totalStars += r.stargazers_count;
+          if (r.language) langCounts.set(r.language, (langCounts.get(r.language) ?? 0) + 1);
+          allRepos.push({
+            name: r.name,
+            url: r.html_url,
+            description: r.description,
+            language: r.language,
+            stars: r.stargazers_count,
+            pushedAt: r.pushed_at,
+            account: acc.login,
+          });
+        }
+        for (const e of acc.events) {
+          allEvents.push({
+            id: `${acc.login}-${e.id}`,
+            type: e.type,
+            repo: e.repo.name.split('/').pop() ?? e.repo.name,
+            createdAt: e.created_at,
+            detail: describeEvent(e),
+            account: acc.login,
+          });
+        }
+      }
+
+      const data: GithubActivity = {
+        accounts: loaded.map((a) => ({ login: a.login, profileUrl: a.profileUrl, publicRepos: a.publicRepos, followers: a.followers })),
+        publicRepos: loaded.reduce((sum, a) => sum + a.publicRepos, 0),
+        followers: loaded.reduce((sum, a) => sum + a.followers, 0),
+        totalStars,
+        languages: [...langCounts.entries()].map(([name, count]) => ({ name, count })).sort((a, b) => b.count - a.count).slice(0, 5),
+        recentRepos: allRepos.sort((a, b) => b.pushedAt.localeCompare(a.pushedAt)).slice(0, 5),
+        events: allEvents.sort((a, b) => b.createdAt.localeCompare(a.createdAt)).slice(0, 5),
+      };
+      try {
+        sessionStorage.setItem(cacheKey, JSON.stringify({ at: Date.now(), data }));
+      } catch { /* storage full/blocked */ }
+      setState({ status: 'ready', data });
+    });
+
     return () => {
       cancelled = true;
     };
-  }, [login, enabled]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [key, enabled]);
 
   return state;
 }

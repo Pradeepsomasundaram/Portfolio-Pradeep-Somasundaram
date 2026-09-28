@@ -28,7 +28,7 @@ const MAX_MESSAGE_CHARS = 6000;
 const MAX_TOTAL_CHARS = 14000;
 const MAX_TOOL_RESULT_CHARS = 6000;
 
-const githubLogin = aboutData.social.github.split('/').filter(Boolean).pop() ?? '';
+const githubLogins: string[] = aboutData.githubAccounts ?? [aboutData.social.github.split('/').filter(Boolean).pop() ?? ''];
 
 // ---------------------------------------------------------------- prompt
 
@@ -156,46 +156,74 @@ const TOOL_DECLARATIONS = [
 
 let githubCache: { at: number; text: string } | null = null;
 
+interface GhRepo {
+  name: string;
+  html_url: string;
+  description: string | null;
+  language: string | null;
+  stargazers_count: number;
+  pushed_at: string;
+  fork: boolean;
+}
+interface GhEvent {
+  type: string;
+  repo: { name: string };
+  created_at: string;
+  payload: { size?: number; action?: string };
+}
+
 async function githubActivity(): Promise<string> {
   if (githubCache && Date.now() - githubCache.at < 10 * 60 * 1000) return githubCache.text;
 
   const headers: Record<string, string> = { Accept: 'application/vnd.github+json', 'User-Agent': 'portfolio-assistant' };
   if (process.env.GITHUB_TOKEN) headers.Authorization = `Bearer ${process.env.GITHUB_TOKEN}`;
-  const get = async <T,>(path: string): Promise<T> => {
-    const res = await fetch(`https://api.github.com/users/${githubLogin}${path}`, { headers });
+  const get = async <T,>(login: string, path: string): Promise<T> => {
+    const res = await fetch(`https://api.github.com/users/${login}${path}`, { headers });
     if (!res.ok) throw new Error(`GitHub API returned ${res.status}`);
     return (await res.json()) as T;
   };
 
-  const [user, repos, events] = await Promise.all([
-    get<{ html_url: string; public_repos: number; followers: number }>(''),
-    get<{ name: string; html_url: string; description: string | null; language: string | null; stargazers_count: number; pushed_at: string; fork: boolean }[]>(
-      '/repos?per_page=100&sort=pushed'
-    ),
-    get<{ type: string; repo: { name: string }; created_at: string; payload: { size?: number; action?: string } }[]>(
-      '/events/public?per_page=10'
-    ),
-  ]);
+  const accounts = await Promise.all(
+    githubLogins.map(async (login) => {
+      const [user, repos, events] = await Promise.all([
+        get<{ html_url: string; public_repos: number; followers: number }>(login, ''),
+        get<GhRepo[]>(login, '/repos?per_page=100&sort=pushed'),
+        get<GhEvent[]>(login, '/events/public?per_page=10'),
+      ]);
+      return { login, user, own: repos.filter((r) => !r.fork), events };
+    })
+  );
 
-  const own = repos.filter((r) => !r.fork);
   const languages = new Map<string, number>();
-  own.forEach((r) => r.language && languages.set(r.language, (languages.get(r.language) ?? 0) + 1));
+  const allRepos: (GhRepo & { account: string })[] = [];
+  const allEvents: (GhEvent & { account: string })[] = [];
+  for (const acc of accounts) {
+    for (const r of acc.own) {
+      if (r.language) languages.set(r.language, (languages.get(r.language) ?? 0) + 1);
+      allRepos.push({ ...r, account: acc.login });
+    }
+    for (const e of acc.events) allEvents.push({ ...e, account: acc.login });
+  }
+  allRepos.sort((a, b) => b.pushed_at.localeCompare(a.pushed_at));
+  allEvents.sort((a, b) => b.created_at.localeCompare(a.created_at));
 
   const text = JSON.stringify({
-    profile: user.html_url,
-    publicRepos: user.public_repos,
-    followers: user.followers,
+    accounts: accounts.map((a) => ({ profile: a.user.html_url, publicRepos: a.user.public_repos, followers: a.user.followers })),
+    publicRepos: accounts.reduce((n, a) => n + a.user.public_repos, 0),
+    followers: accounts.reduce((n, a) => n + a.user.followers, 0),
     topLanguages: [...languages.entries()].sort((a, b) => b[1] - a[1]).slice(0, 5).map(([name, repos]) => ({ name, repos })),
-    recentRepos: own.slice(0, 5).map((r) => ({
+    recentRepos: allRepos.slice(0, 5).map((r) => ({
       name: r.name,
+      account: r.account,
       url: r.html_url,
       description: r.description,
       language: r.language,
       stars: r.stargazers_count,
       pushedAt: r.pushed_at,
     })),
-    latestActivity: events.slice(0, 5).map((e) => ({
+    latestActivity: allEvents.slice(0, 5).map((e) => ({
       type: e.type.replace(/Event$/, ''),
+      account: e.account,
       repo: e.repo.name.split('/').pop(),
       at: e.created_at,
       commits: e.payload.size,
