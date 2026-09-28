@@ -22,6 +22,10 @@ jobs:
       - run: npm ci
       - name: Type-check app and serverless functions
         run: npm run typecheck
+      - name: Env vars documented in .env.example match what functions read
+        run: npm run check:env
+      - name: Resume PDF vs site data (informational only)
+        run: npm run check:resume
       - name: Build
         run: npm run build
       - name: Install Chromium for browser tests

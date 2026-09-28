@@ -1,6 +1,7 @@
 import type { Context } from '@netlify/functions';
 import { getStore } from '@netlify/blobs';
 import { checkRateLimits } from '../lib/limits.mts';
+import { notify } from '../lib/notify.mts';
 
 /**
  * Records that a personalised link (?for=company&role=...) was opened, so the
@@ -43,17 +44,6 @@ export default async (req: Request, context: Context): Promise<Response> => {
     /* Blobs unavailable (local run) */
   }
 
-  const topic = process.env.NTFY_TOPIC;
-  if (topic) {
-    try {
-      await fetch(`https://ntfy.sh/${encodeURIComponent(topic)}`, {
-        method: 'POST',
-        headers: { Title: 'Portfolio link opened' },
-        body: `${company}${role ? ` (${role})` : ''} opened your personalised link.`,
-      });
-    } catch {
-      /* notification is best-effort */
-    }
-  }
+  await notify('Portfolio link opened', `${company}${role ? ` (${role})` : ''} opened your personalised link.`);
   return new Response(null, { status: 204 });
 };

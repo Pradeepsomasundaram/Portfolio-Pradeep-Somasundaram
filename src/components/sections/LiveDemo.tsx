@@ -153,6 +153,10 @@ export const LiveDemo = () => {
                           animate={{ width: `${result.score * 100}%` }}
                         />
                       </div>
+                      <p className="mt-3 text-[11px] text-gray-500 dark:text-gray-400">
+                        Trained on movie reviews to predict positive/negative only — no "neutral", and it can misread
+                        sarcasm or dry technical text.
+                      </p>
                     </motion.div>
                   )}
                 </AnimatePresence>
