@@ -1,11 +1,19 @@
 import { getStore } from '@netlify/blobs';
-import { timingSafeEqual } from 'node:crypto';
+import { createHash, timingSafeEqual } from 'node:crypto';
+import { usageSnapshot } from '../lib/limits.mts';
 
 /**
  * Private dashboard of what visitors ask the assistant. Protected by the
  * INSIGHTS_KEY environment variable (open /.netlify/functions/insights?key=...).
  * Stored questions are anonymised before they are saved and carry no IP.
+ *
+ * The key is needed only once: a correct ?key= sets a short-lived session
+ * cookie and redirects to the plain URL, so the key doesn't linger in the
+ * address bar or browser history on repeat visits.
  */
+
+const COOKIE_NAME = 'insights_auth';
+const SESSION_MS = 12 * 60 * 60 * 1000; // 12 hours
 
 const STOP = new Set(
   'a an the and or of to in on for with is are was were be been what which who whom whose how why when where do does did can could would should about his he him her she they them me my i you your it its this that these those at as by from has have had not no yes tell show give any some there their than then'.split(' ')
@@ -19,11 +27,38 @@ const safeEqual = (a: string, b: string) => {
   return x.length === y.length && timingSafeEqual(x, y);
 };
 
+/** Derived from the key so the cookie value never contains — or reveals — INSIGHTS_KEY itself. */
+const sessionToken = (key: string) => createHash('sha256').update(`insights-session:${key}`).digest('hex');
+
+function readCookie(req: Request, name: string): string | null {
+  const header = req.headers.get('cookie') ?? '';
+  for (const part of header.split(';')) {
+    const [k, ...rest] = part.trim().split('=');
+    if (k === name) return rest.join('=');
+  }
+  return null;
+}
+
 export default async (req: Request): Promise<Response> => {
   const expected = process.env.INSIGHTS_KEY;
   if (!expected) return new Response('Insights are not configured (set INSIGHTS_KEY).', { status: 503 });
-  const key = new URL(req.url).searchParams.get('key') ?? '';
-  if (!safeEqual(key, expected)) return new Response('Not found', { status: 404 });
+
+  const url = new URL(req.url);
+  const cookie = readCookie(req, COOKIE_NAME);
+  const authedByCookie = !!cookie && safeEqual(cookie, sessionToken(expected));
+
+  if (!authedByCookie) {
+    const key = url.searchParams.get('key') ?? '';
+    if (!safeEqual(key, expected)) return new Response('Not found', { status: 404 });
+    // Correct key: hand back a session cookie and drop the key from the URL/history from here on.
+    return new Response(null, {
+      status: 302,
+      headers: {
+        Location: url.pathname,
+        'Set-Cookie': `${COOKIE_NAME}=${sessionToken(expected)}; Max-Age=${SESSION_MS / 1000}; Path=${url.pathname}; HttpOnly; Secure; SameSite=Lax`,
+      },
+    });
+  }
 
   let items: { q: string; at: string }[] = [];
   try {
@@ -63,14 +98,27 @@ export default async (req: Request): Promise<Response> => {
   const days = [...perDay.entries()].sort().slice(-14);
   const maxDay = Math.max(1, ...days.map(([, n]) => n));
 
+  const usage = await usageSnapshot(['chat', 'polish', 'visit']);
+  const usageLabel: Record<string, string> = { chat: 'AI chat answers', polish: 'Contact "Polish with AI"', visit: 'Link-open beacons' };
+
   const html = `<!doctype html><html><head><meta charset="utf-8"><meta name="robots" content="noindex"><title>Assistant insights</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <style>body{font:15px/1.5 system-ui,sans-serif;background:#0b0b0b;color:#e8e6df;max-width:760px;margin:0 auto;padding:24px}
 h1{color:#C9A227}h2{color:#0EA57A;font-size:14px;text-transform:uppercase;letter-spacing:1px;margin-top:28px}
 .chip{display:inline-block;border:1px solid #C9A22766;border-radius:99px;padding:2px 10px;margin:3px;font-size:13px}
 .bar{display:flex;align-items:center;gap:8px;font-size:12px;color:#aaa}.bar i{display:block;height:10px;background:#C9A227;border-radius:3px}
+.bar.warn i{background:#e5484d}
 li{margin:6px 0;color:#ccc}small{color:#777}</style></head><body>
 <h1>What visitors ask</h1><p>${items.length} recent questions (anonymised, latest 300).</p>
+
+<h2>Usage today</h2>${usage
+    .map((u) => {
+      const pct = u.limit > 0 ? Math.min(100, (u.count / u.limit) * 100) : 0;
+      return `<div class="bar ${pct >= 80 ? 'warn' : ''}"><span style="width:170px">${esc(usageLabel[u.scope] ?? u.scope)}</span><i style="width:${pct * 2}px"></i>${u.count}/${u.limit}</div>`;
+    })
+    .join('')}
+<p><small>${process.env.NTFY_TOPIC ? "A push notification fires once a scope passes 80% of its daily cap." : 'Set NTFY_TOPIC to get a push notification when a scope nears its daily cap.'}</small></p>
+
 <h2>Personalised link opens</h2>${
     companies.length
       ? `<ul>${companies.map(([c, v]) => `<li><b>${esc(c)}</b>${v.role ? ` <small>(${esc(v.role)})</small>` : ''} — ${v.n} open${v.n === 1 ? '' : 's'}, last ${esc(v.last.slice(0, 16).replace('T', ' '))} UTC</li>`).join('')}</ul>`
