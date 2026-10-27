@@ -46,9 +46,9 @@
   {
     "id": "bmsc-2025",
     "company": "Beauty Manufacturing Solutions Corp",
-    "role": "Data Engineer / Data Scientist",
-    "dateRange": "Oct 2025 - Feb 2026",
-    "duration": "5 mos",
+    "role": "Agentic AI Engineer / Data Engineer",
+    "dateRange": "Sep 2025 - Feb 2026",
+    "duration": "6 mos",
     "location": "Coppell, Texas, United States",
     "type": "Full-time",
     "skills": [
@@ -93,8 +93,8 @@
     "id": "ceac-2025",
     "company": "Chicago Education Advocacy Cooperative",
     "role": "Data Science Fellow",
-    "dateRange": "Aug 2025 - Nov 2025",
-    "duration": "4 mos",
+    "dateRange": "Aug 2025 - Oct 2025",
+    "duration": "3 mos",
     "location": "Chicago, Illinois, United States",
     "type": "Full-time",
     "skills": [
@@ -135,7 +135,7 @@
   {
     "id": "skva-2023",
     "company": "Shree Kay Vee Automation",
-    "role": "Data Scientist / Systems Developer",
+    "role": "Lead Data Scientist",
     "dateRange": "May 2023 - Jul 2023",
     "duration": "3 mos",
     "location": "Chennai, Tamil Nadu, India",
@@ -252,11 +252,11 @@
   {
     "id": "skva-2020",
     "company": "Shree Kay Vee Automation",
-    "role": "Data Analyst Intern",
-    "dateRange": "Mar 2020 - Jul 2022",
-    "duration": "2 yrs 5 mos",
+    "role": "Data Scientist",
+    "dateRange": "Mar 2020 - May 2023",
+    "duration": "3 yrs 3 mos",
     "location": "Chennai, Tamil Nadu, India",
-    "type": "Internship",
+    "type": "Full-time",
     "skills": [
       "Python",
       "SQL",
@@ -276,7 +276,7 @@
       "SQL",
       "Linux"
     ],
-    "description": "In my long-term internship at Shree Kay Vee Automation, I focused on IoT-driven analytics and predictive maintenance solutions. I developed predictive models in C++ and Python using IoT sensor data to forecast equipment failures, improving operational planning. I hosted dashboards on Linux servers using Power BI and Tableau for real-time KPI tracking, and automated data workflows with AWS Lambda and SQL in a distributed data processing setup. I also applied unit testing to validate pipeline integrity, ensuring the accuracy and reliability of automated reporting systems.",
+    "description": "At Shree Kay Vee Automation, I focused on IoT-driven analytics and predictive maintenance solutions. I developed predictive models in C++ and Python using IoT sensor data to forecast equipment failures, improving operational planning. I hosted dashboards on Linux servers using Power BI and Tableau for real-time KPI tracking, and automated data workflows with AWS Lambda and SQL in a distributed data processing setup. I also applied unit testing to validate pipeline integrity, ensuring the accuracy and reliability of automated reporting systems.",
     "achievements": [
       "Designed Python and SQL data-processing and machine-learning workflows for industrial IoT use cases including time-series forecasting, predictive maintenance, and anomaly detection",
       "Built reusable ingestion and transformation pipelines for high-volume sensor and enterprise data, integrating APIs and relational data sources",
