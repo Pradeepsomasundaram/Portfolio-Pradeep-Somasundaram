@@ -1,29 +1,15 @@
 import { useRef, useState } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { TypeAnimation } from 'react-type-animation';
-import { HiDownload, HiEye, HiSparkles } from 'react-icons/hi';
+import { HiEye, HiMail, HiSparkles } from 'react-icons/hi';
 import { FaGithub, FaLinkedin } from 'react-icons/fa';
-import { Button, CounterAnimation, ResumeModal, TiltCard, DoodleUnderline, DoodleCircle } from '../ui';
-import { useAppStore } from '../../stores/appStore';
+import { Button, CounterAnimation, ResumeModal, TiltCard, DoodleUnderline } from '../ui';
 import { visitContext } from '../../lib/visitContext';
 import certificationsData from '../../data/certifications.json';
-
-const roles = [
-  'Agentic AI & MLOps Lead',
-  2000,
-  'Data Scientist',
-  2000,
-  'Data Engineer',
-  2000,
-  'AI/ML Engineer',
-  2000,
-  'Full-Stack Developer',
-  2000,
-];
+import aboutData from '../../data/about.json';
 
 export const Hero = () => {
   const [showResume, setShowResume] = useState(false);
-  const { setChatbotOpen } = useAppStore();
   const sectionRef = useRef<HTMLElement>(null);
 
   // Classic cinematic opening move: as the next section scrolls in, the
@@ -81,12 +67,9 @@ export const Hero = () => {
             </h1>
             <div className="font-mono text-xl md:text-2xl text-secondary font-medium h-12 mb-6 flex items-center gap-1">
               <span className="text-primary">&gt;</span>
-              <TypeAnimation
-                sequence={roles}
-                wrapper="span"
-                speed={50}
-                repeat={Infinity}
-              />
+              {/* One clear headline (typed once, then it stays) — a rotating list of titles blurs the message */}
+              <span className="sr-only">Agentic AI &amp; MLOps Lead</span>
+              <TypeAnimation sequence={['Agentic AI & MLOps Lead']} wrapper="span" speed={50} aria-hidden="true" />
             </div>
             <DoodleUnderline className="w-36 h-4 text-accent -mt-4 mb-4 hidden md:block" />
             <p className="text-lg text-gray-600 dark:text-gray-300 mb-8 max-w-2xl">
@@ -95,20 +78,9 @@ export const Hero = () => {
               AI Engineering, and scalable data solutions.
             </p>
 
-            {/* CTA Buttons */}
+            {/* CTA Buttons: one primary action, one secondary */}
             <div className="flex flex-wrap gap-4 justify-center md:justify-start">
-              <Button
-                href="/assets/Pradeep_Somasundaram_Res.pdf"
-                download="Pradeep_Somasundaram_Resume.pdf"
-                icon={<HiDownload />}
-              >
-                Download Resume
-              </Button>
-              <Button
-                variant="outline"
-                onClick={() => setShowResume(true)}
-                icon={<HiEye />}
-              >
+              <Button onClick={() => setShowResume(true)} icon={<HiEye />}>
                 View Resume
               </Button>
               <Button
@@ -117,22 +89,10 @@ export const Hero = () => {
               >
                 Contact Me
               </Button>
-              <div className="relative inline-block">
-                <DoodleCircle className="absolute -inset-3 w-[calc(100%+24px)] h-[calc(100%+24px)] text-accent pointer-events-none hidden md:block" />
-                <motion.button
-                  onClick={() => setChatbotOpen(true)}
-                  className="relative inline-flex items-center gap-2 px-6 py-3 rounded-full font-medium text-white bg-gradient-to-r from-primary via-secondary to-accent shadow-md hover:shadow-glow transition-shadow bg-[length:200%_auto] hover:bg-right"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <HiSparkles className="w-4 h-4" />
-                  Ask my AI Assistant
-                </motion.button>
-              </div>
             </div>
 
             {/* Social Links */}
-            <div className="flex gap-6 mt-8 justify-center md:justify-start">
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-3 mt-8 justify-center md:justify-start">
               <motion.a
                 href="https://github.com/PradeepSomasundaram1512"
                 target="_blank"
@@ -153,6 +113,13 @@ export const Hero = () => {
               >
                 <FaLinkedin className="w-8 h-8" />
               </motion.a>
+              <a
+                href={`mailto:${aboutData.social.email}`}
+                className="inline-flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 hover:text-primary transition-colors break-all"
+              >
+                <HiMail className="w-5 h-5 shrink-0" />
+                {aboutData.social.email}
+              </a>
             </div>
           </motion.div>
 

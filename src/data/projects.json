@@ -1,9 +1,45 @@
 [
   {
+    "id": "agentic-portfolio-assistant",
+    "title": "Agentic AI Portfolio Assistant (this site)",
+    "description": "A tool-using AI agent built into this portfolio. Ask it about my work and it calls real tools — searching projects, reading profile data, matching a pasted job description against my actual skills, pulling live GitHub activity — and can scroll the page or open a project for you. It runs as a serverless function with streaming answers, model fallback and rate limiting, so it stays free to run and degrades gracefully to built-in answers.",
+    "technologies": [
+      "TypeScript",
+      "React",
+      "Gemini API",
+      "Function Calling",
+      "Netlify Functions",
+      "Server-Sent Events",
+      "Playwright"
+    ],
+    "category": "AI/NLP",
+    "date": "2026-09",
+    "dateRange": "Sep 2026 - Present",
+    "githubUrl": "https://github.com/Pradeepsomasundaram/Portfolio-Pradeep-Somasundaram",
+    "demoUrl": "https://pradeepsomasundaram.netlify.app",
+    "featured": true,
+    "imageUrl": "",
+    "highlights": [
+      "Agent loop with six tools: search projects, read profile sections, match a job description against real skills, fetch live GitHub activity, scroll the page, and open a project.",
+      "Answers stream over Server-Sent Events and the chat shows each tool call as it runs, with an optional under-the-hood trace of model turns and timings.",
+      "Reliability: tries several free Gemini models in order, retries once, time-boxes every attempt, and falls back to a built-in rule-based assistant if the live model is unavailable.",
+      "Abuse and cost controls: per-visitor and daily rate limits, input and output size caps, a bounded number of tool rounds, same-origin checks, and the API key stays on the server.",
+      "Grounded by design: it is instructed to cite only data returned by its tools, and to treat visitor-supplied text as data rather than instructions.",
+      "Covered by browser tests (streaming, page control, offline fallback, formatting) and a CI workflow that runs typecheck, build, tests and a Lighthouse budget on every change."
+    ]
+  },
+  {
     "id": "child-mind-institute",
     "title": "Child Mind Institute – Problematic Internet Use Analysis",
     "description": "Leveraged NLP and behavioral analytics to detect patterns in internet addiction. Developed deep learning models (BERT, LSTMs, Transformers) and created a Power BI dashboard for real-time visualization.",
-    "technologies": ["Python", "NLP", "BERT", "LSTM", "Transformers", "Power BI"],
+    "technologies": [
+      "Python",
+      "NLP",
+      "BERT",
+      "LSTM",
+      "Transformers",
+      "Power BI"
+    ],
     "category": "Machine Learning",
     "date": "2025-01",
     "dateRange": "Jan 2025 - Present",
@@ -15,7 +51,13 @@
     "id": "customer-retention",
     "title": "AI-Driven Customer Retention Model for E-Commerce",
     "description": "Developed ML models using XGBoost and Random Forest to predict customer churn with 92% accuracy. Implemented Flask API for real-time predictions.",
-    "technologies": ["Python", "XGBoost", "Random Forest", "Flask", "SQL"],
+    "technologies": [
+      "Python",
+      "XGBoost",
+      "Random Forest",
+      "Flask",
+      "SQL"
+    ],
     "category": "Machine Learning",
     "date": "2024-08",
     "dateRange": "Aug 2024 - Dec 2024",
@@ -27,7 +69,12 @@
     "id": "climate-resilience",
     "title": "Climate Resilience Prediction Model",
     "description": "Built ML models to predict climate-related risks and resilience factors using environmental data.",
-    "technologies": ["Python", "Scikit-Learn", "Pandas", "Data Visualization"],
+    "technologies": [
+      "Python",
+      "Scikit-Learn",
+      "Pandas",
+      "Data Visualization"
+    ],
     "category": "Machine Learning",
     "date": "2024-08",
     "dateRange": "Aug 2024 - Dec 2024",
@@ -39,7 +86,13 @@
     "id": "smart-inventory",
     "title": "Smart Inventory Management System with IoT & AI",
     "description": "Developed IoT-enabled inventory system with AI-powered demand forecasting and automated reordering.",
-    "technologies": ["Python", "IoT", "Machine Learning", "Flask", "MongoDB"],
+    "technologies": [
+      "Python",
+      "IoT",
+      "Machine Learning",
+      "Flask",
+      "MongoDB"
+    ],
     "category": "IoT",
     "date": "2024-08",
     "dateRange": "Aug 2024 - Dec 2024",
@@ -51,7 +104,13 @@
     "id": "digital-financial-platform",
     "title": "Digital Financial Platform for Logistics",
     "description": "Built full-stack financial platform for logistics companies with payment processing and analytics.",
-    "technologies": ["React", "Node.js", "MongoDB", "Stripe API", "AWS"],
+    "technologies": [
+      "React",
+      "Node.js",
+      "MongoDB",
+      "Stripe API",
+      "AWS"
+    ],
     "category": "Web Development",
     "date": "2024-02",
     "dateRange": "Feb 2024 - Jul 2024",
@@ -63,7 +122,13 @@
     "id": "ai-learning-platform",
     "title": "AI-Powered Personalized Learning Platform",
     "description": "Created adaptive learning platform using AI to personalize content and track student progress.",
-    "technologies": ["Python", "TensorFlow", "React", "Node.js", "PostgreSQL"],
+    "technologies": [
+      "Python",
+      "TensorFlow",
+      "React",
+      "Node.js",
+      "PostgreSQL"
+    ],
     "category": "AI/NLP",
     "date": "2024-01",
     "dateRange": "Jan 2024 - May 2024",
@@ -75,7 +140,13 @@
     "id": "kafka-stock-analysis",
     "title": "Real-Time Stock Market Data Analysis Using Kafka",
     "description": "Built real-time data pipeline using Apache Kafka for stock market analysis and visualization.",
-    "technologies": ["Python", "Apache Kafka", "Spark", "AWS", "Tableau"],
+    "technologies": [
+      "Python",
+      "Apache Kafka",
+      "Spark",
+      "AWS",
+      "Tableau"
+    ],
     "category": "Data Engineering",
     "date": "2024-01",
     "dateRange": "Jan 2024 - Apr 2024",
@@ -87,7 +158,13 @@
     "id": "multi-channel-analytics",
     "title": "Multi-Channel Data Integration & Analytics",
     "description": "Integrated data from multiple channels into unified analytics platform with ETL pipelines.",
-    "technologies": ["Python", "SQL", "AWS", "Power BI", "ETL"],
+    "technologies": [
+      "Python",
+      "SQL",
+      "AWS",
+      "Power BI",
+      "ETL"
+    ],
     "category": "Data Engineering",
     "date": "2023-08",
     "dateRange": "Aug 2023 - Jan 2024",
@@ -99,7 +176,13 @@
     "id": "healthcare-chatbot",
     "title": "AI-Powered Chatbot for Healthcare Assistance",
     "description": "Developed intelligent chatbot using GPT-4 and BERT for healthcare queries and assistance.",
-    "technologies": ["Python", "GPT-4", "BERT", "Flask", "React"],
+    "technologies": [
+      "Python",
+      "GPT-4",
+      "BERT",
+      "Flask",
+      "React"
+    ],
     "category": "AI/NLP",
     "date": "2023-08",
     "dateRange": "Aug 2023 - Dec 2023",
@@ -111,7 +194,13 @@
     "id": "distributed-pipeline",
     "title": "Distributed Data Processing Pipeline",
     "description": "Built scalable distributed data processing pipeline using Spark and AWS.",
-    "technologies": ["Python", "Apache Spark", "AWS", "Scala", "Hadoop"],
+    "technologies": [
+      "Python",
+      "Apache Spark",
+      "AWS",
+      "Scala",
+      "Hadoop"
+    ],
     "category": "Data Engineering",
     "date": "2023-08",
     "dateRange": "Aug 2023 - Dec 2023",
@@ -123,7 +212,12 @@
     "id": "patient-survival",
     "title": "Patient Survival Analysis",
     "description": "Analyzed patient survival data using statistical models and machine learning techniques.",
-    "technologies": ["Python", "Scikit-Learn", "Pandas", "Survival Analysis"],
+    "technologies": [
+      "Python",
+      "Scikit-Learn",
+      "Pandas",
+      "Survival Analysis"
+    ],
     "category": "Machine Learning",
     "date": "2023-08",
     "dateRange": "Aug 2023 - Dec 2023",
@@ -135,7 +229,12 @@
     "id": "sales-prediction",
     "title": "Sales Prediction",
     "description": "Built predictive models for sales forecasting using time series analysis and ML algorithms.",
-    "technologies": ["Python", "XGBoost", "Time Series", "Pandas"],
+    "technologies": [
+      "Python",
+      "XGBoost",
+      "Time Series",
+      "Pandas"
+    ],
     "category": "Machine Learning",
     "date": "2023-08",
     "dateRange": "Aug 2023 - Dec 2023",
@@ -147,7 +246,12 @@
     "id": "fraud-detection",
     "title": "Fraud Detection in Transactional Data",
     "description": "Developed anomaly detection system for identifying fraudulent transactions using ML.",
-    "technologies": ["Python", "Scikit-Learn", "Neural Networks", "SQL"],
+    "technologies": [
+      "Python",
+      "Scikit-Learn",
+      "Neural Networks",
+      "SQL"
+    ],
     "category": "Machine Learning",
     "date": "2023-01",
     "dateRange": "Jan 2023 - Mar 2023",
@@ -159,7 +263,12 @@
     "id": "digit-recognition",
     "title": "Handwritten Digit Recognition System",
     "description": "Built CNN-based system for recognizing handwritten digits with 98% accuracy.",
-    "technologies": ["Python", "TensorFlow", "CNN", "Keras"],
+    "technologies": [
+      "Python",
+      "TensorFlow",
+      "CNN",
+      "Keras"
+    ],
     "category": "Machine Learning",
     "date": "2022-08",
     "dateRange": "Aug 2022 - Dec 2022",

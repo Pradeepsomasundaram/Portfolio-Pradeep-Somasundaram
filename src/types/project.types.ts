@@ -8,6 +8,8 @@ export interface Project {
   dateRange: string;
   githubUrl: string;
   demoUrl?: string;
+  /** Optional short case-study bullets (how it works / what makes it robust), shown in the project modal. */
+  highlights?: string[];
   featured: boolean;
   imageUrl: string;
 }

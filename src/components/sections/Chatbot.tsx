@@ -148,13 +148,6 @@ const ToolChips = ({ tools }: { tools: string[] }) => (
   </div>
 );
 
-// Deterministic pseudo-confidence score so the same query always scores the same
-function confidenceFor(text: string): number {
-  let hash = 0;
-  for (let i = 0; i < text.length; i++) hash = (hash * 31 + text.charCodeAt(i)) >>> 0;
-  return 90 + (hash % 10);
-}
-
 export const Chatbot = () => {
   const { chatbotOpen, toggleChatbot, setChatbotOpen, jobMatchRequested, clearJobMatchRequest, openProject } = useAppStore();
   const [messages, setMessages] = useState<Message[]>(loadMessages);
@@ -162,7 +155,6 @@ export const Chatbot = () => {
   const [isTyping, setIsTyping] = useState(false);
   const [followUps, setFollowUps] = useState<string[]>([]);
   const [streamingId, setStreamingId] = useState<string | null>(null);
-  const [confidenceById, setConfidenceById] = useState<Record<string, number>>({});
   const [jobMatchMode, setJobMatchMode] = useState(false);
   const [liveText, setLiveText] = useState('');
   const [liveTools, setLiveTools] = useState<string[]>([]);
@@ -256,7 +248,6 @@ export const Chatbot = () => {
         ]);
         setStreamingId(botId);
         if (speakReplies) voice.speak(content);
-        setConfidenceById((prev) => ({ ...prev, [botId]: confidenceFor(response.text) }));
         setFollowUps(response.followUps);
       }, delay);
     };
@@ -471,11 +462,6 @@ export const Chatbot = () => {
                     )}
                     {showTrace && msg.trace && msg.trace.length > 0 && <TracePanel trace={msg.trace} />}
                     {msg.role === 'assistant' && msg.tools && msg.tools.length > 0 && <ToolChips tools={msg.tools} />}
-                    {msg.role === 'assistant' && msg.id !== streamingId && confidenceById[msg.id] && (
-                      <p className="mt-1.5 pt-1.5 border-t border-black/5 dark:border-white/10 font-mono text-[10px] text-secondary/80">
-                        confidence: {confidenceById[msg.id]}%
-                      </p>
-                    )}
                   </div>
                 </motion.div>
               ))}

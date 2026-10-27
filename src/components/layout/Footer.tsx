@@ -1,13 +1,6 @@
 import { HiMail, HiHeart } from 'react-icons/hi';
 import { FaGithub, FaLinkedin } from 'react-icons/fa';
 
-const statusMetrics = [
-  { label: 'model', value: 'online' },
-  { label: 'latency', value: '12ms' },
-  { label: 'uptime', value: '99.98%' },
-  { label: 'build', value: 'v2.0.0-neural' },
-];
-
 const quickLinks = [
   { label: 'About', id: 'about' },
   { label: 'Experience', id: 'experience' },
@@ -38,9 +31,8 @@ export const Footer = () => {
               Pradeep Somasundaram
             </a>
             <p className="mt-4 text-gray-500 dark:text-gray-400 text-sm leading-relaxed">
-              Data Scientist & AI/ML Engineer passionate about building
-              scalable data solutions and leveraging machine learning
-              to drive impactful insights.
+              Agentic AI &amp; MLOps Lead building production data pipelines
+              and AI workflows on GCP and Azure.
             </p>
             <div className="flex items-center gap-4 mt-6">
               <a
@@ -108,21 +100,6 @@ export const Footer = () => {
               ))}
             </ul>
           </div>
-        </div>
-
-        {/* System status strip */}
-        <div className="py-3 border-t border-gray-200 dark:border-white/10 flex flex-wrap items-center justify-center gap-x-6 gap-y-1 font-mono text-[11px] text-gray-500 dark:text-gray-400">
-          {statusMetrics.map((m) => (
-            <span key={m.label} className="flex items-center gap-1.5">
-              {m.label === 'model' && (
-                <span className="relative flex h-1.5 w-1.5">
-                  <span className="absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75 animate-ping" />
-                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-secondary" />
-                </span>
-              )}
-              {m.label}: <span className="text-secondary">{m.value}</span>
-            </span>
-          ))}
         </div>
 
         {/* Bottom Bar */}

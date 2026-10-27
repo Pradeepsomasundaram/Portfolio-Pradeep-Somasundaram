@@ -9,7 +9,7 @@ const DISMISS_KEY = 'persona-dismissed';
 /** Asks first-time visitors what they're hiring for, then tunes the Projects
  * section to that role. Stays as a small "tuned for" chip so it can be undone. */
 export const PersonaPicker = () => {
-  const { persona, setPersona } = useAppStore();
+  const { persona, setPersona, chatbotOpen } = useAppStore();
   const [showPrompt, setShowPrompt] = useState(false);
 
   useEffect(() => {
@@ -18,8 +18,24 @@ export const PersonaPicker = () => {
       dismissed = sessionStorage.getItem(DISMISS_KEY) === '1';
     } catch { /* storage blocked */ }
     if (persona || dismissed) return;
-    const t = setTimeout(() => setShowPrompt(true), 6000);
-    return () => clearTimeout(t);
+    const hero = document.getElementById('hero');
+    if (!hero) return;
+
+    // Offer it only once the visitor has scrolled past the hero, so it never covers the first screen
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        clearTimeout(timer);
+        if (entry.isIntersecting) setShowPrompt(false);
+        else timer = setTimeout(() => setShowPrompt(true), 1200);
+      },
+      { threshold: 0.15 }
+    );
+    observer.observe(hero);
+    return () => {
+      observer.disconnect();
+      clearTimeout(timer);
+    };
   }, [persona]);
 
   const dismiss = () => {
@@ -38,7 +54,7 @@ export const PersonaPicker = () => {
   return (
     <div className="fixed bottom-24 left-4 sm:bottom-6 sm:left-24 z-40 max-w-[calc(100vw-2rem)] sm:max-w-[calc(100vw-12rem)]">
       <AnimatePresence mode="wait">
-        {showPrompt && !persona && (
+        {showPrompt && !persona && !chatbotOpen && (
           <motion.div
             key="prompt"
             initial={{ opacity: 0, y: 16 }}
