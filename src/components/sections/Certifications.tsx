@@ -1,7 +1,15 @@
 import { useState } from 'react';
 import { AnimatedSection, Card, TiltCard, ShowMoreButton } from '../ui';
-import { HiBadgeCheck } from 'react-icons/hi';
+import { HiBadgeCheck, HiExternalLink } from 'react-icons/hi';
+import { FaLinkedin } from 'react-icons/fa';
 import certificationsData from '../../data/certifications.json';
+import aboutData from '../../data/about.json';
+import type { Certification } from '../../types/certification.types';
+
+const certifications: Certification[] = certificationsData;
+
+// LinkedIn's standard page listing every certification on a profile, built from the profile link
+const linkedinCertificationsUrl = `${aboutData.social.linkedin.replace(/\/$/, '')}/details/certifications/`;
 
 const accents = [
   'from-primary to-accent',
@@ -13,7 +21,7 @@ const INITIAL_COUNT = 4;
 
 export const Certifications = () => {
   const [expanded, setExpanded] = useState(false);
-  const visible = expanded ? certificationsData : certificationsData.slice(0, INITIAL_COUNT);
+  const visible = expanded ? certifications : certifications.slice(0, INITIAL_COUNT);
 
   return (
     <section id="certifications" className="py-20 px-4">
@@ -42,9 +50,23 @@ export const Certifications = () => {
                         <p className="text-primary text-sm font-semibold mb-3">
                           {cert.issuer}
                         </p>
-                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-auto pt-2 font-mono">
-                          {cert.date}
-                        </p>
+                        <div className="mt-auto pt-2 flex items-center justify-between gap-3">
+                          <p className="text-xs text-gray-500 dark:text-gray-400 font-mono">{cert.date}</p>
+                          {cert.credentialUrl && (
+                            <a
+                              href={cert.credentialUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              aria-label={`Verify credential: ${cert.name}`}
+                              className="inline-flex items-center gap-1 text-xs font-medium text-secondary hover:underline"
+                            >
+                              Verify <HiExternalLink className="w-3.5 h-3.5" />
+                            </a>
+                          )}
+                        </div>
+                        {cert.credentialId && (
+                          <p className="mt-1 text-[10px] text-gray-400 font-mono break-all">ID: {cert.credentialId}</p>
+                        )}
                       </div>
                     </Card>
                   </TiltCard>
@@ -53,13 +75,26 @@ export const Certifications = () => {
             })}
           </div>
 
-          {certificationsData.length > INITIAL_COUNT && (
+          {certifications.length > INITIAL_COUNT && (
             <ShowMoreButton
               expanded={expanded}
               onClick={() => setExpanded((e) => !e)}
-              hiddenCount={certificationsData.length - INITIAL_COUNT}
+              hiddenCount={certifications.length - INITIAL_COUNT}
             />
           )}
+
+          <div className="mt-8 text-center">
+            <a
+              href={linkedinCertificationsUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline"
+            >
+              <FaLinkedin className="w-4 h-4" />
+              See and verify these on LinkedIn
+              <HiExternalLink className="w-4 h-4" />
+            </a>
+          </div>
         </AnimatedSection>
       </div>
     </section>
