@@ -153,10 +153,10 @@ export const Hero = () => {
                       <picture>
                         <source srcSet="/assets/profile.webp" type="image/webp" />
                         <img
-                          src="/assets/profile.png"
+                          src="/assets/profile.jpg"
                           alt="Pradeep Somasundaram"
-                          width={640}
-                          height={640}
+                          width={600}
+                          height={600}
                           fetchPriority="high"
                           className="photo-grade w-full h-full object-cover"
                           onError={(e) => {
