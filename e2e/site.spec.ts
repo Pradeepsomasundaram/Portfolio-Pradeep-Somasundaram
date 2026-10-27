@@ -145,6 +145,14 @@ test('the contact form can polish a rough note without sending it', async ({ pag
   expect(formSubmissions).toBe(0);
 });
 
+test('the certifications section links out to the LinkedIn certifications page', async ({ page }) => {
+  await page.goto('/');
+  const link = page.locator('#certifications').getByRole('link', { name: /verify these on LinkedIn/i });
+  await expect(link).toHaveAttribute('href', 'https://www.linkedin.com/in/pradeep-somasundaram-835230192/details/certifications/');
+  await expect(link).toHaveAttribute('target', '_blank');
+  await expect(link).toHaveAttribute('rel', /noopener/);
+});
+
 test.describe('phone layout', () => {
   test.use({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
 
