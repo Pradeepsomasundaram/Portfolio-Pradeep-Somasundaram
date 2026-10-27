@@ -6,6 +6,8 @@ import { FaGithub, FaLinkedin } from 'react-icons/fa';
 import { Button, CounterAnimation, ResumeModal, TiltCard, DoodleUnderline } from '../ui';
 import { visitContext } from '../../lib/visitContext';
 import certificationsData from '../../data/certifications.json';
+import projectsData from '../../data/projects.json';
+import { published } from '../../lib/publications';
 import aboutData from '../../data/about.json';
 
 export const Hero = () => {
@@ -180,8 +182,8 @@ export const Hero = () => {
           transition={{ duration: 0.8, delay: 0.6 }}
         >
           <CounterAnimation end={6} suffix="+" label="Years Experience" />
-          <CounterAnimation end={15} suffix="+" label="Projects" />
-          <CounterAnimation end={2} label="Publications" />
+          <CounterAnimation end={projectsData.length} label="Projects" />
+          <CounterAnimation end={published.length} label="Publications" />
           <CounterAnimation end={certificationsData.length} label="Certifications" />
         </motion.div>
       </motion.div>

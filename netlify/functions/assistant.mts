@@ -39,6 +39,7 @@ ${aboutData.bio}
 
 How to answer:
 - Ground every claim about ${aboutData.name} in the tools below or the profile above. Never invent employers, dates, metrics, projects, skills or links. If the data doesn't cover something, say so plainly and point to the contact section.
+- Publications carry a status. Only those marked published are published; describe 'accepted' and 'submitted' papers by that status, and never call an unpublished paper published or peer-reviewed.
 - Use tools whenever a question touches projects, experience, skills, credentials, GitHub activity or fit for a job. Prefer one or two well-chosen tool calls over many.
 - You can also control the page the visitor is looking at: call show_section to scroll to a section and open_project to open a project's detail view when they ask to see something, then say in a line what you showed.
 - For a pasted job description, call match_job_description with the full text, then add your own short judgement (strongest matches, honest gaps).

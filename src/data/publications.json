@@ -6,7 +6,8 @@
     "date": "2023",
     "description": "An innovative method to perform advanced semiconductor classification using logistic regression and a random forest classifier is proposed. Testing semiconductors is a crucial step in the production process, especially as the complexity of integrated circuit (IC) designs and the competitive pressure on the market rise. This work provides an examination on how to perform automated testing using machine learning techniques.",
     "link": "https://ieeexplore.ieee.org/document/10083525",
-    "type": "Conference Paper"
+    "type": "Conference Paper",
+    "status": "published"
   },
   {
     "id": "springer-xgboost",
@@ -15,6 +16,40 @@
     "date": "2023",
     "description": "An innovative XGBoost method to enhance company engagement with customers using machine learning concepts. The paper evaluates parameters for subscriber shortfall and proposes progression strategies for revenue enhancement in industrial management systems.",
     "link": "https://link.springer.com/chapter/10.1007/978-981-99-1479-1_22",
-    "type": "Book Chapter"
+    "type": "Book Chapter",
+    "status": "published"
+  },
+  {
+    "id": "arima-lstm-rul",
+    "title": "Reliable Evaluation of ARIMA-LSTM Hybrids for Remaining Useful Life Prediction",
+    "publisher": "ICAIET-2027",
+    "date": "2027",
+    "type": "Conference Paper",
+    "status": "accepted",
+    "description": "Tested on 4 NASA C-MAPSS datasets over 20+ seeds, where a moving average beat causal ARIMA on 3 of 4.",
+    "codeUrl": "https://github.com/PradeepSomasundaram1512/hybrid-arima-lstm-rul-cmapss",
+    "codeLabel": "Code (GitHub)"
+  },
+  {
+    "id": "forward-audit-llm-alpha",
+    "title": "Does the LLM Add Alpha? A Contamination-Free Forward Audit of a Deployed Multi-Agent LLM Trading System",
+    "publisher": "AIEI 2027",
+    "date": "2027",
+    "type": "Paper",
+    "status": "submitted",
+    "description": "Proposes the Forward Audit Protocol (matched placebo, block bootstrap, calibration audit), with code and data released publicly. Shows the LLM's selection alpha was statistically indistinguishable from zero at every horizon, with effect sizes stated.",
+    "codeUrl": "https://doi.org/10.5281/zenodo.23044933",
+    "codeLabel": "Code & data (Zenodo)"
+  },
+  {
+    "id": "hera-pdm",
+    "title": "HERA-PdM: Uncertainty-Gated Edge-Cloud Predictive Maintenance",
+    "publisher": "ICAIET 2027",
+    "date": "2027",
+    "type": "Conference Paper",
+    "status": "submitted",
+    "description": "Conformalized quantile regression cut critical moments left without action to 0.6% vs 49.5% for thresholds on FEMTO bearings.",
+    "codeUrl": "https://github.com/PradeepSomasundaram1512/hera_pdm",
+    "codeLabel": "Code (GitHub)"
   }
 ]

@@ -302,9 +302,79 @@ test('the featured project explains how the AI assistant works', async ({ page }
   await expect(first).toHaveText('Agentic AI Portfolio Assistant (this site)');
   await page.locator('#projects').getByRole('button', { name: /Details/ }).first().click();
   const modal = page.getByRole('dialog', { name: 'Agentic AI Portfolio Assistant (this site)' });
-  await expect(modal).toContainText('How it works');
+  await expect(modal).toContainText('Highlights');
   await expect(modal).toContainText('six tools');
   await expect(modal.getByRole('link', { name: /Live Demo/ })).toHaveAttribute('href', 'https://pradeepsomasundaram.netlify.app');
+});
+
+test('publications show where each paper stands, and link to its code', async ({ page }) => {
+  await page.goto('/');
+  const section = page.locator('#publications');
+  await expect(section).toContainText('2 published · 1 accepted · 2 submitted');
+  await expect(section.getByText('Published', { exact: true })).toHaveCount(2);
+  await expect(section.getByText('Accepted', { exact: true })).toHaveCount(1);
+  await expect(section.getByText('Submitted', { exact: true })).toHaveCount(2);
+
+  // The published papers keep their publisher links; the unpublished ones link to code instead
+  await expect(section.getByRole('link', { name: /View Publication/ })).toHaveCount(2);
+  await expect(section.getByRole('link', { name: /Code & data \(Zenodo\)/ })).toHaveAttribute('href', 'https://doi.org/10.5281/zenodo.23044933');
+  const github = section.getByRole('link', { name: /Code \(GitHub\)/ });
+  await expect(github).toHaveCount(2);
+  await expect(github.first()).toHaveAttribute('href', /github\.com\/PradeepSomasundaram1512\/(hybrid-arima-lstm-rul-cmapss|hera_pdm)$/);
+});
+
+test('the hero counts come from the data, and only published papers count as publications', async ({ page }) => {
+  await page.goto('/');
+  const hero = page.locator('#hero');
+  // The counters animate up to their value, so poll for the final numbers. The number and its label
+  // sit side by side with no space between them ("22Projects2Publications"), hence the lookbehinds.
+  await expect(hero).toContainText(/(?<!\d)22\s*Projects/i, { timeout: 10_000 });
+  await expect(hero).toContainText(/(?<!\d)2\s*Publications/i);
+  await expect(hero).toContainText(/(?<!\d)10\s*Certifications/i);
+  // Five papers are listed, but only two are published
+  await expect(hero).not.toContainText(/(?<!\d)5\s*Publications/i);
+});
+
+test('every GitHub project is listed, including the newest and the BI dashboards', async ({ page }) => {
+  await page.goto('/');
+  const section = page.locator('#projects');
+  await section.getByRole('button', { name: 'grid' }).click();
+  await expect(section.getByRole('button', { name: /^All\s*22$/ })).toBeVisible();
+
+  // The new category holds the three Power BI repos that used to be missing
+  await section.getByRole('button', { name: /^Analytics & BI\s*3$/ }).click();
+  await expect(section.locator('h3')).toHaveText([
+    'TeleHealth Trends Dashboard',
+    'Customer Retention Dashboard with Predictive Insights',
+    'Revenue & Profitability Dashboard (Global Superstore)',
+  ]);
+  const repos = await section.getByRole('link', { name: /GitHub/ }).evaluateAll((links) => links.map((a) => (a as HTMLAnchorElement).href));
+  expect(repos).toEqual([
+    'https://github.com/PradeepSomasundaram1512/TeleHealth-Trends-Dashboard',
+    'https://github.com/PradeepSomasundaram1512/Customer-Retention-Dashboard-with-Predictive-Insights',
+    'https://github.com/PradeepSomasundaram1512/Real-Time-Revenue-Profitability-Dashboard',
+  ]);
+
+  // AgriDroneAI keeps the repo's own candid result rather than just the headline number
+  await section.getByRole('button', { name: /^IoT\s*\d+$/ }).click();
+  await section.locator('h3', { hasText: 'AgriDroneAI' }).locator('xpath=ancestor::*[contains(@class,"flex-col")][1]').getByRole('button', { name: /Details/ }).click();
+  const modal = page.getByRole('dialog', { name: /AgriDroneAI/ });
+  await expect(modal).toContainText('about 80% of the water');
+  await expect(modal).toContainText('does about as well on yield and profit');
+  await expect(modal).toContainText('not on real aircraft');
+});
+
+test('the built-in assistant describes unpublished papers by their status', async ({ page }) => {
+  await page.route(FUNCTION, (route) => route.fulfill({ status: 404, body: 'no' }));
+  await page.goto('/');
+  await openChat(page);
+  await ask(page, 'What publications does he have?');
+  const dialog = page.getByRole('dialog', { name: 'Portfolio AI assistant' });
+  await expect(dialog).toContainText('2 peer-reviewed publications', { timeout: 15_000 });
+  // The status lines come later in the answer, so once they're there the whole answer is on screen
+  await expect(dialog).toContainText('Accepted at ICAIET-2027');
+  await expect(dialog).toContainText('Submitted to AIEI 2027');
+  await expect(dialog).not.toContainText(/\b5 peer-reviewed/);
 });
 
 test.describe('phone layout', () => {

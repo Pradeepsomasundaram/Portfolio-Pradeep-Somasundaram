@@ -29,6 +29,84 @@
     ]
   },
   {
+    "id": "ai-trading-platform",
+    "title": "AI Trading Platform",
+    "description": "A full-stack AI trading platform: a React/TypeScript front end, Python and Node.js APIs, live market and news integrations, and alerts, driven by a multi-agent LLM system on AWS and GCP. A 7-node LangGraph agent logged 3,507 live decisions, and auditing them showed 71.3% were silent API-quota fallbacks.",
+    "technologies": [
+      "React",
+      "TypeScript",
+      "Python",
+      "Node.js",
+      "LangGraph",
+      "RAG",
+      "AWS",
+      "GCP"
+    ],
+    "category": "AI/NLP",
+    "date": "2026-01",
+    "dateRange": "Jan 2026 - Sep 2026",
+    "githubUrl": "https://github.com/PradeepSomasundaram1512/stock",
+    "featured": true,
+    "highlights": [
+      "Full-stack platform: React/TypeScript front end, Python/Node.js APIs, live market and news integrations, and alerts.",
+      "Deployed a 7-node LangGraph agent that logged 3,507 live decisions; auditing them found 71.3% were silent API-quota fallbacks.",
+      "Built an evaluation harness where matched placebos erased an apparent +1.71% ten-day return and exposed 82% stated confidence against 45% wins.",
+      "The forward audit is written up as a paper (submitted to AIEI 2027), with code, tests and pre-registration materials released on Zenodo."
+    ],
+    "imageUrl": ""
+  },
+  {
+    "id": "agridroneai",
+    "title": "AgriDroneAI: Autonomous Drone Operations Agent",
+    "description": "A simulation-first, self-operating precision-agriculture drone network. A scheduled GitHub Actions autopilot runs one operating cycle a day, from reading sensors to planning safety-gated missions to auditing the result, with a kill switch and an audit trail. In simulation it kept about 99% of the crop using about 80% less water than a fixed schedule.",
+    "technologies": [
+      "Python",
+      "GitHub Actions",
+      "PX4",
+      "MAVSDK"
+    ],
+    "category": "IoT",
+    "date": "2026-10",
+    "dateRange": "Oct 2026",
+    "githubUrl": "https://github.com/PradeepSomasundaram1512/AgriDroneAI",
+    "featured": true,
+    "highlights": [
+      "Each daily cycle: read sensors, repair bad data, classify crop stress, plan collision-checked multi-drone missions, safety-gate them, act, retrain on drift, and audit.",
+      "Saved about 80% of the water in simulation while keeping about 99% of the crop, versus a fixed schedule.",
+      "Honest result: a farmer who simply reacts to the same soil sensors does about as well on yield and profit, so the value shown is automation and coverage, not better agronomy.",
+      "8 evaluation and benchmark scripts (stress model, sensor-fault recall, wind, robustness) and 220+ tests behind an 85% coverage gate; daily GitHub Actions cycles open incidents on failure.",
+      "PX4/MAVSDK adapter validated in simulation (PX4 SITL), not on real aircraft."
+    ],
+    "imageUrl": ""
+  },
+  {
+    "id": "cricket-win-probability",
+    "title": "Cricket Win Probability and Player Impact",
+    "description": "A ball-by-ball win-probability engine for men's T20 internationals, built from Cricsheet data. Separate LightGBM models for the first innings and the chase use leakage-safe pre-match Elo ratings, and each ball's change in win probability is credited to players to rate their impact. Served through a FastAPI backend and a React frontend.",
+    "technologies": [
+      "Python",
+      "LightGBM",
+      "Elo Ratings",
+      "FastAPI",
+      "React",
+      "TypeScript",
+      "Recharts"
+    ],
+    "category": "Machine Learning",
+    "date": "2026-10",
+    "dateRange": "Oct 2026",
+    "githubUrl": "https://github.com/PradeepSomasundaram1512/Cricket-Win-Probability-and-Player-Impact",
+    "featured": true,
+    "highlights": [
+      "Per-innings LightGBM models with leakage-safe pre-match Elo, tested chronologically on 3,364 T20I matches (2,691 train, 673 test).",
+      "Test log loss of 0.554 (first innings) and 0.349 (chase) against a 0.693 coin-flip baseline.",
+      "Player impact: every ball's change in win probability is credited to the batter and debited from the bowler, with ratings shrunk toward the role mean.",
+      "Served through a FastAPI backend and a React, TypeScript and Recharts frontend.",
+      "Documents its own limits: no pitch, bowler-type, field-setting or toss features, and player ratings are directional rather than a ranking."
+    ],
+    "imageUrl": ""
+  },
+  {
     "id": "child-mind-institute",
     "title": "Child Mind Institute – Problematic Internet Use Analysis",
     "description": "Leveraged NLP and behavioral analytics to detect patterns in internet addiction. Developed deep learning models (BERT, LSTMs, Transformers) and created a Power BI dashboard for real-time visualization.",
@@ -45,7 +123,10 @@
     "dateRange": "Jan 2025 - Present",
     "githubUrl": "https://github.com/PradeepSomasundaram1512/Child-Mind-Institute-Problematic-Internet-Usage",
     "featured": true,
-    "imageUrl": "/assets/project-1.png"
+    "imageUrl": "/assets/project-1.png",
+    "highlights": [
+      "Compared XGBoost, LightGBM, CatBoost, BERT, LSTM, and Transformers on behavioral and actigraphy data; LightGBM led at QWK 0.52."
+    ]
   },
   {
     "id": "customer-retention",
@@ -152,7 +233,11 @@
     "dateRange": "Jan 2024 - Apr 2024",
     "githubUrl": "https://github.com/PradeepSomasundaram1512/Real-Time-Stock-Market-Data-Analysis-Using-Kafka",
     "featured": true,
-    "imageUrl": "/assets/project-1.png"
+    "imageUrl": "/assets/project-1.png",
+    "highlights": [
+      "Built a Kafka and Spark Streaming pipeline for stock data with ML anomaly detection using XGBoost and deep learning.",
+      "Designed the pipeline for millions of events per second, with streaming ingestion and anomaly scoring."
+    ]
   },
   {
     "id": "multi-channel-analytics",
@@ -257,7 +342,10 @@
     "dateRange": "Jan 2023 - Mar 2023",
     "githubUrl": "https://github.com/PradeepSomasundaram1512/Fraud-Detection-in-Transactional-Data",
     "featured": false,
-    "imageUrl": "/assets/project-1.png"
+    "imageUrl": "/assets/project-1.png",
+    "highlights": [
+      "Built fraud detection with Isolation Forest and Autoencoders on a Kafka and AWS workflow, with about 30% fewer fraudulent occurrences."
+    ]
   },
   {
     "id": "digit-recognition",
@@ -275,5 +363,73 @@
     "githubUrl": "https://github.com/PradeepSomasundaram1512/Hand-Written-Digit-Recognition",
     "featured": false,
     "imageUrl": "/assets/project-2.png"
+  },
+  {
+    "id": "telehealth-trends-dashboard",
+    "title": "TeleHealth Trends Dashboard",
+    "description": "Interactive Power BI dashboards built on a healthcare dataset to surface telehealth trends, with the report file, source dataset and dashboard screenshots in the repository.",
+    "technologies": [
+      "Power BI",
+      "Excel",
+      "Data Visualization"
+    ],
+    "category": "Analytics & BI",
+    "date": "2025-05",
+    "dateRange": "May 2025",
+    "githubUrl": "https://github.com/PradeepSomasundaram1512/TeleHealth-Trends-Dashboard",
+    "featured": false,
+    "imageUrl": ""
+  },
+  {
+    "id": "customer-retention-dashboard",
+    "title": "Customer Retention Dashboard with Predictive Insights",
+    "description": "Power BI dashboards for customer churn and customer risk analysis, built on a customer-churn dataset to show where retention is at risk.",
+    "technologies": [
+      "Power BI",
+      "Excel",
+      "Data Visualization"
+    ],
+    "category": "Analytics & BI",
+    "date": "2025-05",
+    "dateRange": "May 2025",
+    "githubUrl": "https://github.com/PradeepSomasundaram1512/Customer-Retention-Dashboard-with-Predictive-Insights",
+    "featured": false,
+    "imageUrl": ""
+  },
+  {
+    "id": "revenue-profitability-dashboard",
+    "title": "Revenue & Profitability Dashboard (Global Superstore)",
+    "description": "An interactive Power BI sales dashboard on the Global Superstore dataset: data cleaned and transformed with Power Query, calculated measures and columns written in DAX, and cards, charts and slicers so end users can read the insights easily.",
+    "technologies": [
+      "Power BI",
+      "Power Query",
+      "DAX",
+      "Excel"
+    ],
+    "category": "Analytics & BI",
+    "date": "2025-05",
+    "dateRange": "May 2025",
+    "githubUrl": "https://github.com/PradeepSomasundaram1512/Real-Time-Revenue-Profitability-Dashboard",
+    "featured": false,
+    "imageUrl": ""
+  },
+  {
+    "id": "pharma-process-optimization",
+    "title": "Pharmaceutical Process Modeling and Optimization",
+    "description": "Analysis of pharmaceutical supply-chain transaction data to understand industry dynamics, with promotion, geospatial and time-series analysis, forecasting and XGBoost models, an optimization model and a small GUI, used to recommend promotion strategies.",
+    "technologies": [
+      "Python",
+      "Jupyter Notebook",
+      "XGBoost",
+      "Time-Series Analysis",
+      "Geospatial Analysis",
+      "Optimization"
+    ],
+    "category": "Machine Learning",
+    "date": "2025-05",
+    "dateRange": "May 2025",
+    "githubUrl": "https://github.com/PradeepSomasundaram1512/Pharmaceutical-Process---Modeling-and-Optimization-",
+    "featured": false,
+    "imageUrl": ""
   }
 ]

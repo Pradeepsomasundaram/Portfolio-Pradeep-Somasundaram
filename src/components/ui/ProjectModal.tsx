@@ -84,7 +84,7 @@ export const ProjectModal = ({ project, relatedProjects, onClose, onSelectRelate
               {project.highlights && project.highlights.length > 0 && (
                 <>
                   <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
-                    How it works
+                    Highlights
                   </h3>
                   <ul className="list-disc list-inside space-y-1.5 text-gray-600 dark:text-gray-300 mb-6">
                     {project.highlights.map((h) => (
