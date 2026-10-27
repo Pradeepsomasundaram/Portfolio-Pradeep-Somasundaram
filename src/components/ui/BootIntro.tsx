@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { visitContext } from '../../lib/visitContext';
 
 const bootLines = [
   '> initializing portfolio_ai.core',
@@ -11,9 +12,10 @@ const bootLines = [
 const STORAGE_KEY = 'portfolio-boot-seen';
 
 /**
- * One-time terminal-style boot sequence shown on the visitor's first load
- * this session. Sets the tone ("this is an AI-built lab, not a static page")
- * without gatekeeping repeat views.
+ * Brief terminal-style boot sequence on a visitor's first load this session.
+ * Kept to about a second, skippable with a click or key, and never shown to
+ * visitors arriving through a personalised link (they're here to evaluate, so
+ * nothing should sit between them and the content).
  */
 export const BootIntro = () => {
   const [show, setShow] = useState(false);
@@ -22,7 +24,7 @@ export const BootIntro = () => {
   useEffect(() => {
     const seen = sessionStorage.getItem(STORAGE_KEY);
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (seen || reducedMotion) return;
+    if (seen || reducedMotion || visitContext.company) return;
     setShow(true);
     sessionStorage.setItem(STORAGE_KEY, '1');
   }, []);
@@ -30,12 +32,20 @@ export const BootIntro = () => {
   useEffect(() => {
     if (!show) return;
     if (lineIndex >= bootLines.length) {
-      const timeout = setTimeout(() => setShow(false), 500);
+      const timeout = setTimeout(() => setShow(false), 200);
       return () => clearTimeout(timeout);
     }
-    const timeout = setTimeout(() => setLineIndex((i) => i + 1), 320);
+    const timeout = setTimeout(() => setLineIndex((i) => i + 1), 140);
     return () => clearTimeout(timeout);
   }, [show, lineIndex]);
+
+  // Any key dismisses it too
+  useEffect(() => {
+    if (!show) return;
+    const onKey = () => setShow(false);
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [show]);
 
   return (
     <AnimatePresence>
@@ -44,7 +54,8 @@ export const BootIntro = () => {
           className="fixed inset-0 z-[300] flex items-center justify-center bg-void px-6"
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.3 }}
+          onClick={() => setShow(false)}
         >
           <div className="w-full max-w-md font-mono text-sm text-secondary">
             {bootLines.slice(0, lineIndex).map((line, i) => (
@@ -60,6 +71,12 @@ export const BootIntro = () => {
                 transition={{ duration: 0.3 }}
               />
             </div>
+            <button
+              onClick={() => setShow(false)}
+              className="mt-6 text-xs text-gray-500 hover:text-secondary transition-colors"
+            >
+              Skip intro →
+            </button>
           </div>
         </motion.div>
       )}
