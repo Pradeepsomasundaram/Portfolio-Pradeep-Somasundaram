@@ -24,6 +24,7 @@ const categoryGradient = (category: string) =>
   category === 'Deep Learning' ? 'bg-gradient-to-br from-blue-500 to-cyan-600' :
   category === 'Full Stack' ? 'bg-gradient-to-br from-orange-500 to-amber-600' :
   category === 'IoT' ? 'bg-gradient-to-br from-green-500 to-lime-600' :
+  category === 'Analytics & BI' ? 'bg-gradient-to-br from-yellow-500 to-amber-600' :
   'bg-gradient-to-br from-gray-500 to-gray-600';
 
 export const Projects = () => {
