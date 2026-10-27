@@ -70,17 +70,11 @@ export const Terminal = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const endRef = useRef<HTMLDivElement>(null);
 
-  // Backtick toggles the terminal (unless the visitor is typing in a field)
+  // Escape closes the terminal. The backtick that opens it is handled in Layout so it works
+  // before this (lazy) component has loaded.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      const el = e.target as HTMLElement;
-      const typing = el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.isContentEditable;
-      if (e.key === '`' && !typing && !e.metaKey && !e.ctrlKey) {
-        e.preventDefault();
-        setTerminalOpen(!useAppStore.getState().terminalOpen);
-      } else if (e.key === 'Escape' && useAppStore.getState().terminalOpen) {
-        setTerminalOpen(false);
-      }
+      if (e.key === 'Escape' && useAppStore.getState().terminalOpen) setTerminalOpen(false);
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
