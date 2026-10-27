@@ -205,6 +205,19 @@ test('the hero has one clear headline, two actions and a visible email', async (
   await expect(page).toHaveTitle(/Agentic AI & MLOps Lead/);
 });
 
+test('the hero headshot loads and the resume PDF is served', async ({ page, request }) => {
+  await page.goto('/');
+  const photo = page.locator('#hero img[alt="Pradeep Somasundaram"]');
+  await expect(photo).toBeVisible();
+  // naturalWidth is 0 for a broken image, so this catches a bad path or a deleted file
+  await expect.poll(() => photo.evaluate((img: HTMLImageElement) => img.naturalWidth)).toBeGreaterThan(0);
+
+  const resume = await request.get('/assets/Pradeep_Somasundaram_Res.pdf');
+  expect(resume.status()).toBe(200);
+  expect(resume.headers()['content-type']).toContain('pdf');
+  expect((await resume.body()).subarray(0, 5).toString()).toBe('%PDF-');
+});
+
 test('the footer and chat no longer show invented numbers', async ({ page }) => {
   await page.route('**/.netlify/functions/assistant', (route) => route.fulfill({ status: 404, body: 'no' }));
   await page.goto('/');
