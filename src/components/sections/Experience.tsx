@@ -1,8 +1,88 @@
 import { useState } from 'react';
+import { HiChevronDown, HiChevronUp } from 'react-icons/hi';
 import { AnimatedSection, Card, Badge, ShowMoreButton, CareerPath } from '../ui';
 import experiencesData from '../../data/experience.json';
 
 const INITIAL_COUNT = 4;
+// Collapsed cards show the headline numbers and this many bullets; the rest is one click away
+const PREVIEW_BULLETS = 3;
+
+type Role = (typeof experiencesData)[number];
+
+const ExperienceCard = ({ exp }: { exp: Role }) => {
+  // The current role starts open; earlier ones start as a short preview
+  const [open, setOpen] = useState(!!exp.featured);
+  const bullets = exp.achievements ?? [];
+  const detailsId = `exp-details-${exp.id}`;
+
+  return (
+    <Card>
+      <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-4">
+        <div className="flex-1">
+          <div className="flex items-start gap-3 flex-wrap">
+            <h3 className="text-2xl font-bold text-gray-900 dark:text-white">{exp.role}</h3>
+            {exp.featured && (
+              <span className="px-3 py-1 bg-primary text-white text-xs font-semibold rounded-full">Current</span>
+            )}
+          </div>
+          <p className="text-lg text-primary font-semibold mt-1">{exp.company}</p>
+        </div>
+        <div className="text-gray-600 dark:text-gray-300 text-sm">
+          <p className="font-medium">{exp.dateRange}</p>
+          <p>{exp.location}</p>
+          <p className="font-medium">{exp.type}</p>
+        </div>
+      </div>
+
+      {exp.metrics && exp.metrics.length > 0 && (
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-5">
+          {exp.metrics.map((m) => (
+            <div key={m.label} className="rounded-xl border border-primary/25 bg-primary/5 px-3 py-2.5">
+              <p className="text-xl font-bold text-primary leading-tight">{m.value}</p>
+              <p className="text-xs text-gray-600 dark:text-gray-300 mt-0.5">{m.label}</p>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {bullets.length > 0 && (
+        <ul className="list-disc list-inside space-y-1 text-gray-600 dark:text-gray-300">
+          {bullets.slice(0, PREVIEW_BULLETS).map((achievement, i) => (
+            <li key={i}>{achievement}</li>
+          ))}
+        </ul>
+      )}
+
+      {/* Kept in the page (just hidden) so the full text stays available to search and screen readers on demand */}
+      <div id={detailsId} hidden={!open} className="mt-1">
+        {bullets.length > PREVIEW_BULLETS && (
+          <ul className="list-disc list-inside space-y-1 text-gray-600 dark:text-gray-300">
+            {bullets.slice(PREVIEW_BULLETS).map((achievement, i) => (
+              <li key={i}>{achievement}</li>
+            ))}
+          </ul>
+        )}
+        <p className="text-gray-600 dark:text-gray-300 mt-4 mb-4 leading-relaxed">{exp.description}</p>
+        <div className="flex flex-wrap gap-2">
+          {exp.skills.map((skill) => (
+            <Badge key={skill} text={skill} />
+          ))}
+        </div>
+      </div>
+
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        aria-expanded={open}
+        aria-controls={detailsId}
+        className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-secondary hover:underline"
+      >
+        {open ? 'Show less' : 'Show details'}
+        {open ? <HiChevronUp className="w-4 h-4" /> : <HiChevronDown className="w-4 h-4" />}
+      </button>
+    </Card>
+  );
+};
 
 export const Experience = () => {
   const [expanded, setExpanded] = useState(false);
@@ -37,64 +117,7 @@ export const Experience = () => {
                       <div className="absolute left-[1.15rem] top-6 w-7 h-7 rounded-full bg-primary/20 animate-ping hidden md:block" />
                     )}
 
-                    <Card>
-                      <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-4">
-                        <div className="flex-1">
-                          <div className="flex items-start gap-3 flex-wrap">
-                            <h3 className="text-2xl font-bold text-gray-900 dark:text-white">
-                              {exp.role}
-                            </h3>
-                            {exp.featured && (
-                              <span className="px-3 py-1 bg-primary text-white text-xs font-semibold rounded-full">
-                                Current
-                              </span>
-                            )}
-                          </div>
-                          <p className="text-lg text-primary font-semibold mt-1">
-                            {exp.company}
-                          </p>
-                        </div>
-                        <div className="text-gray-600 dark:text-gray-300 text-sm">
-                          <p className="font-medium">{exp.dateRange}</p>
-                          <p>{exp.location}</p>
-                          <p className="font-medium">{exp.type}</p>
-                        </div>
-                      </div>
-
-                      <p className="text-gray-600 dark:text-gray-300 mb-4 leading-relaxed">
-                        {exp.description}
-                      </p>
-
-                      {exp.metrics && exp.metrics.length > 0 && (
-                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-5">
-                          {exp.metrics.map((m) => (
-                            <div key={m.label} className="rounded-xl border border-primary/25 bg-primary/5 px-3 py-2.5">
-                              <p className="text-xl font-bold text-primary leading-tight">{m.value}</p>
-                              <p className="text-xs text-gray-600 dark:text-gray-300 mt-0.5">{m.label}</p>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-
-                      {exp.achievements && exp.achievements.length > 0 && (
-                        <div className="mb-4">
-                          <h3 className="font-semibold text-gray-900 dark:text-white mb-2">
-                            Key Achievements:
-                          </h3>
-                          <ul className="list-disc list-inside space-y-1 text-gray-600 dark:text-gray-300">
-                            {exp.achievements.map((achievement, i) => (
-                              <li key={i}>{achievement}</li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
-
-                      <div className="flex flex-wrap gap-2">
-                        {exp.skills.map((skill) => (
-                          <Badge key={skill} text={skill} />
-                        ))}
-                      </div>
-                    </Card>
+                    <ExperienceCard exp={exp} />
                   </div>
                 </AnimatedSection>
               ))}

@@ -23,13 +23,13 @@
       "MLOps",
       "Cloud Computing"
     ],
-    "description": "Agentic AI and MLOps Lead at Cognizant, leading the design and delivery of agentic AI solutions and the MLOps practices that take machine learning models from prototype to reliable production.",
+    "description": "Agentic AI and MLOps lead building production data pipelines and AI workflows on GCP and Azure.",
     "achievements": [
-      "Leading agentic AI solution design and delivery",
-      "Driving MLOps practices for deploying, monitoring, and operating ML models in production",
-      "Engineering scalable Python and SQL backend data services for a U.S. restaurant-technology modernization program, migrating legacy SQL Server/PL-SQL workloads to GCP BigQuery and Dataflow while processing 10M+ records monthly",
-      "Designing high-volume batch and near-real-time ingestion pipelines for API and file-based sources, reducing downstream data latency by approximately 30% while improving reliability and operational visibility",
-      "Building reusable distributed transformation frameworks across Bronze, Silver, and Gold layers with schema enforcement, automated validation, data-quality checks, and production monitoring"
+      "Lead technical design for an enterprise automation initiative, from architecture through proof of concept",
+      "Designed a five-agent LangGraph workflow (intake, decisioning, automation, root-cause analysis, log monitoring) with explicit state, retries, and human checkpoints",
+      "Modernized legacy SQL Server and PL/SQL workloads on GCP with BigQuery and Dataflow, supporting 10M+ records per month and cutting downstream latency by about 30% with a hybrid near-real-time and batch design to control cost",
+      "Containerize services with Docker and contribute to Kubernetes/AKS deployments and Terraform-style infrastructure as code, with monitoring, validation, and exception handling so failed or anomalous loads are caught before they reach downstream users",
+      "Build Medallion-style Bronze, Silver, and Gold layers, Azure workflows with Data Factory, Data Lake Storage, and Synapse, and Airflow orchestration"
     ],
     "featured": true,
     "metrics": [
@@ -70,7 +70,7 @@
       "n8n",
       "IAM/KMS"
     ],
-    "description": "At Beauty Manufacturing Solutions Corp (BMSC), I lead development of scalable data engineering and analytics solutions across ERP, IoT, and operational systems. I built a unified AWS-based data lake integrating Sage X3, MaintainX, Redzone, ETQ Reliance, NinjaOne, and SQL Server using S3, Glue, Lambda, Step Functions, Athena, and n8n. I design end-to-end ETL pipelines, implement strong data governance with IAM/KMS, and optimize schema performance to support high-impact analytics. I also develop forecasting, anomaly detection, and operational insights models that improve manufacturing, quality, and finance decision-making. Alongside this, I administer and optimize the Sage X3 environment—resolving system issues, managing SQL Server performance, automating reports, enhancing workflows, and streamlining cross-functional data processes. My role blends data engineering, data science, and ERP system administration to deliver reliable, scalable, and data-driven solutions across the company.",
+    "description": "Built data engineering and AI workflows across ERP, IoT, and operational systems for a manufacturer. I migrated about 500 GB of legacy SQL Server data into an AWS S3 and Databricks architecture, supporting recurring pipelines at 2M+ records per month. I built the transformations in PySpark, Spark SQL, and Scala, and used MLflow within Databricks to track experiments and model versions. I designed resilient ETL with checkpointing, retries, schema validation, and duplicate protection. I built event-driven processing on S3, Lambda, and Glue so incoming files triggered downstream workflows automatically, and I set up IAM and RBAC access controls across storage, compute, and application services. I connected data from Sage X3, MaintainX, Redzone, ETQ Reliance, NinjaOne, and SQL Server, and shipped retrieval-augmented AI workflows grounded in four enterprise systems. I also owned the migration workstreams from design through deployment and production stabilization, and supported the Sage X3 environment alongside the data work.",
     "achievements": [
       "Built distributed PySpark and Spark SQL pipelines on AWS and Databricks to migrate approximately 500 GB of SQL Server data and process 2M+ records monthly across manufacturing, quality, ERP, and operational systems",
       "Developed cloud-native ingestion and processing services with Python, AWS S3, Glue, Lambda, IAM, Databricks, and REST APIs, with automated validation, retry handling, and data-quality controls",
@@ -161,8 +161,9 @@
       "ARIMA",
       "SQL"
     ],
-    "description": "At Shree Kay Vee Automation, I combined my expertise in C++ and Python with distributed data engineering to optimize industrial automation and IoT-driven processes. I designed and deployed ETL pipelines in Linux-based environments using AWS Lambda and Snowflake, cutting manual data processing time by 50%. I built predictive maintenance algorithms using LSTM and ARIMA to anticipate machine failures, which helped reduce unplanned downtime by 20%. My role also involved creating advanced Power BI dashboards for real-time KPI monitoring and implementing white-box testing practices to ensure accuracy and reliability in predictive models and workflows. Automated SQL pipelines and payroll reporting from 1M+ labor records, reducing manual entry by 40% and improving ERP-driven reconciliation.",
+    "description": "Led a 3-member technical team delivering AI and data engineering solutions across development, integration, and rollout for industrial IoT systems. I built Python and SQL ingestion pipelines for telemetry from 100+ industrial assets, cutting data-processing latency by 40%. I developed LSTM anomaly-detection and predictive-maintenance models across those assets, using validated features and testing to keep the models reliable. I integrated telemetry and enterprise data through APIs and cloud services running on Linux, and I debugged and optimized deployed pipelines so operational signals stayed available to downstream applications.",
     "achievements": [
+      "Led a 3-member technical team delivering AI and data engineering solutions across development, integration, and rollout for industrial IoT systems",
       "Developed Python and SQL ingestion and analytical pipelines for telemetry from 100+ industrial assets, reducing data-processing latency by 40% and improving availability of operational signals",
       "Built and evaluated machine-learning workflows for anomaly detection and predictive maintenance using time-series and LSTM-based models",
       "Integrated industrial telemetry and enterprise data through APIs and cloud services while supporting debugging, testing, and deployment in Linux/cloud environments"
@@ -276,7 +277,7 @@
       "SQL",
       "Linux"
     ],
-    "description": "At Shree Kay Vee Automation, I focused on IoT-driven analytics and predictive maintenance solutions. I developed predictive models in C++ and Python using IoT sensor data to forecast equipment failures, improving operational planning. I hosted dashboards on Linux servers using Power BI and Tableau for real-time KPI tracking, and automated data workflows with AWS Lambda and SQL in a distributed data processing setup. I also applied unit testing to validate pipeline integrity, ensuring the accuracy and reliability of automated reporting systems.",
+    "description": "Built analytics and machine learning for industrial IoT and predictive maintenance. I designed Python and SQL machine learning workflows for four IoT use cases, from forecasting to anomaly detection, using sensor data to anticipate equipment failures. I built reusable ingestion and transformation pipelines for high-volume sensor and enterprise data, integrating APIs and relational sources to make downstream analytics and models more reliable. I worked with engineering teams on requirements, testing, deployment, monitoring, and production support, and applied unit testing to validate pipeline integrity. I hosted real-time KPI dashboards on Linux servers with Power BI and Tableau.",
     "achievements": [
       "Designed Python and SQL data-processing and machine-learning workflows for industrial IoT use cases including time-series forecasting, predictive maintenance, and anomaly detection",
       "Built reusable ingestion and transformation pipelines for high-volume sensor and enterprise data, integrating APIs and relational data sources",
