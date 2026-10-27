@@ -117,10 +117,16 @@ test('the command palette opens and finds pages', async ({ page }) => {
   await expect(palette.getByRole('button', { name: /Contact/ }).first()).toBeVisible();
 });
 
-test('the persona prompt reorders projects for the chosen role', async ({ page }) => {
+test('the persona prompt waits until the hero is scrolled past, then reorders projects', async ({ page }) => {
   await page.goto('/');
   const prompt = page.getByRole('dialog', { name: 'Tailor this portfolio' });
-  await expect(prompt).toBeVisible({ timeout: 15_000 });
+
+  // It used to pop up after ~6 s and cover the hero; now it must stay away while the hero is on screen
+  await page.waitForTimeout(7000);
+  await expect(prompt).toBeHidden();
+
+  await page.evaluate(() => document.getElementById('about')?.scrollIntoView());
+  await expect(prompt).toBeVisible({ timeout: 10_000 });
   await prompt.getByRole('button', { name: 'Data Engineering' }).click();
   await expect(page.getByRole('button', { name: /Tuned for/ })).toBeVisible();
   await expect(page.locator('#projects h3').first()).toHaveText('Multi-Channel Data Integration & Analytics');
@@ -182,6 +188,110 @@ test('the newest certifications link to their public verification pages', async 
   await section.getByRole('button', { name: /^Show \d+ more/ }).click();
   await expect(section.getByRole('heading', { level: 3 })).toHaveCount(10);
   await expect(verify).toHaveCount(5);
+});
+
+test('the hero has one clear headline, two actions and a visible email', async ({ page }) => {
+  await page.goto('/');
+  const hero = page.locator('#hero');
+  await expect(hero.getByText('Agentic AI & MLOps Lead').first()).toBeAttached();
+  await expect(hero.getByRole('button', { name: 'View Resume' })).toBeVisible();
+  await expect(hero.getByRole('button', { name: 'Contact Me' })).toBeVisible();
+  // The rotating job titles and the extra buttons are gone
+  await expect(hero.getByRole('button', { name: /Download Resume|Ask my AI/ })).toHaveCount(0);
+  await expect(hero.getByRole('link', { name: /Pradeep\.Somasundaram1501@gmail\.com/ })).toHaveAttribute(
+    'href',
+    'mailto:Pradeep.Somasundaram1501@gmail.com'
+  );
+  await expect(page).toHaveTitle(/Agentic AI & MLOps Lead/);
+});
+
+test('the footer and chat no longer show invented numbers', async ({ page }) => {
+  await page.route('**/.netlify/functions/assistant', (route) => route.fulfill({ status: 404, body: 'no' }));
+  await page.goto('/');
+  const footer = page.locator('footer');
+  await expect(footer).not.toContainText(/uptime|latency|99\.98/i);
+  // Offline answers used to carry a "confidence: NN%" badge that was just a hash of the text
+  await page.getByRole('button', { name: 'Toggle AI chat assistant' }).click();
+  await page.getByPlaceholder(/Ask about/).fill('What is his current role?');
+  await page.getByRole('button', { name: 'Send message', exact: true }).click();
+  const dialog = page.getByRole('dialog', { name: 'Portfolio AI assistant' });
+  await expect(dialog).toContainText('Cognizant', { timeout: 15_000 });
+  // The badge only appeared once the typewriter finished, so give the reply time to complete first
+  await page.waitForTimeout(2500);
+  await expect(dialog).not.toContainText(/confidence/i);
+});
+
+test.describe('boot intro', () => {
+  // The default setup marks the intro as already seen; these tests want a genuine first visit
+  test.beforeEach(async ({ page }) => {
+    await page.addInitScript(() => sessionStorage.removeItem('portfolio-boot-seen'));
+  });
+
+  test('is short, and can be skipped', async ({ page }) => {
+    await page.goto('/');
+    const skip = page.getByRole('button', { name: /Skip intro/ });
+    await expect(skip).toBeVisible();
+    await skip.click();
+    await expect(skip).toBeHidden();
+    await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+  });
+
+  test('ends by itself within a couple of seconds', async ({ page }) => {
+    await page.goto('/');
+    const skip = page.getByRole('button', { name: /Skip intro/ });
+    await expect(skip).toBeVisible();
+    await expect(skip).toBeHidden({ timeout: 3000 });
+  });
+
+  test('is never shown to visitors arriving through a personalised link', async ({ page }) => {
+    await page.route('**/.netlify/functions/visit', (route) => route.fulfill({ status: 204 }));
+    // Records whether the intro's text ever enters the page, however briefly
+    await page.addInitScript(() => {
+      const w = window as unknown as { __bootSeen: boolean };
+      w.__bootSeen = false;
+      new MutationObserver(() => {
+        if (document.body?.innerText.includes('initializing portfolio_ai.core')) w.__bootSeen = true;
+      }).observe(document, { subtree: true, childList: true, characterData: true });
+    });
+    const bootSeen = () => page.evaluate(() => (window as unknown as { __bootSeen: boolean }).__bootSeen);
+
+    // Control: a normal first visit does show it, so we know the detector works
+    await page.goto('/');
+    await expect.poll(bootSeen).toBe(true);
+
+    // A personalised link must skip it entirely (longer than the intro could possibly run)
+    await page.goto('/?for=acme&role=ml');
+    await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+    await page.waitForTimeout(3000);
+    expect(await bootSeen()).toBe(false);
+  });
+});
+
+test('experience shows a short preview, with the details on demand', async ({ page }) => {
+  await page.goto('/');
+  const experience = page.locator('#experience');
+  // The current role starts open and carries the specifics
+  await expect(experience.getByText('five-agent LangGraph workflow').first()).toBeVisible();
+  // An earlier role is collapsed: its long description is hidden until asked for
+  const bmsc = experience.locator('h3', { hasText: 'Agentic AI Engineer / Data Engineer' }).locator('xpath=ancestor::*[contains(@class,"relative")][1]');
+  const description = 'Built data engineering and AI workflows across ERP, IoT, and operational systems for a manufacturer.';
+  await expect(bmsc.getByText(description)).toBeHidden();
+  await bmsc.getByRole('button', { name: 'Show details' }).click();
+  await expect(bmsc.getByText(description)).toBeVisible();
+  await bmsc.getByRole('button', { name: 'Show less' }).click();
+  await expect(bmsc.getByText(description)).toBeHidden();
+});
+
+test('the featured project explains how the AI assistant works', async ({ page }) => {
+  await page.goto('/');
+  await page.locator('#projects').getByRole('button', { name: 'grid' }).click();
+  const first = page.locator('#projects h3').first();
+  await expect(first).toHaveText('Agentic AI Portfolio Assistant (this site)');
+  await page.locator('#projects').getByRole('button', { name: /Details/ }).first().click();
+  const modal = page.getByRole('dialog', { name: 'Agentic AI Portfolio Assistant (this site)' });
+  await expect(modal).toContainText('How it works');
+  await expect(modal).toContainText('six tools');
+  await expect(modal.getByRole('link', { name: /Live Demo/ })).toHaveAttribute('href', 'https://pradeepsomasundaram.netlify.app');
 });
 
 test.describe('phone layout', () => {
