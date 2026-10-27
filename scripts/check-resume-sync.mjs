@@ -20,7 +20,7 @@ const check = (label, expected, present) => {
   if (expected && !present) findings.push(`${label}: site says "${expected}", not found in the resume text`);
 };
 
-check('Email', about.social.email, flat.includes(about.social.email));
+check('Email', about.social.email, flat.toLowerCase().includes(about.social.email.toLowerCase()));
 
 const current = experience.find((e) => e.featured) ?? experience[0];
 check('Current employer', current.company, flat.includes(current.company));
