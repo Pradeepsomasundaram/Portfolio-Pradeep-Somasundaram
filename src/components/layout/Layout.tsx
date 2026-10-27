@@ -1,37 +1,41 @@
-import { ReactNode, useEffect, useState } from 'react';
+import { ReactNode, Suspense, lazy, useEffect, useState } from 'react';
 import { Navigation } from './Navigation';
 import { Footer } from './Footer';
-import { Chatbot } from '../sections/Chatbot';
 import {
   ParticleBackground,
   BackToTop,
   CursorSpotlight,
-  CommandPalette,
   CustomCursor,
   BootIntro,
   CinematicBackground,
   PersonaPicker,
-  Terminal,
 } from '../ui';
 import { useAppStore } from '../../stores/appStore';
 import { visitContext } from '../../lib/visitContext';
+
+// Interaction-triggered UI. None of it is needed for first paint, and together with the
+// assistant engine it pulls in (~55 KB minified) it was inflating the entry chunk, so each
+// loads as its own chunk once the page is idle — or immediately if the visitor asks for it first.
+const Chatbot = lazy(() => import('../sections/Chatbot').then((m) => ({ default: m.Chatbot })));
+const CommandPalette = lazy(() => import('../ui/CommandPalette').then((m) => ({ default: m.CommandPalette })));
+const Terminal = lazy(() => import('../ui/Terminal').then((m) => ({ default: m.Terminal })));
 
 interface LayoutProps {
   children: ReactNode;
 }
 
 export const Layout = ({ children }: LayoutProps) => {
-  const { theme, commandPaletteOpen, toggleCommandPalette, setCommandPaletteOpen } = useAppStore();
+  const { theme, commandPaletteOpen, toggleCommandPalette, setCommandPaletteOpen, chatbotOpen, terminalOpen } = useAppStore();
 
-  // Ambient particles are decoration: start them once the page has settled so they
-  // never compete with first paint or input responsiveness
-  const [particlesReady, setParticlesReady] = useState(false);
+  // Ambient particles and the lazy overlays below are not needed for first paint: start them
+  // once the page has settled so they never compete with first paint or input responsiveness
+  const [idleReady, setIdleReady] = useState(false);
   useEffect(() => {
     const w = window as Window & {
       requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number;
       cancelIdleCallback?: (id: number) => void;
     };
-    const start = () => setParticlesReady(true);
+    const start = () => setIdleReady(true);
     if (w.requestIdleCallback) {
       const id = w.requestIdleCallback(start, { timeout: 3000 });
       return () => w.cancelIdleCallback?.(id);
@@ -62,6 +66,16 @@ export const Layout = ({ children }: LayoutProps) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
         e.preventDefault();
         toggleCommandPalette();
+        return;
+      }
+      // Backtick opens the terminal (unless the visitor is typing in a field). This lives here, not
+      // in the lazy Terminal, so the shortcut works even before the Terminal chunk has loaded.
+      const el = e.target as HTMLElement;
+      const typing = el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.isContentEditable;
+      if (e.key === '`' && !typing && !e.metaKey && !e.ctrlKey) {
+        e.preventDefault();
+        const { terminalOpen: open, setTerminalOpen } = useAppStore.getState();
+        setTerminalOpen(!open);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
@@ -78,7 +92,7 @@ export const Layout = ({ children }: LayoutProps) => {
       </a>
       <BootIntro />
       {theme === 'dark' && <CinematicBackground />}
-      {theme === 'dark' && particlesReady && <ParticleBackground />}
+      {theme === 'dark' && idleReady && <ParticleBackground />}
       <CursorSpotlight />
       <CustomCursor />
       <div className="grain-overlay" />
@@ -86,11 +100,15 @@ export const Layout = ({ children }: LayoutProps) => {
         <Navigation />
         <main id="main-content">{children}</main>
         <Footer />
-        <Chatbot />
         <PersonaPicker />
-        <Terminal />
         <BackToTop />
-        <CommandPalette open={commandPaletteOpen} onClose={() => setCommandPaletteOpen(false)} />
+        <Suspense fallback={null}>
+          {(idleReady || chatbotOpen) && <Chatbot />}
+          {(idleReady || terminalOpen) && <Terminal />}
+          {(idleReady || commandPaletteOpen) && (
+            <CommandPalette open={commandPaletteOpen} onClose={() => setCommandPaletteOpen(false)} />
+          )}
+        </Suspense>
       </div>
     </div>
   );

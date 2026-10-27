@@ -1,4 +1,6 @@
+import type { Context } from '@netlify/functions';
 import { getStore } from '@netlify/blobs';
+import { checkRateLimits } from '../lib/limits.mts';
 import aboutData from '../../src/data/about.json';
 
 /**
@@ -49,7 +51,12 @@ async function fetchDays(login: string, from: Date, to: Date, token: string): Pr
   return weeks.flatMap((w) => w.contributionDays).map((d) => ({ date: d.date, count: d.contributionCount }));
 }
 
-export default async (): Promise<Response> => {
+const json = (status: number, body: Record<string, unknown>) =>
+  new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' } });
+
+export default async (req: Request, context: Context): Promise<Response> => {
+  if (req.method !== 'GET') return json(405, { available: false });
+
   const token = process.env.GITHUB_TOKEN;
   if (!token || LOGINS.length === 0) {
     return new Response(JSON.stringify({ available: false }), {
@@ -70,6 +77,10 @@ export default async (): Promise<Response> => {
   } catch {
     /* Blobs unavailable — fall through and fetch fresh */
   }
+
+  // Cached responses above are free to serve; only a cache miss spends the shared GitHub token,
+  // so that's the path worth rate-limiting (guards against bursts of concurrent cache misses).
+  if ((await checkRateLimits(context.ip || 'unknown', 'contrib')) !== 'ok') return json(429, { available: false });
 
   const to = new Date();
   const from = new Date(to.getTime() - WEEKS * 7 * 24 * 60 * 60 * 1000);
