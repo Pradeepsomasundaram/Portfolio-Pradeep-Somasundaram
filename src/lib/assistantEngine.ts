@@ -4,7 +4,7 @@ import skillsData from '../data/skills.json';
 import experienceData from '../data/experience.json';
 import educationData from '../data/education.json';
 import certificationsData from '../data/certifications.json';
-import publicationsData from '../data/publications.json';
+import { publications, published, accepted, submitted, statusOf } from './publications';
 import volunteeringData from '../data/volunteering.json';
 import awardsData from '../data/awards.json';
 import organizationsData from '../data/organizations.json';
@@ -63,7 +63,7 @@ function buildIntents(): Intent[] {
         const currentRole = experienceData[0];
         const totalSkills = Object.values(skillsData).flat().length;
         return {
-          text: `Pradeep Somasundaram is a ${aboutData.roles.join(', ')} based in Dallas, Texas.\n\n${aboutData.bio}\n\nQuick stats:\n- ${aboutData.stats.yearsExperience} years of experience\n- ${aboutData.stats.projectsCompleted} projects completed\n- ${totalSkills}+ technologies mastered\n- ${certificationsData.length} professional certifications\n- ${publicationsData.length} peer-reviewed publications\n\nCurrently working as ${currentRole.role} at ${currentRole.company}.`,
+          text: `Pradeep Somasundaram is a ${aboutData.roles.join(', ')} based in Dallas, Texas.\n\n${aboutData.bio}\n\nQuick stats:\n- ${aboutData.stats.yearsExperience} years of experience\n- ${projectsData.length} projects listed\n- ${totalSkills}+ technologies mastered\n- ${certificationsData.length} professional certifications\n- ${published.length} peer-reviewed publications (plus ${accepted.length} accepted and ${submitted.length} submitted)\n\nCurrently working as ${currentRole.role} at ${currentRole.company}.`,
           followUps: ['Work experience', 'Education', 'Top projects', 'Contact info'],
         };
       },
@@ -226,15 +226,18 @@ function buildIntents(): Intent[] {
         ['semiconductor', 4], ['ecg', 3],
       ],
       handler: () => {
-        const pubSummary = publicationsData
-          .map(
-            (pub) =>
-              `- "${pub.title}"\n  Published in ${pub.publisher} (${pub.date}) — ${pub.type}\n  ${pub.description.slice(0, 150)}...`
-          )
+        const where = (pub: (typeof publications)[number]) =>
+          ({
+            published: `Published in ${pub.publisher} (${pub.date}) — ${pub.type}`,
+            accepted: `Accepted at ${pub.publisher} — awaiting publication`,
+            submitted: `Submitted to ${pub.publisher} — under review`,
+          })[statusOf(pub)];
+        const pubSummary = publications
+          .map((pub) => `- "${pub.title}"\n  ${where(pub)}\n  ${pub.description.slice(0, 150)}...`)
           .join('\n\n');
 
         return {
-          text: `Pradeep has ${publicationsData.length} peer-reviewed publications:\n\n${pubSummary}\n\nHis research spans deep learning for manufacturing quality control and machine learning for biomedical signal processing.`,
+          text: `Pradeep has ${published.length} peer-reviewed publications, plus ${accepted.length} accepted and ${submitted.length} submitted papers:\n\n${pubSummary}\n\nHis research spans machine learning for industrial and manufacturing data, predictive maintenance (NASA C-MAPSS, FEMTO bearings), and auditing LLM-based agents. Code for the newer papers is public.`,
           followUps: ['Education', 'ML/AI expertise', 'Awards', 'Projects'],
         };
       },
@@ -343,7 +346,7 @@ function buildIntents(): Intent[] {
         ['resume', 5], ['cv', 5], ['download', 3], ['pdf', 3],
       ],
       handler: () => ({
-        text: `You can download Pradeep's resume by clicking the "Download Resume" button on the Home page.\n\nThe resume covers:\n- ${experienceData.length} professional roles across data science, ML, and engineering\n- MS in Data Science from GWU (Grade: A)\n- BE in EEE from Anna University (CGPA: 9.21)\n- ${Object.values(skillsData).flat().length}+ technical skills\n- ${certificationsData.length} certifications\n- ${publicationsData.length} research publications`,
+        text: `You can download Pradeep's resume by clicking the "Download Resume" button on the Home page.\n\nThe resume covers:\n- ${experienceData.length} professional roles across data science, ML, and engineering\n- MS in Data Science from GWU (Grade: A)\n- BE in EEE from Anna University (CGPA: 9.21)\n- ${Object.values(skillsData).flat().length}+ technical skills\n- ${certificationsData.length} certifications\n- ${published.length} published research papers`,
         followUps: ['Experience details', 'Skills', 'Education', 'Contact'],
       }),
     },
@@ -372,7 +375,7 @@ function buildIntents(): Intent[] {
           .join('\n');
 
         return {
-          text: `Pradeep has strong expertise in AI/ML:\n\n- ${mlProjects.length}+ ML/AI projects including deep learning, NLP, and computer vision\n- ${publicationsData.length} research publications (IEEE, Springer)\n- MS in Data Science from GWU with focus on ML\n- Certified Data Scientist (micro1)\n\nKey technologies: Python, TensorFlow, PyTorch, Scikit-learn, Hugging Face, OpenAI APIs, LangChain, BERT, XGBoost\n\nNotable ML projects:\n${projectList}\n\nHis work includes semiconductor defect classification, emotion detection from ECG signals, and building scalable ML pipelines.`,
+          text: `Pradeep has strong expertise in AI/ML:\n\n- ${mlProjects.length}+ ML/AI projects including deep learning, NLP, and computer vision\n- ${published.length} published papers (IEEE, Springer), plus ${accepted.length + submitted.length} accepted or submitted\n- MS in Data Science from GWU with focus on ML\n- Certified Data Scientist (micro1)\n\nKey technologies: Python, TensorFlow, PyTorch, Scikit-learn, Hugging Face, OpenAI APIs, LangChain, BERT, XGBoost\n\nNotable ML projects:\n${projectList}\n\nHis work includes semiconductor defect classification, emotion detection from ECG signals, and building scalable ML pipelines.`,
           followUps: ['All projects', 'Publications', 'Data engineering', 'Skills breakdown'],
         };
       },
@@ -436,7 +439,7 @@ function buildIntents(): Intent[] {
         ['free time', 4], ['outside work', 4], ['personal', 3], ['fitness', 3],
       ],
       handler: () => ({
-        text: `Here are some fun facts about Pradeep:\n\n- He's a member of Equinox, showing his commitment to fitness and wellness\n- He's been a Youth Red Cross volunteer since 2019\n- He volunteered at the International Monetary Fund's Annual Summit\n- He has ${publicationsData.length} research papers published in IEEE and Springer\n- He achieved a CGPA of 9.21/10 in his undergraduate studies\n- He's proficient in ${Object.values(skillsData).flat().length}+ technologies!\n\nHe balances technical excellence with community involvement and personal wellness.`,
+        text: `Here are some fun facts about Pradeep:\n\n- He's a member of Equinox, showing his commitment to fitness and wellness\n- He's been a Youth Red Cross volunteer since 2019\n- He volunteered at the International Monetary Fund's Annual Summit\n- He has ${published.length} research papers published in IEEE and Springer, with more accepted or under review\n- He achieved a CGPA of 9.21/10 in his undergraduate studies\n- He's proficient in ${Object.values(skillsData).flat().length}+ technologies!\n\nHe balances technical excellence with community involvement and personal wellness.`,
         followUps: ['Organizations', 'Volunteering', 'Awards', 'About'],
       }),
     },
@@ -450,7 +453,7 @@ function buildIntents(): Intent[] {
         ['best', 2], ['top', 2], ['strongest', 4],
       ],
       handler: () => ({
-        text: `What makes Pradeep stand out:\n\n1. Full-spectrum data expertise — from raw data pipelines (AWS, ETL) to ML models (TensorFlow, PyTorch) to dashboards (Power BI, React)\n\n2. Research-backed skills — ${publicationsData.length} peer-reviewed publications in IEEE and Springer\n\n3. Industry diversity — experience across technology services (Cognizant), manufacturing (BMSC), education (CEAC), tech (IBM), and automation\n\n4. Academic excellence — MS from GWU (Grade: A), BE from Anna University (CGPA: 9.21/10)\n\n5. Impact-driven — pipelines processing 10M+ records monthly, ~30% lower data latency at Cognizant, ~500 GB migrated at BMSC, 25% less manual reporting at CEAC\n\n6. Community-minded — IMF volunteer, Youth Red Cross, active in IEEE and professional organizations`,
+        text: `What makes Pradeep stand out:\n\n1. Full-spectrum data expertise — from raw data pipelines (AWS, ETL) to ML models (TensorFlow, PyTorch) to dashboards (Power BI, React)\n\n2. Research-backed skills — ${published.length} peer-reviewed publications in IEEE and Springer, plus ${accepted.length + submitted.length} more accepted or submitted\n\n3. Industry diversity — experience across technology services (Cognizant), manufacturing (BMSC), education (CEAC), tech (IBM), and automation\n\n4. Academic excellence — MS from GWU (Grade: A), BE from Anna University (CGPA: 9.21/10)\n\n5. Impact-driven — pipelines processing 10M+ records monthly, ~30% lower data latency at Cognizant, ~500 GB migrated at BMSC, 25% less manual reporting at CEAC\n\n6. Community-minded — IMF volunteer, Youth Red Cross, active in IEEE and professional organizations`,
         followUps: ['Experience', 'Projects', 'Testimonials', 'Contact'],
       }),
     },

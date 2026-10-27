@@ -2,10 +2,11 @@ import { motion } from 'framer-motion';
 import { AnimatedSection, Card } from '../ui';
 import aboutData from '../../data/about.json';
 import certificationsData from '../../data/certifications.json';
+import projectsData from '../../data/projects.json';
 
 const stats = [
   { label: 'Years Experience', value: aboutData.stats.yearsExperience },
-  { label: 'Projects Completed', value: aboutData.stats.projectsCompleted },
+  { label: 'Projects', value: String(projectsData.length) },
   { label: 'Skills Mastered', value: aboutData.stats.skillsLearned },
   { label: 'Certifications', value: String(certificationsData.length) },
 ];
