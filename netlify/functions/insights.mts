@@ -98,8 +98,8 @@ export default async (req: Request): Promise<Response> => {
   const days = [...perDay.entries()].sort().slice(-14);
   const maxDay = Math.max(1, ...days.map(([, n]) => n));
 
-  const usage = await usageSnapshot(['chat', 'polish', 'visit']);
-  const usageLabel: Record<string, string> = { chat: 'AI chat answers', polish: 'Contact "Polish with AI"', visit: 'Link-open beacons' };
+  const usage = await usageSnapshot(['chat', 'polish', 'visit', 'contrib']);
+  const usageLabel: Record<string, string> = { chat: 'AI chat answers', polish: 'Contact "Polish with AI"', visit: 'Link-open beacons', contrib: 'GitHub heatmap refreshes' };
 
   const html = `<!doctype html><html><head><meta charset="utf-8"><meta name="robots" content="noindex"><title>Assistant insights</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
