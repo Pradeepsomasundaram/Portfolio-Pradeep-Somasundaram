@@ -6,6 +6,7 @@ import { FaGithub, FaLinkedin } from 'react-icons/fa';
 import { Button, CounterAnimation, ResumeModal, TiltCard, DoodleUnderline, DoodleCircle } from '../ui';
 import { useAppStore } from '../../stores/appStore';
 import { visitContext } from '../../lib/visitContext';
+import certificationsData from '../../data/certifications.json';
 
 const roles = [
   'Agentic AI & MLOps Lead',
@@ -214,7 +215,7 @@ export const Hero = () => {
           <CounterAnimation end={6} suffix="+" label="Years Experience" />
           <CounterAnimation end={15} suffix="+" label="Projects" />
           <CounterAnimation end={2} label="Publications" />
-          <CounterAnimation end={6} label="Certifications" />
+          <CounterAnimation end={certificationsData.length} label="Certifications" />
         </motion.div>
       </motion.div>
 

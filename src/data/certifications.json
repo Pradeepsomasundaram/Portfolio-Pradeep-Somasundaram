@@ -1,17 +1,58 @@
 [
   {
+    "id": "aws-genai-pro",
+    "name": "AWS Certified Generative AI Developer - Professional",
+    "issuer": "Amazon Web Services (AWS)",
+    "date": "Oct 2026",
+    "expires": "Oct 2029",
+    "description": "Advanced AWS certification for implementing generative AI solutions in production environments using AWS technologies.",
+    "credentialId": "97ac71bf-7270-4865-ae3e-42a03ead7d8f",
+    "credentialUrl": "https://www.credly.com/badges/97ac71bf-7270-4865-ae3e-42a03ead7d8f"
+  },
+  {
+    "id": "gcp-pmle",
+    "name": "Google Cloud Certified Professional Machine Learning Engineer Certification",
+    "issuer": "Google Cloud",
+    "date": "Oct 2026",
+    "expires": "Oct 2028",
+    "description": "Validates the ability to build, evaluate, productionize, and optimize machine learning models using Google Cloud technologies.",
+    "credentialId": "c1ee8fa9c8c442f694bb740ddacfd567",
+    "credentialUrl": "https://www.credly.com/badges/daac1ea1-0dd6-47b5-b2ac-390cec77ba84"
+  },
+  {
+    "id": "ms-agentic-ai-architect",
+    "name": "Microsoft Certified: Agentic AI Business Solutions Architect Expert",
+    "issuer": "Microsoft",
+    "date": "Oct 2026",
+    "expires": "Oct 2027",
+    "description": "Expert-level certification covering how to plan, design, and deploy AI-powered business solutions.",
+    "credentialId": "EE7263342F80C050",
+    "credentialUrl": "https://learn.microsoft.com/en-us/users/pradeepsomasundaram-3112/credentials/ee7263342f80c050"
+  },
+  {
+    "id": "ms-power-platform-dev",
+    "name": "Microsoft Certified: Power Platform Developer Associate",
+    "issuer": "Microsoft",
+    "date": "Oct 2026",
+    "expires": "Oct 2027",
+    "description": "Covers technical design and building Power Platform solutions, Power Apps improvements, extending the user experience and platform, and developing integrations.",
+    "credentialId": "F3CC288A3A8849A",
+    "credentialUrl": "https://learn.microsoft.com/en-us/users/pradeepsomasundaram-3112/credentials/f3cc288a3a8849a"
+  },
+  {
+    "id": "aws-cloud-arch",
+    "name": "AWS Academy Graduate - AWS Academy Cloud Architecting",
+    "issuer": "Amazon Web Services Training and Certification",
+    "date": "Dec 2024",
+    "description": "AWS Academy Graduate training badge in Cloud Architecting, covering compute, storage, networking, security, and scalable cloud solutions.",
+    "credentialUrl": "https://www.credly.com/badges/47072e61-1560-4fa0-bb43-8f1c8d2195f7"
+  },
+  {
     "id": "micro1-ds",
     "name": "Certified Data Scientist",
     "issuer": "micro1",
     "date": "Nov 2024",
     "description": "Certified proficiency in data science methodologies, machine learning algorithms, and statistical analysis."
-  },
-  {
-    "id": "aws-cloud-arch",
-    "name": "AWS Academy Cloud Architecting",
-    "issuer": "Amazon Web Services Training and Certification",
-    "date": "Dec 2024",
-    "description": "Graduate-level certification in AWS cloud architecture, covering compute, storage, networking, security, and scalable cloud solutions."
   },
   {
     "id": "kaashiv-iot",
@@ -21,11 +62,11 @@
     "description": "Certified in IoT architecture, sensor networks, real-time data processing, and embedded systems integration."
   },
   {
-    "id": "niit-python",
-    "name": "Programming with Python for Data Science",
+    "id": "niit-cpp",
+    "name": "Object Oriented Programming using C++",
     "issuer": "NIIT Limited",
     "date": "2022",
-    "description": "Certification in Python programming for data analysis, scientific computing, and machine learning applications."
+    "description": "Certification in C++ object-oriented programming, covering classes, inheritance, polymorphism, and design patterns."
   },
   {
     "id": "niit-c",
@@ -35,10 +76,10 @@
     "description": "Certification in C programming language fundamentals, memory management, and systems programming."
   },
   {
-    "id": "niit-cpp",
-    "name": "Object Oriented Programming using C++",
+    "id": "niit-python",
+    "name": "Programming with Python for Data Science",
     "issuer": "NIIT Limited",
     "date": "2022",
-    "description": "Certification in C++ object-oriented programming, covering classes, inheritance, polymorphism, and design patterns."
+    "description": "Certification in Python programming for data analysis, scientific computing, and machine learning applications."
   }
 ]

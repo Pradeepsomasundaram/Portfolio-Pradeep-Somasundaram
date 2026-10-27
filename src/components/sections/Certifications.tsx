@@ -19,6 +19,16 @@ const accents = [
 
 const INITIAL_COUNT = 4;
 
+// Name the platform a credential is verified on, so "Verify" says where it goes
+const verifierName = (url: string): string | null => {
+  try {
+    const host = new URL(url).hostname;
+    if (host.endsWith('credly.com')) return 'Credly';
+    if (host.endsWith('learn.microsoft.com')) return 'Microsoft Learn';
+  } catch { /* fall through to the generic label */ }
+  return null;
+};
+
 export const Certifications = () => {
   const [expanded, setExpanded] = useState(false);
   const visible = expanded ? certifications : certifications.slice(0, INITIAL_COUNT);
@@ -50,8 +60,11 @@ export const Certifications = () => {
                         <p className="text-primary text-sm font-semibold mb-3">
                           {cert.issuer}
                         </p>
-                        <div className="mt-auto pt-2 flex items-center justify-between gap-3">
-                          <p className="text-xs text-gray-500 dark:text-gray-400 font-mono">{cert.date}</p>
+                        <div className="mt-auto pt-2 flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
+                          <p className="text-xs text-gray-500 dark:text-gray-400 font-mono">
+                            {cert.date}
+                            {cert.expires ? ` · expires ${cert.expires}` : ''}
+                          </p>
                           {cert.credentialUrl && (
                             <a
                               href={cert.credentialUrl}
@@ -60,7 +73,8 @@ export const Certifications = () => {
                               aria-label={`Verify credential: ${cert.name}`}
                               className="inline-flex items-center gap-1 text-xs font-medium text-secondary hover:underline"
                             >
-                              Verify <HiExternalLink className="w-3.5 h-3.5" />
+                              {verifierName(cert.credentialUrl) ? `Verify on ${verifierName(cert.credentialUrl)}` : 'Verify'}{' '}
+                              <HiExternalLink className="w-3.5 h-3.5" />
                             </a>
                           )}
                         </div>

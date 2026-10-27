@@ -1,12 +1,13 @@
 import { motion } from 'framer-motion';
 import { AnimatedSection, Card } from '../ui';
 import aboutData from '../../data/about.json';
+import certificationsData from '../../data/certifications.json';
 
 const stats = [
   { label: 'Years Experience', value: aboutData.stats.yearsExperience },
   { label: 'Projects Completed', value: aboutData.stats.projectsCompleted },
   { label: 'Skills Mastered', value: aboutData.stats.skillsLearned },
-  { label: 'Certifications', value: aboutData.stats.certifications },
+  { label: 'Certifications', value: String(certificationsData.length) },
 ];
 
 export const About = () => {

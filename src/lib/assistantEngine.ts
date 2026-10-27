@@ -211,7 +211,7 @@ function buildIntents(): Intent[] {
           .join('\n');
 
         return {
-          text: `Pradeep holds ${certificationsData.length} professional certifications:\n\n${certSummary}\n\nThese validate his expertise across data science, cloud architecture, IoT, and programming.`,
+          text: `Pradeep holds ${certificationsData.length} professional certifications:\n\n${certSummary}\n\nThese validate his expertise across generative AI and ML engineering (AWS, Google Cloud, Microsoft), cloud architecture, IoT, and programming. The recent ones are verifiable online through Credly and Microsoft Learn — see the Certifications section.`,
           followUps: ['Skills overview', 'Education', 'AWS experience', 'Projects'],
         };
       },

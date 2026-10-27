@@ -153,6 +153,37 @@ test('the certifications section links out to the LinkedIn certifications page',
   await expect(link).toHaveAttribute('rel', /noopener/);
 });
 
+test('the newest certifications link to their public verification pages', async ({ page }) => {
+  await page.goto('/');
+  const section = page.locator('#certifications');
+  const verify = section.getByRole('link', { name: /^Verify credential:/ });
+
+  // The four newest (all verifiable) are visible before expanding
+  await expect(verify).toHaveCount(4);
+  await expect(section.getByRole('link', { name: 'Verify credential: AWS Certified Generative AI Developer - Professional' })).toHaveAttribute(
+    'href',
+    'https://www.credly.com/badges/97ac71bf-7270-4865-ae3e-42a03ead7d8f'
+  );
+  await expect(section.getByRole('link', { name: 'Verify credential: Microsoft Certified: Power Platform Developer Associate' })).toHaveAttribute(
+    'href',
+    'https://learn.microsoft.com/en-us/users/pradeepsomasundaram-3112/credentials/f3cc288a3a8849a'
+  );
+  // Links name the platform they verify on
+  await expect(section.getByText('Verify on Credly').first()).toBeVisible();
+  await expect(section.getByText('Verify on Microsoft Learn').first()).toBeVisible();
+
+  // Every verify link opens safely in a new tab
+  for (const link of await verify.all()) {
+    await expect(link).toHaveAttribute('target', '_blank');
+    await expect(link).toHaveAttribute('rel', /noopener/);
+  }
+
+  // Expanding reveals the older ones; only the AWS Academy badge among them has a public link
+  await section.getByRole('button', { name: /^Show \d+ more/ }).click();
+  await expect(section.getByRole('heading', { level: 3 })).toHaveCount(10);
+  await expect(verify).toHaveCount(5);
+});
+
 test.describe('phone layout', () => {
   test.use({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
 

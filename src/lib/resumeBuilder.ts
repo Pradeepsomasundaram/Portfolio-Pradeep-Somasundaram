@@ -111,7 +111,7 @@ ${educationData
     .join('')}
 
 <h2>Certifications</h2>
-<p class="small">${certificationsData.map((c) => `${esc(c.name)} (${esc(c.issuer)}, ${esc(c.date)})`).join(' · ')}</p>
+<p class="small">${certificationsData.slice(0, 6).map((c) => `${esc(c.name)} (${esc(c.issuer)}, ${esc(c.date)})`).join(' · ')}</p>
 </body></html>`;
 }
 
